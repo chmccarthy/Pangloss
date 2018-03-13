@@ -376,7 +376,11 @@ def ClusterClean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, ex
 
     logfile.write("{0} core clusters and {1} noncore clusters identified...\n".format(len(core.keys()), len(noncore.keys())))
     logfile.write("Creating ring chart in R...\n")
+<<<<<<< HEAD
     sp.call(["Rscript", "PlotRingChart.R", str(len(core.keys())), str(len(noncore.keys()))])
+=======
+    sp.call(["Rscript", "PlotRingChart.R", str(len(core.keys()), str(len(noncore.keys()))])
+>>>>>>> e2215f1359896be8bd59624a90c2b29aae4822b2
 
     with open("core.txt", "w") as c:
         json.dump(core, c)
