@@ -53,7 +53,6 @@ import argparse
 import datetime
 import json
 import os
-import random
 import multiprocessing as mp
 import shutil
 import subprocess as sp
@@ -199,7 +198,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                         if hit.split("|")[0] not in [i.split("|")[0] for i in blast_hit_dict.keys()]:  # If the source strain of a given hit is missing from the query cluster.
                             if hit.split("|")[0] not in found:  # Ignore if missing strain has already been "added" to cluster.
                                 if seq_ratio(seqindex, key, hit) >= 0.6:  # If the sequence length ratio (see seq_ratio function) between hit and query is greater than or = 60%.
-                                    if len(filter(lambda x: x == hit, flatten(blast_hit_dict.values()))) / current = strain_cutoff:  # If that hit is found in the BLASTp results of every member of the query cluster.
+                                    if len(filter(lambda x: x == hit, flatten(blast_hit_dict.values()))) / current == strain_cutoff:  # If that hit is found in the BLASTp results of every member of the query cluster.
                                         if subject_top_hit(blast_hit_dict.values(), hit, current, strain_cutoff):  # If that hit is the top hit from the source strain of every member of the query cluster.
                                             for query_cluster in noncore.keys():  # Loop through noncore clusters AGAIN.
                                                 if hit in noncore[query_cluster]:  # Locate hit's source cluster within noncore clusters, henceforth the "subject cluster".
@@ -220,7 +219,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                                                                             else:
                                                                                 homologs[cluster] = [query_cluster]
                                                         else:
-                                                            if len(filter(lambda x: x in blast_hit_dict.keys(), flatten(subjhits.values()))) / current = strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
+                                                            if len(filter(lambda x: x in blast_hit_dict.keys(), flatten(subjhits.values()))) / current == strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
                                                                 strains = [key.split("|")[0] for key in blast_hit_dict.keys()]
                                                                 if query_top_hit(blast_hit_dict.keys(), strains, subjhits.values(), current, strain_cutoff):
                                                                     gap = True  # Suitable homolog has been found.
@@ -285,10 +284,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
 
     mainlogfile.write("{0} core clusters and {1} noncore clusters identified...\n".format(len(core.keys()), len(noncore.keys())))
     mainlogfile.write("Creating ring chart in R...\n")
-    sp.call(["Rscript", "PlotRingChart.R", str(len(core.keys())), str(len(noncore.keys()))])
-
- #   with open("core.txt", "w") as c:
- #       json.dump(core, c)
+    sp.call(["Rscript", "{0}/PlotRingChart.R".format(dirname), str(len(core.keys())), str(len(noncore.keys()))])
 
     ##### Loop through noncore clusters from size (total -1) to 2. #####
     for size in range(start, 1, -1):
@@ -373,6 +369,9 @@ if __name__ == "__main__":
 
     ##### Set default amount of cores used. #####
     cores = mp.cpu_count() - 1
+
+    ##### Get absolute path of script, for running R commands. #####
+    dirname = os.path.dirname(os.path.abspath(__file__))
 
     ##### Run PanGLOSS. #####
     main()
