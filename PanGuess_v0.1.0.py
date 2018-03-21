@@ -19,6 +19,10 @@ Requirements:
 
 Recent changes:
 
+    v0.2.0 (March 2018)
+    - Defined ExonerateGene as class, moved some functions to Tools module.
+    - Removed other old functions.
+
     v0.1.0 (Winter 2017)
     - Initial version.
 
@@ -45,7 +49,6 @@ from collections import OrderedDict as od
 from csv import reader
 from glob import glob
 from PanGLOSS.Tools import pairwise, get_gene_lengths, exoneratecmdline
-from PanGLOSS.ExonerateGene import ExonerateGene
 
 logfile = open("PanGuess.log", "a", 0)
 
@@ -332,26 +335,6 @@ def get_noncoding_regions(seq_name, seq, list_of_coords):
             ncr.append(">{0}\n{1}\n".format(seq_name + "_NCR_{0}_{1}".format(coord[1] + 1,
                                             next_coord[0] - 1), seq.seq[coord[1] + 1:next_coord[0] - 1]))
     return ncr
-    # Do the for loop and if/else need to be in here since I've removed GMAP?
-    # for region, next_region in pairwise(ncr):
-    #     if all([region, next_region]):
-    #         if similar(region.split("\n")[1][:1000], next_region.split("\n")[1][:1000]) == 1:
-    #             print "Found repetitive intro..."
-    #             to_search = region.split("\n")[1][:1000]
-    #             break
-    # if to_search:
-    #     for region in ncr:
-    #         if region.split("\n")[1][:1000] == to_search:
-    #             print "Ignoring {0}".format(region.split("\n")[0])
-    #             pass
-    #         else:
-    #             if len(region.split("\n")[1]) <= 10000:
-    #                 to_return.append(region)
-    # else:
-    #     for region in ncr:
-    #         if len(region.split("\n")[1]) <= 10000:
-    #             to_return.append(region)
-    #return to_return
 
 
 def run_transdecoder(genome, combined_output, tag):

@@ -94,7 +94,7 @@ def called_ratio(called_alignment, query_gene):
     return ratio
 
 
-def subject_top_hit(list_of_lists, gene_id):
+def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
     """
     Return boolean for whether a gene is the top BLASTp hit for its strain.
 
@@ -102,20 +102,23 @@ def subject_top_hit(list_of_lists, gene_id):
     protein cluster as identified by PanOCT, and checks if the gene of
     interest (assuming it passes all prior criteria, see GapFinder for more)
     is the top BLASTp hit from that strain for each member. If this is the case
-    for every member, it returns the default value of True. If not, it
+    for >cutoff of members, it returns the default value of True. If not, it
     returns False. Crucial for GapFinder!
     """
-    top = True
+    count = 0
     for li in list_of_lists:
         if not filter(lambda x: x.split("|")[0] == gene_id.split("|")[0], li)[0] == gene_id:
-            top = False
-            break
-        else:
             pass
+        else:
+            count = count + 1
+    if (count / size) >= strain_cutoff:
+        top = True
+    else:
+        top = False
     return top
 
 
-def query_top_hit(cluster_members, strain_list, blast_hits):
+def query_top_hit(cluster_members, strain_list, blast_hits, size, strain_cutoff):
     """
     Return boolean for whether a set of genes are all top BLASTp strain hits.
 
@@ -127,28 +130,28 @@ def query_top_hit(cluster_members, strain_list, blast_hits):
     subject cluster's BLAST results) return False. In this way, we can determine
     reciprocality between query and subject clusters in terms of BLASTp hits. Crucial for GapFinder!
     """
-    top = True
+    count = 0
     if any(isinstance(el, list) for el in blast_hits):
         for li in blast_hits:
             for strain in strain_list:
                 if not filter(lambda x: x.split("|")[0] == strain, li):
-                    top = False
-                    break
-                elif filter(lambda x: x.split("|")[0] == strain, li)[0] not in cluster_members:
-                    top = False
-                    break
-                else:
                     pass
+                elif filter(lambda x: x.split("|")[0] == strain, li)[0] not in cluster_members:
+                    pass
+                else:
+                    count = count + 1
     else:
         for strain in strain_list:
             if not filter(lambda x: x.split("|")[0] == strain, blast_hits):
-                top = False
-                break
-            elif filter(lambda x: x.split("|")[0] == strain, blast_hits)[0] not in cluster_members:
-                top = False
-                break
-            else:
                 pass
+            elif filter(lambda x: x.split("|")[0] == strain, blast_hits)[0] not in cluster_members:
+                pass
+            else:
+                count = count + 1
+    if (count / size) >= strain_cutoff:
+        top = True
+    else:
+        top = False
     return top
 
 

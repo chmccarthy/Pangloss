@@ -156,7 +156,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
         4c. If one of the hits is from a strain missing from or not already added to the current cluster.
         4d. Calculate sequence length ratio between member protein and hit.
         4e. If ratio is greater than/equal to 60%, check hit in member protein is also the top hit for that strain for
-            every other member protein.
+            every other member protein (.
         4f. If it is, get that hit protein's associated cluster and check that its size is not greater than total - current.
         5a. If "hit" cluster is a singleton, check if every member of the "query" cluster is (first) a BLASTp hit and
             (second) the top BLASTp hit for their respective strains for the "hit" cluster protein.
@@ -181,7 +181,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
         total         = Total number of genomes.
         current       = Cluster size being queried.
         min_id_cutoff = Percentage identity of a BLASTp hit (default = 30).
-        strain_cutoff = Cutoff of percentage of reciprocal strain top hits between two clusters (default = 100).
+        strain_cutoff = Cutoff fraction of reciprocal strain top hits between two clusters (default = 1).
     """
     homologs = {}
     for cluster in noncore.keys():  # Loop through non-core clusters.
@@ -200,7 +200,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                             if hit.split("|")[0] not in found:  # Ignore if missing strain has already been "added" to cluster.
                                 if seq_ratio(seqindex, key, hit) >= 0.6:  # If the sequence length ratio (see seq_ratio function) between hit and query is greater than or = 60%.
                                     if len(filter(lambda x: x == hit, flatten(blast_hit_dict.values()))) / current = strain_cutoff:  # If that hit is found in the BLASTp results of every member of the query cluster.
-                                        if subject_top_hit(blast_hit_dict.values(), hit):  # If that hit is the top hit from the source strain of every member of the query cluster.
+                                        if subject_top_hit(blast_hit_dict.values(), hit, current, strain_cutoff):  # If that hit is the top hit from the source strain of every member of the query cluster.
                                             for query_cluster in noncore.keys():  # Loop through noncore clusters AGAIN.
                                                 if hit in noncore[query_cluster]:  # Locate hit's source cluster within noncore clusters, henceforth the "subject cluster".
                                                     if (total - current) >= len(filter(lambda x: x != "----------", noncore[query_cluster])):  # If the size of the subject cluster is =< the number of missing strains from the query cluster.
@@ -211,7 +211,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                                                                 if not filter(lambda x: x in spec, [i.split("|")[0] for i in blast_hit_dict.keys()]):  # If all strains present in the subject cluster are missing from the query cluster.
                                                                     if len(filter(lambda x: x in blast_hit_dict.keys(), set(flatten(subjhits.values())))) == current:
                                                                         strains = [key.split("|")[0] for key in blast_hit_dict.keys()]
-                                                                        if query_top_hit(blast_hit_dict.keys(), strains, subjhits.values()):
+                                                                        if query_top_hit(blast_hit_dict.keys(), strains, subjhits.values(), current, strain_cutoff):
                                                                             for s in spec:
                                                                                 found.append(s)
                                                                             gap = True
@@ -222,7 +222,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                                                         else:
                                                             if len(filter(lambda x: x in blast_hit_dict.keys(), flatten(subjhits.values()))) / current = strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
                                                                 strains = [key.split("|")[0] for key in blast_hit_dict.keys()]
-                                                                if query_top_hit(blast_hit_dict.keys(), strains, subjhits.values()):
+                                                                if query_top_hit(blast_hit_dict.keys(), strains, subjhits.values(), current, strain_cutoff):
                                                                     gap = True  # Suitable homolog has been found.
                                                                     found.append(hit.split("|")[0])  # Shortcut: append hit ID substring because we're only looking at a singleton.
                                                                     if cluster in homologs.keys():  # Allow more than one subject cluster to be associated to a query cluster.

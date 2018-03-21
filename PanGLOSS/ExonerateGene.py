@@ -1,5 +1,10 @@
 from Bio import SearchIO
 
+"""
+ExonerateGene: Gene object called through exonerate.
+"""
+
+
 class ExonerateGene:
     """
     An object that stores the attributes of a gene called via exonerate.
