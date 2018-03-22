@@ -207,7 +207,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                                              hit) >= 0.6:  # If the sequence length ratio (see seq_ratio function) between hit and query is greater than or = 60%.
                                     print key
                                     if len(filter(lambda x: x == hit, flatten(
-                                            blast_hit_dict.values()))) / current == strain_cutoff:  # If that hit is found in the BLASTp results of every member of the query cluster.
+                                            blast_hit_dict.values()))) / current <= strain_cutoff:  # If that hit is found in the BLASTp results of every member of the query cluster.
                                         if subject_top_hit(blast_hit_dict.values(), hit, current,
                                                            strain_cutoff):  # If that hit is the top hit from the source strain of every member of the query cluster.
                                             for query_cluster in noncore.keys():  # Loop through noncore clusters AGAIN.
@@ -247,7 +247,7 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                                                                                 homologs[cluster] = [query_cluster]
                                                         else:
                                                             if len(filter(lambda x: x in blast_hit_dict.keys(), flatten(
-                                                                    subjhits.values()))) / current == strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
+                                                                    subjhits.values()))) / current <= strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
                                                                 strains = [key.split("|")[0] for key in
                                                                            blast_hit_dict.keys()]
                                                                 if query_top_hit(blast_hit_dict.keys(), strains,
@@ -317,7 +317,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     mainlogfile.write(
         "{0} core clusters and {1} noncore clusters identified...\n".format(len(core.keys()), len(noncore.keys())))
     mainlogfile.write("Creating ring chart in R...\n")
-    sp.call(["Rscript", "{0}/PlotRingChart.R".format(dirname), str(len(core.keys())), str(len(noncore.keys()))])
+    #sp.call(["Rscript", "{0}/PlotRingChart.R".format(dirname), str(len(core.keys())), str(len(noncore.keys()))])
 
     ##### Loop through noncore clusters from size (total -1) to 2. #####
     for size in range(start, 1, -1):

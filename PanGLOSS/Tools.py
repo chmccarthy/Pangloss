@@ -107,10 +107,13 @@ def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
     """
     count = 0
     for li in list_of_lists:
-        if not filter(lambda x: x.split("|")[0] == gene_id.split("|")[0], li)[0] == gene_id:
-            pass
+        if filter(lambda x: x.split("|")[0] == gene_id.split("|")[0], li):
+            if not filter(lambda x: x.split("|")[0] == gene_id.split("|")[0], li)[0] == gene_id:
+                pass
+            else:
+                count = count + 1
         else:
-            count = count + 1
+            pass
     print (count / size), strain_cutoff
     if (count / size) >= strain_cutoff:
         top = True
