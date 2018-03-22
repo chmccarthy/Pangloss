@@ -111,6 +111,7 @@ def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
             pass
         else:
             count = count + 1
+    print (count / size), strain_cutoff
     if (count / size) >= strain_cutoff:
         top = True
     else:
@@ -148,6 +149,7 @@ def query_top_hit(cluster_members, strain_list, blast_hits, size, strain_cutoff)
                 pass
             else:
                 count = count + 1
+    print (count / size), strain_cutoff
     if (count / size) >= strain_cutoff:
         top = True
     else:
