@@ -35,7 +35,7 @@ Maynooth University in 2017-2018 (Charley.McCarthy@nuim.ie).
 """
 
 from __future__ import division
-import argparse
+
 import cStringIO
 import multiprocessing as mp
 import os
@@ -44,10 +44,12 @@ import shutil
 import subprocess as sp
 import sys
 import time
-from Bio import SearchIO, SeqIO
 from collections import OrderedDict as od
 from csv import reader
 from glob import glob
+
+from Bio import SearchIO, SeqIO
+
 from PanGLOSS.Tools import pairwise, get_gene_lengths, exoneratecmdline
 
 logfile = open("PanGuess.log", "a", 0)
@@ -247,17 +249,17 @@ def call_overlap(a, l):
 	Check overlapping co-ordinates for calls via exonerate vs. GeneMark-ES.
 	"""
     for b in map(lambda x: (int(x[1]), int(x[2])), l):
-        if (int(a[0]) <= b[0] <= int(a[1])):
+        if int(a[0]) <= b[0] <= int(a[1]):
             return True
-        elif (int(a[0]) <= b[1] <= int(a[1])):
+        elif int(a[0]) <= b[1] <= int(a[1]):
             return True
         else:
             for coord in a:
-                if (b[0] <= int(coord) <= b[1]):
+                if b[0] <= int(coord) <= b[1]:
                     return True
-                elif (b[0] <= int(coord) - 20 <= b[1]):
+                elif b[0] <= int(coord) - 20 <= b[1]:
                     return True
-                elif (b[0] <= int(coord) + 20 <= b[1]):
+                elif b[0] <= int(coord) + 20 <= b[1]:
                     return True
 
 
@@ -300,13 +302,13 @@ def strip_duplicates(gtf):
             elif int(line[3]) == int(next_line[3]):
                 # If gene has identical end (does this happen?).
                 pass
-            elif (int(next_line[2]) <= int(line[2]) <= int(next_line[3])):
+            elif int(next_line[2]) <= int(line[2]) <= int(next_line[3]):
                 # If gene starts within next gene.
                 pass
-            elif (int(next_line[2]) <= int(line[3]) <= int(next_line[3])):
+            elif int(next_line[2]) <= int(line[3]) <= int(next_line[3]):
                 # If gene ends within next gene.
                 pass
-            elif (int(next_line[3]) <= int(line[3])):
+            elif int(next_line[3]) <= int(line[3]):
                 # If gene overlaps with entirety of next gene.
                 pass
             else:
@@ -387,7 +389,7 @@ def transdecoder_gtf_to_attributes(feature_file, tag):
                 locs = (row[3], row[4])
             if row[2] == "exon":
                 exon_count = exon_count + 1
-            if next_row == []:
+            if not next_row:
                 annotations = "TransDecoder={0};IS=False;Introns={1}".format(gene_id, exon_count - 1)
                 attributes.append([contig_id, gene_id, min(locs), max(locs),
                                    annotations, tag])

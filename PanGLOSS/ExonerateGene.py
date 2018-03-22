@@ -9,6 +9,7 @@ class ExonerateGene:
     """
     An object that stores the attributes of a gene called via exonerate.
     """
+
     def __init__(self, string):
         """
         Define the attributes of a ExonerateGene object.
@@ -54,7 +55,7 @@ class ExonerateGene:
             for hit in result:
                 locs = hit[0].hit_range
                 gene_id = "{0}_{1}".format(hit.id, "_".join(str(loc) for
-                                           loc in locs))
+                                                            loc in locs))
                 self.locs = locs
                 self.id = gene_id
 

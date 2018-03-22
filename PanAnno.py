@@ -1,4 +1,3 @@
-import re
 import subprocess as sp
 from csv import reader
 core = {}
@@ -77,7 +76,7 @@ def get_genome_enrichments(strain, states, annotations, go_terms, go_slim):
 				slim.write(line)
 	with open("{0}_gained_popl.txt".format(strain), "w") as gained:
 		for cluster in states[strain]:
-			if cluster[1] == True:
+			if cluster[1]:
 					member = filter(lambda x: x.startswith(strain), noncore[cluster[0]])[0]
 					if member in annotations.keys():
 						if annotations[member]["GO"]:
