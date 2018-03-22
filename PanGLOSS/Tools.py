@@ -15,7 +15,6 @@ from itertools import chain, izip_longest, tee
 from Bio import SeqIO
 from ExonerateGene import ExonerateGene
 
-
 def pairwise(iterable):
     """
     Enable pairwise iteration.
