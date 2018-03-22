@@ -38,7 +38,6 @@ class ExonerateGene:
                 contig_id = hit.id
                 called = []
                 introns = len(hit[0].hit_inter_ranges)
-                score = hit[0].score
                 for fragment in hit[0].fragments:
                     for record in fragment.aln._records:
                         if record.name == "aligned hit sequence":

@@ -85,7 +85,7 @@ def get_genome_enrichments(strain, states, annotations, go_terms, go_slim):
 	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "{0}_gained_popl.txt".format(strain), "{0}_population.txt".format(strain), "{0}_slim.txt".format(strain), "--outfile={0}_enrichment.tsv".format(strain)])
 
 
-def get_complement_enrichments(core, noncore, annotations, strains, go_terms, go_slim):
+def get_complement_enrichments(core, noncore, annotations, go_terms, go_slim):
 	with open("pangenome_associations.txt", "w") as passocs, open("pangenome_population.txt", "w") as panpopl:
 		print "Getting association and background population for pangenome..."
 		for gene in annotations.keys():
@@ -123,11 +123,7 @@ def main():
 	print "Loaded annotations.\nLoading TNT output..."
 	#cluster_states = generate_mapping_dict("tnt.output")
 	print "Loaded TNT output."
-	strains = get_strains(core)
-	#for strain in strains:
-	#	print "Getting GO enrichment for {0}...".format(strain)
-	#	get_genome_enrichments(strain, cluster_states, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_generic.obo")
-	get_complement_enrichments(core, noncore, anno_dict, strains, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_generic.obo")
+	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_generic.obo")
 
 
 if __name__ == "__main__":

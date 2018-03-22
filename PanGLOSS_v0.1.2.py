@@ -17,6 +17,7 @@ Requirements:
     - R (>3.0)
         - Cairo (>1.5)
         - UpSetR (>1.3)
+    - MacOS (tested on MacOS 10.12) or Linux (tested on SLES 11).
 
 Recent changes:
 
@@ -49,20 +50,19 @@ Maynooth University in 2017-2018 (Charley.McCarthy@nuim.ie).
 """
 
 from __future__ import division
-import argparse
+
 import datetime
-import json
-import os
 import multiprocessing as mp
-import shutil
+import os
 import subprocess as sp
 import time
-from Bio import SearchIO, SeqIO
 from csv import reader
 from glob import glob
-from PanGLOSS.Tools import called_ratio, flatten, grouper, pairwise, seq_ratio
-from PanGLOSS.Tools import subject_top_hit, query_top_hit, exonerate_first_hits
-from PanGLOSS.Tools import gene_within, gene_overlap, merge_clusters
+
+from Bio import SearchIO, SeqIO
+from PanGLOSS.Tools import flatten, grouper, seq_ratio
+from PanGLOSS.Tools import merge_clusters
+from PanGLOSS.Tools import subject_top_hit, query_top_hit
 
 
 ##### Here is the function to handle individual BLASTp searches in parallel_BLAST. #####

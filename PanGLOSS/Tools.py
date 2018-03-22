@@ -13,7 +13,7 @@ from difflib import SequenceMatcher
 from itertools import chain, izip_longest, tee
 
 from Bio import SeqIO
-from PanGLOSS.ExonerateGene import ExonerateGene
+from ExonerateGene import ExonerateGene
 
 
 def pairwise(iterable):
