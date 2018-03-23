@@ -205,7 +205,6 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
                             if hit.split("|")[0] not in found:  # Ignore if missing strain has already been "added" to cluster.
                                 if seq_ratio(seqindex, key,
                                              hit) >= 0.6:  # If the sequence length ratio (see seq_ratio function) between hit and query is greater than or = 60%.
-                                    print key
                                     if len(filter(lambda x: x == hit, flatten(
                                             blast_hit_dict.values()))) / current <= strain_cutoff:  # If that hit is found in the BLASTp results of every member of the query cluster.
                                         if subject_top_hit(blast_hit_dict.values(), hit, current,
@@ -273,7 +272,7 @@ def run_PanOCT(blast_results, fasta_handle, attributes, tags):
              "-g", attributes, "-P", fasta_handle])
 
 
-def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, strain_cutoff=1):
+def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, strain_cutoff=1.0):
     """
     Tidy up non-core clusters found by PanOCT.
 
@@ -312,7 +311,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             core[row[0]] = row[1:]  # Populating our core dict.
             if total == 0:
                 total = len(row) - 1  # Total number of genomes.
-                start = total - 2  # Max noncore cluster size.
+                start = total - 6  # Max noncore cluster size.
 
     mainlogfile.write(
         "{0} core clusters and {1} noncore clusters identified...\n".format(len(core.keys()), len(noncore.keys())))
@@ -353,7 +352,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
                             del noncore[cluster], noncore[candidate]
                             filled_count = filled_count + 2
                     else:
-                        if merge_size > total:
+                        if merge_size < total:
                             mainlogfile.write("{0} (size: {1}) has a homologous cluster: {2} (size: {3})\n".format
                                               (cluster, len(filter(lambda x: x != "----------", noncore[cluster])),
                                                candidate, len(filter(lambda x: x != "----------", noncore[candidate]))))
@@ -395,7 +394,7 @@ def main():
     """
     Main software workflow.
     """
-    cluster_clean("matchtable.txt", "panoct_db.fasta", split_by=cores)
+    cluster_clean("matchtable.txt", "panoct_db.fasta", split_by=cores, strain_cutoff=0.8)
 
 
 if __name__ == "__main__":

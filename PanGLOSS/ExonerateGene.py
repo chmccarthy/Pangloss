@@ -32,6 +32,9 @@ class ExonerateGene:
         a second parse using exonerate-vulgar to determine co-ordinates for
         genes.
         """
+        contig_id = ""
+        introns = 0
+        called = []
         for result in SearchIO.parse(string, "exonerate-text"):
             ref = result.id
             stop = False

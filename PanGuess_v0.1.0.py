@@ -380,6 +380,7 @@ def transdecoder_gtf_to_attributes(feature_file, tag):
 	"""
     attributes = []  # List for holding converted attribute info.
     exon_count = 0
+    contig_id = ""
     gtf = reader(open(feature_file), delimiter="\t")
     for row, next_row in pairwise(gtf):
         if len(row) == 9:
