@@ -113,13 +113,17 @@ def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
                 count = count + 1
         else:
             pass
-    print (count / size), strain_cutoff
     if (count / size) >= strain_cutoff:
         top = True
     else:
         top = False
     return top
 
+
+def query_hit_dict(members, blast_results, min_id_cutoff):
+    blast_hit_dict = {member: [hit.id for hit in blast_results[member].hits if hit.hsps[0].ident_pct
+                               >= float(min_id_cutoff)]for member in members if member in blast_results}
+    return blast_hit_dict
 
 def query_top_hit(cluster_members, strain_list, blast_hits, size, strain_cutoff):
     """
