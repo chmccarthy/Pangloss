@@ -149,6 +149,13 @@ def query_top_hit(cluster_members, strain_list, blast_hits, size, strain_cutoff)
     cluster. If so, return the default True, if not (or if a strain is missing from the
     subject cluster's BLAST results) return False. In this way, we can determine
     reciprocality between query and subject clusters in terms of BLASTp hits. Crucial for GapFinder!
+
+    Arguments:
+        cluster_members = List of proteins in query cluster.
+        strain_list = List of strains in query cluster.
+        blast_hits = BLAST hit dictionary of subject cluster.
+        size =
+
     """
     count = 0
     if any(isinstance(el, list) for el in blast_hits):
