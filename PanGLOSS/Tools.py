@@ -108,11 +108,11 @@ def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
     for li in list_of_lists:
         if filter(lambda x: x.split("|")[0] == gene_id.split("|")[0], li):
             if not filter(lambda x: x.split("|")[0] == gene_id.split("|")[0], li)[0] == gene_id:
-                pass
+                pass  # Hit is not top hit for that strain.
             else:
                 count = count + 1
         else:
-            pass
+            pass  # Hit's source strain is not represented in member protein's results.
     if count / size >= strain_cutoff:
         top = True
     else:
@@ -121,11 +121,17 @@ def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
 
 
 def query_hit_dict(members, blast_results, min_id_cutoff):
+    """
+    Generate dictionary of all hits for all members of a query cluster >min_id_cutoff identity.
+    """
     blast_hit_dict = {member: [hit.id for hit in blast_results[member].hits if hit.hsps[0].ident_pct
-                               >= float(min_id_cutoff)]for member in members if member in blast_results}
+                               >= float(min_id_cutoff)] for member in members if member in blast_results}
     return blast_hit_dict
 
 def subject_hit_dict(subject_cluster, blast_results, min_id_cutoff):
+    """
+    Generate dictionary of all hits for all members of a subject cluster >min_id_cutoff identity.
+    """
     subjhits = {subj: [hit.id for hit in blast_results[subj].hits if
                 hit.hsps[0].ident_pct >= float(min_id_cutoff)] for subj in
                 subject_cluster if subj in blast_results}
