@@ -330,10 +330,10 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             mainlogfile.write("All-vs.-all BLAST of {0} proteins...\n".format(len(to_blast)))
 
             ##### Run parallel_BLAST. #####
-            #results = parallel_BLAST(to_blast, db, split_by, "ClusterBLAST_{0}.fasta".format(str(size)))
-            #outfast = open("ClusterBLAST_{0}.fasta".format(str(size)), "w")
-            #for seq in to_blast:
-            #    outfast.write(">{0}\n{1}\n".format(db[seq].id, db[seq].seq))
+            results = parallel_BLAST(to_blast, db, split_by, "ClusterBLAST_{0}.fasta".format(str(size)))
+            outfast = open("ClusterBLAST_{0}.fasta".format(str(size)), "w")
+            for seq in to_blast:
+                outfast.write(">{0}\n{1}\n".format(db[seq].id, db[seq].seq))
             results = SearchIO.index("ClusterBLAST_{0}.fasta.results".format(str(size)), "blast-tab",
                                      fields=blast_fields)
             mainlogfile.write("Finding potential homology gaps in clusters of size {0}...\n".format(str(size)))
@@ -384,13 +384,13 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
                 "At cluster size (n = {0}): merged {1} homologous clusters into {2} noncore lusters.\n".format(size,
                                                                                                                merged_count,
                                                                                                                merged_count / 2))
-        #if not os.path.isdir("{0}/sub_BLASTs".format(os.getcwd())):
-        #    os.makedirs("{0}/sub_BLASTs/faa".format(os.getcwd()))
-        #    os.makedirs("{0}/sub_BLASTs/results".format(os.getcwd()))
-        #for sub_faa in glob("ClusterBLAST_*.fasta"):
-        #    os.rename(sub_faa, "{0}/sub_BLASTs/faa/{1}".format(os.getcwd(), sub_faa))
-        #for sub_results in glob("*.results"):
-        #    os.rename(sub_results, "{0}/sub_BLASTs/results/{1}".format(os.getcwd(), sub_results))
+        if not os.path.isdir("{0}/sub_BLASTs".format(os.getcwd())):
+            os.makedirs("{0}/sub_BLASTs/faa".format(os.getcwd()))
+            os.makedirs("{0}/sub_BLASTs/results".format(os.getcwd()))
+        for sub_faa in glob("ClusterBLAST_*.fasta"):
+            os.rename(sub_faa, "{0}/sub_BLASTs/faa/{1}".format(os.getcwd(), sub_faa))
+        for sub_results in glob("*.results"):
+            os.rename(sub_results, "{0}/sub_BLASTs/results/{1}".format(os.getcwd(), sub_results))
 
     with open("new_matchtable.txt", "w") as outmatch:
         for cluster in core.keys():
