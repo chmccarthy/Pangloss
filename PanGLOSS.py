@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-PanGLOSS v0.1.2: PanGenomic Largescale Orthology & microSynteny Search.
+PanGLOSS v0.1.5: PanGenomic Largescale Orthology & microSynteny Search.
 
 Python software (with some future Cython and R components) for pangenomic
 analysis of eukaryotes. In something of a provisional state at the moment.
