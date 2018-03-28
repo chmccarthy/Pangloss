@@ -43,7 +43,7 @@ def generate_superalignment(panoct_clusters, fasta_handle):
 
 
 def main():
-    generate_superalignment("matchtable.txt", "panoct_db.fasta")
+    generate_superalignment("new_matchtable.txt", "panoct_db.fasta")
 
 if __name__ == "__main__":
     main()

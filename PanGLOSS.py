@@ -298,24 +298,6 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
                 total = len(row) - 1  # Total number of genomes.
                 start = total - 1  # Max noncore cluster size.
 
-    sizes_arg = []
-    counts_arg = []
-    n_sizes = Counter([len(filter(lambda x: x != "----------", noncore[cluster])) for cluster in noncore.keys()])
-    for n_size in n_sizes.keys():
-        if int(n_size) < 10:
-            sizes_arg.append("n0" + str(n_size))
-        else:
-            sizes_arg.append("n" + str(n_size))
-        counts_arg.append(str(n_sizes[n_size]))
-
-    core_count = len(core.keys()) + len(softcore.keys())
-    sizes_arg.append("n" + str(total))
-    counts_arg.append(str(core_count))
-
-    ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(len(core.keys())), str(len(softcore.keys())), str(len(noncore.keys())), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
-    sp.check_call(ring_plot)
-    mainlogfile.write("Creating ring chart in R...\n")
-
     mainlogfile.write(
         "{0} core clusters and {1} noncore clusters identified...\n".format(len(core.keys()), len(noncore.keys())))
 
@@ -334,8 +316,8 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             outfast = open("ClusterBLAST_{0}.fasta".format(str(size)), "w")
             for seq in to_blast:
                 outfast.write(">{0}\n{1}\n".format(db[seq].id, db[seq].seq))
-            results = SearchIO.index("ClusterBLAST_{0}.fasta.results".format(str(size)), "blast-tab",
-                                     fields=blast_fields)
+            #results = SearchIO.index("ClusterBLAST_{0}.fasta.results".format(str(size)), "blast-tab",
+            #                         fields=blast_fields)
             mainlogfile.write("Finding potential homology gaps in clusters of size {0}...\n".format(str(size)))
 
             ##### Run gap_finder. #####
@@ -414,14 +396,14 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     counts_arg = []
     n_sizes = Counter([len(filter(lambda x: x != "----------", noncore[cluster])) for cluster in noncore.keys()])
     for n_size in n_sizes.keys():
-        if n_size > 9:
+        if n_size < 10:
             sizes_arg.append("n0" + str(n_size))
         else:
             sizes_arg.append("n" + str(n_size))
         counts_arg.append(str(n_sizes[n_size]))
 
     core_count = len(core.keys()) + len(softcore.keys())
-    sizes_arg.append(str(total))
+    sizes_arg.append("n" + str(total))
     counts_arg.append(str(core_count))
 
     ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(len(core.keys())), str(len(softcore.keys())), str(len(noncore.keys())), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
