@@ -304,7 +304,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     for iteration in range(0, iterations, 1):
         mainlogfile.write("Running iteration {0}...\n".format(iteration + 1))
         ##### Loop through noncore clusters from size (total -1) to 2. #####
-        for size in range(start, 1, -1):
+        for size in range(start, 0, -1):
             filled_count = 0
             merged_count = 0
             ##### Get list of (remaining) noncore protein IDs. #####
@@ -322,7 +322,6 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
 
             ##### Run gap_finder. #####
             gaps = gap_finder(results, db, noncore, total, size, min_id_cutoff, strain_cutoff)
-
 
             ##### Identify clusters that need to be merged and move merged clusters to appropriate dictionary. #####
             for cluster in gaps:
@@ -406,14 +405,18 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     sizes_arg.append("n" + str(total))
     counts_arg.append(str(core_count))
 
-    ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(len(core.keys())), str(len(softcore.keys())), str(len(noncore.keys())), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
+    core_proteome = len(flatten(core.values())
+    softcore_proteome = len(flatten(softcore.values())
+    noncore_proteome = len(filter(lambda x: x != "----------", flatten(noncore.values()))
+
+    ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(core_proteome), str(softcore_proteome), str(noncore_proteome), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
     try:
         sp.check_call(ring_plot)
         mainlogfile.write("Creating ring chart in R...\n")
     except sp.CalledProcessError as r_exec:
         if r_exec.returncode != 0:
             mainlogfile.write("Unable to run R script PlotRingChart.R, attempted command below:\n")
-            mainlogfile.write(" ".join(ring_plot) + "\n")
+    mainlogfile.write(" ".join(ring_plot) + "\n")
 
     upset_plot = ["Rscript", "PlotUsingUpSet.R"]
     try:
@@ -421,7 +424,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
         mainlogfile.write("Creating upset plot of accessory clusters in R...\n")
     except sp.CalledProcessError as r_exec:
         if r_exec.returncode != 0:
-            mainlogfile.write("Unable to run R script PlotUsingUpSet.R.\n")
+            mainlogfile.write("Unable to run R script PlotUsingUpSet.R. Run script manually.\n")
 
     mainlogfile.write("Remaining noncore clusters after sub_BLASTing: {0}\n".format(len(noncore.keys())))
     mainlogfile.write(
