@@ -13,17 +13,28 @@ PVM gene prediction techniques.
 Requirements:
     - Python (written for 2.7.x)
         - BioPython (1.70)
+
     - PanOCT (>3.23)
+
     - R (>3.0)
         - Cairo (>1.5)
         - UpSetR (>1.3)
-    - MacOS (tested on MacOS 10.12) or Linux (tested on SLES 11).
+        - ggplot2
+        - ggrepel
+
+    - MacOS (tested on MacOS >10.12) or Linux (tested on SLES 11).
 
 Recent changes:
 
+    v0.1.6 (March 2018)
+    -
+
+
     v0.1.5 (March 2018)
     - Improved cluster merging.
+    - Made gap_finder code MUCH easier to read.
     - Implemented cluster top hit reciprocality option (default 1.0).
+    - Integrated R scripts into pipeline.
 
     v0.1.4 (March 2018)
     - Implementing full cluster merging (as opposed to n-1 + 1 merging).
@@ -37,14 +48,13 @@ Recent changes:
     - Made parallel_BLAST code easier to read.
 
     v0.1.1 (Winter 2017)
-    - Completely rewritten to link in with PanGuess gene prediction pipeline.
+    - Completely rewritten to integrate with PanGuess gene prediction pipeline.
 
     v0.1.0 (Autumn 2017)
     - Initial test version based on GFF files taken from NCBI, AUGUSTUS, &c.
 
 To-do:
 
-    - Integrate functions from PanGuess into PanGLOSS.
     - Improve CLI.
     - Write replacement orthology search.
     - Convert some of the more maths-y parts to Cython if feasible.
@@ -247,6 +257,10 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
     return homologs
 
 
+def paralog_finder():
+    return
+
+
 def run_PanOCT(blast_results, fasta_handle, attributes, tags):
     """
     Wrapper for running PanOCT within PanGLOSS.
@@ -312,12 +326,12 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             mainlogfile.write("All-vs.-all BLAST of {0} proteins...\n".format(len(to_blast)))
 
             ##### Run parallel_BLAST. #####
-            results = parallel_BLAST(to_blast, db, split_by, "ClusterBLAST_{0}.fasta".format(str(size)))
-            outfast = open("ClusterBLAST_{0}.fasta".format(str(size)), "w")
-            for seq in to_blast:
-                outfast.write(">{0}\n{1}\n".format(db[seq].id, db[seq].seq))
-            #results = SearchIO.index("ClusterBLAST_{0}.fasta.results".format(str(size)), "blast-tab",
-            #                         fields=blast_fields)
+            #results = parallel_BLAST(to_blast, db, split_by, "ClusterBLAST_{0}.fasta".format(str(size)))
+            #outfast = open("ClusterBLAST_{0}.fasta".format(str(size)), "w")
+            #for seq in to_blast:
+            #    outfast.write(">{0}\n{1}\n".format(db[seq].id, db[seq].seq))
+            results = SearchIO.index("ClusterBLAST_{0}.fasta.results".format(str(size)), "blast-tab",
+                                     fields=blast_fields)
             mainlogfile.write("Finding potential homology gaps in clusters of size {0}...\n".format(str(size)))
 
             ##### Run gap_finder. #####
@@ -393,15 +407,21 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
 
     sizes_arg = []
     counts_arg = []
-    n_sizes = Counter([len(filter(lambda x: x != "----------", noncore[cluster])) for cluster in noncore.keys()])
+    n_sizes = {}
+    for cl_size in range(1, total, 1):
+        n_proteins = [protein for protein in filter(lambda x: x != "----------", noncore[cluster])
+                      for cluster in noncore.keys() if
+                      len(filter(lambda x: x != "----------", noncore[cluster])) == cl_size]
+        n_sizes[cl_size] = len(n_proteins)
+
     for n_size in n_sizes.keys():
-        if n_size < 10:
+        if int(n_size) < 10:
             sizes_arg.append("n0" + str(n_size))
         else:
             sizes_arg.append("n" + str(n_size))
         counts_arg.append(str(n_sizes[n_size]))
 
-    core_count = len(core.keys()) + len(softcore.keys())
+    core_count = len(flatten(core.values())) + len(flatten(softcore.keys()))
     sizes_arg.append("n" + str(total))
     counts_arg.append(str(core_count))
 

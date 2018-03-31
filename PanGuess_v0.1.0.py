@@ -12,15 +12,20 @@ using only genomic data and a reference protein set.
 Requirements:
 	- Python (written for 2.7.x)
 		- BioPython (1.70)
+
 	- Exonerate (>2.2)
+
 	- GeneMark-ES (>4.30)
+
 	- TransDecoder (>5.0.2)
-	- MacOS (tested on MacOS 10.12) or Linux (tested on SLES 11)
+
+	- MacOS (tested on MacOS >10.12) or Linux (tested on SLES 11)
 
 Recent changes:
 
 	v0.2.0 (March 2018)
 	- Defined ExonerateGene as class, moved some functions to Tools module.
+	- Better integrated codebase with PanGLOSS.
 	- Removed other old functions.
 
 	v0.1.0 (Winter 2017)
