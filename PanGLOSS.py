@@ -27,8 +27,8 @@ Requirements:
 Recent changes:
 
     v0.1.6 (March 2018)
-    -
-
+    - Added core:noncore paralogy finding (somewhat slow).
+    - Removed gap boolean from gap_finder, not necessary?
 
     v0.1.5 (March 2018)
     - Improved cluster merging.
@@ -202,92 +202,86 @@ def gap_finder(blast_results, seqindex, noncore, total, current, min_id_cutoff, 
     """
     homologs = {}
     for cluster in noncore.keys():  # Loop through non-core clusters.
-        print homologs
         found = []  # Default for strains "added" to cluster.
         members = filter(lambda x: x != "----------", noncore[cluster])  # Get actual cluster.
         if len(members) != current:
             pass  # Ignore clusters outside of the current size.
         else:  # If cluster size = current.
             query_cluster_length = len(members)
-            gap = False  # Default state of our cluster.
             blast_hit_dict = query_hit_dict(members, blast_results, min_id_cutoff)
-            for key in blast_hit_dict:  # Loop through each protein in the "query cluster".
-                if not gap:  # If no suitable homolog has been found.
-                    for hit in blast_hit_dict[key]:  # Loop through every hit from a given query cluster protein.
-                        strain_tag = hit.split("|")[0]
-                        if strain_tag not in [i.split("|")[0] for i in blast_hit_dict.keys()]:
-                            if strain_tag not in found:
-                                if seq_ratio(seqindex, key, hit) >= 0.6:
-                                    singlehitcount = len(filter(lambda x: x == hit, flatten(blast_hit_dict.values())))
-                                    if singlehitcount / query_cluster_length >= strain_cutoff:
-                                        if subject_top_hit(blast_hit_dict.values(), hit, query_cluster_length, strain_cutoff):
-                                            for subject_cluster in noncore.keys():
-                                                if hit in noncore[subject_cluster]:
-                                                    subject_cluster_length = len(filter(lambda x: x != "----------", noncore[subject_cluster]))
-                                                    if total >= query_cluster_length + subject_cluster_length:  # If the size of the subject cluster is < the number of missing strains from the query cluster.
-                                                        subjhits = subject_hit_dict(noncore[subject_cluster], blast_results, min_id_cutoff)
-                                                        subshitinquery = len(list(filter(lambda x: x in noncore[subject_cluster], set(flatten(blast_hit_dict.values())))))
-                                                        if subject_cluster_length > 1:  # If the subject cluster is not a singleton cluster.
-                                                            if subshitinquery / subject_cluster_length >= strain_cutoff:
-                                                                strains_in_subject = [i.split("|")[0] for i in filter(lambda x: x != "----------", noncore[subject_cluster])]  # Strains present in the subject cluster.
-                                                                if not filter(lambda x: x in strains_in_subject, [i.split("|")[0] for i in blast_hit_dict.keys()]):  # If all strains present in the subject cluster are missing from the query cluster.
-                                                                    reciphitcount = len(filter(lambda x: x in blast_hit_dict.keys(), set(flatten(subjhits.values()))))
-                                                                    if reciphitcount / query_cluster_length >= strain_cutoff:
-                                                                        strains_in_query = [key.split("|")[0] for key in blast_hit_dict.keys()]
-                                                                        if query_top_hit(blast_hit_dict.keys(), strains_in_query, subjhits.values(), subject_cluster_length, strain_cutoff):
-                                                                            for s in strains_in_subject:
-                                                                                found.append(s)
-                                                                            gap = True
-                                                                            if cluster in homologs.keys():  # Allow more than one cluster to be associated.
-                                                                                homologs[cluster].append(subject_cluster)
-                                                                            else:
-                                                                                homologs[cluster] = [subject_cluster]
-                                                        else:
-                                                            if subshitinquery / subject_cluster_length >= strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
-                                                                strains_in_query = [key.split("|")[0] for key in blast_hit_dict.keys()]
-                                                                if query_top_hit(blast_hit_dict.keys(), strains_in_query,
-                                                                                 subjhits.values(), query_cluster_length,
-                                                                                 strain_cutoff):
-                                                                    gap = True  # Suitable homolog has been found.
-                                                                    found.append(hit.split("|")[
-                                                                                     0])  # Shortcut: append hit ID substring because we're only looking at a singleton.
-                                                                    if cluster in homologs.keys():  # Allow more than one subject cluster to be associated to a query cluster.
-                                                                        homologs[cluster].append(subject_cluster)
-                                                                    else:
-                                                                        homologs[cluster] = [subject_cluster]
+            for key in blast_hit_dict.keys():  # Loop through each protein in the "query cluster".
+                for hit in blast_hit_dict[key]:  # Loop through every hit from a given query cluster protein.
+                    strain_tag = hit.split("|")[0]
+                    if strain_tag not in [i.split("|")[0] for i in blast_hit_dict.keys()]:
+                        if strain_tag not in found:
+                            if seq_ratio(seqindex, key, hit) >= 0.6:
+                                singlehitcount = len(filter(lambda x: x == hit, flatten(blast_hit_dict.values())))
+                                if singlehitcount / query_cluster_length >= strain_cutoff:
+                                    if subject_top_hit(blast_hit_dict.values(), hit, query_cluster_length, strain_cutoff):
+                                        for subject_cluster in noncore.keys():
+                                            if hit in noncore[subject_cluster]:
+                                                subject_cluster_length = len(filter(lambda x: x != "----------", noncore[subject_cluster]))
+                                                if total >= query_cluster_length + subject_cluster_length:  # If the size of the subject cluster is < the number of missing strains from the query cluster.
+                                                    subjhits = subject_hit_dict(noncore[subject_cluster], blast_results, min_id_cutoff)
+                                                    subshitinquery = len(filter(lambda x: x in noncore[subject_cluster], set(flatten(blast_hit_dict.values()))))
+                                                    if subject_cluster_length > 1:  # If the subject cluster is not a singleton cluster.
+                                                        if subshitinquery / subject_cluster_length >= strain_cutoff:
+                                                            strains_in_subject = [i.split("|")[0] for i in filter(lambda x: x != "----------", noncore[subject_cluster])]  # Strains present in the subject cluster.
+                                                            if not filter(lambda x: x in strains_in_subject, [i.split("|")[0] for i in blast_hit_dict.keys()]):  # If all strains present in the subject cluster are missing from the query cluster.
+                                                                reciphitcount = len(filter(lambda x: x in blast_hit_dict.keys(), set(flatten(subjhits.values()))))
+                                                                if reciphitcount / query_cluster_length >= strain_cutoff:
+                                                                    strains_in_query = [key.split("|")[0] for key in blast_hit_dict.keys()]
+                                                                    if query_top_hit(blast_hit_dict.keys(), strains_in_query, subjhits.values(), subject_cluster_length, strain_cutoff):
+                                                                        for s in strains_in_subject:
+                                                                            found.append(s)
+                                                                        if cluster in homologs.keys():  # Allow more than one cluster to be associated.
+                                                                            homologs[cluster].append(subject_cluster)
+                                                                        else:
+                                                                            homologs[cluster] = [subject_cluster]
+                                                    else:
+                                                        if subshitinquery / subject_cluster_length >= strain_cutoff:  # If every member of the query cluster is also a subject of the protein in the singleton subject cluster.
+                                                            strains_in_query = [key.split("|")[0] for key in blast_hit_dict.keys()]
+                                                            if query_top_hit(blast_hit_dict.keys(), strains_in_query,
+                                                                             subjhits.values(), query_cluster_length,
+                                                                             strain_cutoff):
+                                                                found.append(hit.split("|")[
+                                                                                 0])  # Shortcut: append hit ID substring because we're only looking at a singleton.
+                                                                if cluster in homologs.keys():  # Allow more than one subject cluster to be associated to a query cluster.
+                                                                    homologs[cluster].append(subject_cluster)
+                                                                else:
+                                                                    homologs[cluster] = [subject_cluster]
     return homologs
 
 
 def paralog_finder(blast_results, seqindex, core, softcore, noncore, strain_cutoff):
     paralogs = {}
-    for query_cluster in noncore.keys():
-        members = filter(lambda x: x != "----------", noncore[query_cluster])
+    for query_cluster in core.keys():
+        already_matched = []
+        members = core[query_cluster]
         strains_in_query = [member.split("|")[0] for member in members]
         query_cluster_length = len(members)
         member_dict = query_hit_dict(members, blast_results, 30)
-        is_paralog = False
-        for protein in member_dict:
-            is_paralog = False
-                for hit in member_dict[protein]:
-                    if hit.split("|")[0] in strains_in_query:
-                        if seq_ratio(seqindex, protein, hit) >= 0.6:
-                            singlehitcount = len(filter(lambda x: x == hit, flatten(member_dict.values())))
-                            if singlehitcount / query_cluster_length >= strain_cutoff:
-                                if hit in flatten(core.values()):
-                                    for subject_cluster in core.keys():
-                                        if hit in core[subject_cluster]:
-                                            strains_in_subject = [subject.split("|")[0] for subject in
-                                                              core[subject_cluster]]
-                                            subject_cluster_length = len(core[subject_cluster])
+        for protein in member_dict.keys():
+            for hit in member_dict[protein]:
+                if hit.split("|")[0] in strains_in_query:
+                    if seq_ratio(seqindex, protein, hit) >= 0.6:
+                        singlehitcount = len(filter(lambda x: x == hit, flatten(member_dict.values())))
+                        if singlehitcount / query_cluster_length >= strain_cutoff:
+                            if hit in flatten(noncore.values()):
+                                for subject_cluster in noncore.keys():
+                                    if hit in noncore[subject_cluster]:
+                                        if subject_cluster not in already_matched:
+                                            subject_members = filter(lambda x: x != "----------", noncore[subject_cluster])
+                                            strains_in_subject = [subject.split("|")[0] for subject in subject_members]
+                                            subject_cluster_length = len(subject_members)
                                             strain_match = len(set(set(strains_in_query) & set(strains_in_subject)))
-                                            if strain_match / query_cluster_length >= strain_cutoff:
-                                                subhitsinquery = len(list(filter(lambda x: x in core[subject_cluster],
-                                                                                set(flatten(member_dict.values())))))
+                                            if strain_match / subject_cluster_length >= strain_cutoff:
+                                                subhitsinquery = len(filter(lambda x: x in subject_members, set(flatten(member_dict.values()))))
                                                 if subhitsinquery / subject_cluster_length >= strain_cutoff:
-                                                    subj_dict = subject_hit_dict(core[subject_cluster], blast_results, 30)
+                                                    subj_dict = subject_hit_dict(subject_members, blast_results, 30)
                                                     reciphitcount = len(filter(lambda x: x in members, set(flatten(subj_dict.values()))))
                                                     if reciphitcount / query_cluster_length >= strain_cutoff:
-                                                        is_paralog = True
+                                                        already_matched.append(subject_cluster)
                                                         if query_cluster in paralogs.keys():
                                                             paralogs[query_cluster].append(subject_cluster)
                                                         else:
@@ -350,10 +344,11 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     mainlogfile.write(
         "{0} core clusters and {1} noncore clusters identified...\n".format(len(core.keys()), len(noncore.keys())))
 
+    ##### Run parallel_BLAST and gap finding for n iterations. #####
     for iteration in range(0, iterations, 1):
         mainlogfile.write("Running iteration {0}...\n".format(iteration + 1))
         ##### Loop through noncore clusters from size (total -1) to 2. #####
-        for size in range(3, 1, -1):
+        for size in range(start, 1, -1):
             filled_count = 0
             merged_count = 0
             ##### Get list of (remaining) noncore protein IDs. #####
@@ -424,7 +419,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             #    os.rename(sub_results, "{0}/sub_BLASTs/results/{1}".format(os.getcwd(), sub_results))
 
     paralogs = paralog_finder(full_blast, db, core, softcore, noncore, strain_cutoff)
-    mainlogfile.write("Identified {0} pangenome clusters with paralogous clusters...".format(len(paralogs.keys())))
+    mainlogfile.write("Identified {0} pangenome clusters that have paralogous clusters...".format(len(paralogs.keys())))
     paralog_to_core = 0
     for cluster in paralogs:
         if cluster in core.keys():
@@ -459,7 +454,6 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     counts_arg = []
     n_sizes = Counter([len(filter(lambda x: x != "----------", noncore[cluster])) for cluster in noncore.keys()])
 
-
     for n_size in n_sizes.keys():
         if int(n_size) < 10:
             sizes_arg.append("n0" + str(n_size))
@@ -492,7 +486,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
         if r_exec.returncode != 0:
             mainlogfile.write("Unable to run R script PlotUsingUpSet.R. Run script manually.\n")
 
-    mainlogfile.write("Remaining noncore clusters after sub_BLASTing: {0}\n".format(len(noncore.keys())))
+    mainlogfile.write("Remaining noncore clusters after PanGLOSS analysis: {0}\n".format(len(noncore.keys())))
     mainlogfile.write(
         "PanGLOSS analysis finished in {0} seconds. Thank you for choosing PanGLOSS, the friendly pangenome software.\n".format(
             time.time() - start_time))
@@ -516,6 +510,7 @@ if __name__ == "__main__":
     start_time = time.time()
     subblastlog = open("parallel_BLAST.log", "a", 0)  # Log for parallel_BLAST.
     subblastlog.write("\n=== Started PanGLOSS job at {0}. ===\n".format(str(datetime.datetime.now())))
+
     ##### Define custom columns for parallel_BLAST. #####
     blast_fields = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen',
                     'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore',
