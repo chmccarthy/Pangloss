@@ -128,9 +128,12 @@ def query_hit_dict(members, blast_results, min_id_cutoff):
                                >= float(min_id_cutoff)] for member in members if member in blast_results}
     return blast_hit_dict
 
+
 def subject_hit_dict(subject_cluster, blast_results, min_id_cutoff):
     """
     Generate dictionary of all hits for all members of a subject cluster >min_id_cutoff identity.
+
+    FTR I think this is almost identical in function to query_hit_dict.
     """
     subjhits = {subj: [hit.id for hit in blast_results[subj].hits if
                 hit.hsps[0].ident_pct >= float(min_id_cutoff)] for subj in
