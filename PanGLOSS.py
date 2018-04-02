@@ -470,7 +470,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     counts_arg.append(str(core_count))
 
     core_proteome = len(flatten(core.values()))
-    softcore_proteome = len(filter(lambda x: x != "----------", flatten(softcore.values()))
+    softcore_proteome = len(filter(lambda x: x != "----------", flatten(softcore.values())))
     noncore_proteome = len(filter(lambda x: x != "----------", flatten(noncore.values())))
 
     ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(core_proteome), str(softcore_proteome), str(noncore_proteome), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
