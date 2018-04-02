@@ -30,32 +30,6 @@ def generate_annotation_dict(ips_file):
 	return annotations_dict
 
 
-# def generate_mapping_dict(tnt_output):
-# 	node_match = re.compile(r"([ ]{3,4})[\S]")
-# 	char_match = re.compile(r"([ ]{6})[\S]")
-# 	states = {}
-# 	apo = False
-# 	current_node = ""
-# 	with open(tnt_output) as infile:
-# 		for line in infile.readlines():
-# 			if line.startswith("Tree 0 :"):
-# 				apo = True
-# 			if node_match.match(line) is not None:
-# 				current_node = line.lstrip().split(":")[0].strip()
-# 				states[current_node] = []
-# 			if apo:
-# 				if char_match.match(line) is not None:
-# 					if not line.lstrip().startswith("No "):
-# 						data = line.lstrip().split(":")
-# 						cluster = int(data[0].split(" ")[1]) + 1
-# 						if data[1].lstrip().strip() == "1 --> 0":
-# 							gain = False
-# 						elif data[1].lstrip().strip() == "0 --> 1":
-# 							gain = True
-# 						states[current_node].append((str(cluster), gain))
-# 	return states
-
-
 def get_strains(core):
 	key = core.keys()[0]
 	strains = [gene.split("|")[0] for gene in core[key]]
