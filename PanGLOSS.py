@@ -423,7 +423,9 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             #    os.rename(sub_results, "{0}/sub_BLASTs/results/{1}".format(os.getcwd(), sub_results))
 
     paralogs = paralog_finder(full_blast, db, core, softcore, noncore, strain_cutoff)
-    mainlogfile.write("Identified {0} pangenome clusters that have paralogous clusters...".format(len(paralogs)))
+    mainlogfile.write("Identified {0} pangenome clusters that have paralogous clusters...\n".format(len(paralogs)))
+    mainlogfile.write("Total identified paralogous clusters: {0}. Total unique paralogous"
+                      "clusters: {1}\n".format(len(flatten(paralogs.values())), len(set(flatten(paralogs.values())))))
     paralog_to_core = 0
     for cluster in paralogs:
         if cluster in core:
@@ -434,7 +436,10 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
                     softcore[hit] = noncore[hit]
                     del noncore[hit]
                     paralog_to_core = paralog_to_core + 1
-    mainlogfile.write("Identified {0} accessory clusters paralogous to core clusters.".format(paralog_to_core))
+                elif hit in softcore:
+                    mainlogfile.write("{0} has a paralogous accessory cluster {1} that has already"
+                                      "been reassigned to the softcore genome.".format(cluster, hit))
+    mainlogfile.write("Identified {0} accessory clusters paralogous to core clusters.\n".format(paralog_to_core))
 
     with open("new_matchtable.txt", "w") as outmatch:
         for cluster in core:
@@ -444,7 +449,18 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
         for cluster in noncore:
             outmatch.write("{0}\t{1}\n".format(cluster, "\t".join(noncore[cluster])))
 
-    with open("noncore_matchtable.txt", "w") as outnon:
+    with open("softcore_pam.txt", "w") as outsof:
+        for cluster in softcore:
+            pa = []
+            for el in softcore[cluster]:
+                if el == "----------":
+                    pa.append("0")
+                else:
+                    pa.append("1")
+            outsof.write("{0}\n".format("\t".join(pa)))
+
+
+    with open("noncore_pam.txt", "w") as outnon:
         for cluster in noncore:
             pa = []
             for el in noncore[cluster]:
@@ -473,6 +489,8 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     softcore_proteome = len(filter(lambda x: x != "----------", flatten(softcore.values())))
     noncore_proteome = len(filter(lambda x: x != "----------", flatten(noncore.values())))
 
+    mainlogfile.write("====")
+
     ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(core_proteome), str(softcore_proteome), str(noncore_proteome), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
     try:
         sp.check_call(ring_plot)
@@ -480,15 +498,23 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     except sp.CalledProcessError as r_exec:
         if r_exec.returncode != 0:
             mainlogfile.write("Unable to run R script PlotRingChart.R, attempted command below:\n")
-    mainlogfile.write(" ".join(ring_plot) + "\n")
+            mainlogfile.write(" ".join(ring_plot) + "\n")
 
-    upset_plot = ["Rscript", "PlotUsingUpSet.R"]
+    upset_plot = ["Rscript", "PlotUsingUpSet.R", "softcore_pam.txt", "softcore_upset.eps"]
     try:
         sp.check_call(upset_plot)
-        mainlogfile.write("Creating upset plot of accessory clusters in R...\n")
+        mainlogfile.write("Creating upset plot of softcore clusters in R...\n")
+        upset_plot = ["Rscript", "PlotUsingUpSet.R", "noncore_pam.txt", "noncore_upset.eps"]
+        try:
+            sp.check_call(upset_plot)
+        except sp.CalledProcessError as r_exec:
+            if r_exec.returncode != 0:
+                mainlogfile.write("Unable to run R script PlotUsingUpSet.R. Run command manually:\n")
+                mainlogfile.write(" ".join(upset_plot) + "\n")
     except sp.CalledProcessError as r_exec:
         if r_exec.returncode != 0:
-            mainlogfile.write("Unable to run R script PlotUsingUpSet.R. Run script manually.\n")
+            mainlogfile.write("Unable to run R script PlotUsingUpSet.R. Run command manually:\n")
+            mainlogfile.write(" ".join(upset_plot) + "\n")
 
     mainlogfile.write("Remaining noncore clusters after PanGLOSS analysis: {0}\n".format(len(noncore)))
     mainlogfile.write(
