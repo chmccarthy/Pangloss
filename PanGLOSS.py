@@ -449,6 +449,14 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
         for cluster in noncore:
             outmatch.write("{0}\t{1}\n".format(cluster, "\t".join(noncore[cluster])))
 
+    with open("new_softtable.txt", "w") as outsofmatch:
+        for cluster in softcore:
+            outsofmatch.write("{0}\t{1}\n".format(cluster, "\t".join(softcore[cluster])))
+
+    with open("new_nontable.txt", "w") as outnonmatch:
+        for cluster in noncore:
+            outnonmatch.write("{0}\t{1}\n".format(cluster, "\t".join(noncore[cluster])))
+
     with open("softcore_pam.txt", "w") as outsof:
         for cluster in softcore:
             pa = []
@@ -489,7 +497,9 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
     softcore_proteome = len(filter(lambda x: x != "----------", flatten(softcore.values())))
     noncore_proteome = len(filter(lambda x: x != "----------", flatten(noncore.values())))
 
-    mainlogfile.write("====")
+    mainlogfile.write("====Core: {0} clusters, {1} proteins."
+                      "Softcore: {2} clusters, {3} proteins."
+                      "Accessory: {4} clusters, {5} proteins.\n====".format(core.keys(), core_proteome, softcore.keys(), softcore_proteome, noncore.keys(), noncore_proteome))
 
     ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(core_proteome), str(softcore_proteome), str(noncore_proteome), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
     try:
