@@ -1,0 +1,60 @@
+GO:1901566	BP	p	organonitrogen compound biosynthetic process	0/3840	1051/54457	4	0.0
+GO:0043603	BP	p	cellular amide metabolic process	0/3840	1051/54457	4	0.0
+GO:0006412	BP	p	translation	0/3840	1051/54457	7	0.0
+GO:0043043	BP	p	peptide biosynthetic process	0/3840	1051/54457	6	0.0
+GO:0006518	BP	p	peptide metabolic process	0/3840	1051/54457	5	0.0
+GO:0043604	BP	p	amide biosynthetic process	0/3840	1051/54457	5	0.0
+GO:0034641	BP	p	cellular nitrogen compound metabolic process	192/3840	5594/54457	3	0.0
+GO:0016192	BP	p	vesicle-mediated transport	0/3840	517/54457	4	0.0
+GO:1901360	BP	p	organic cyclic compound metabolic process	192/3840	4543/54457	3	0.0
+GO:0046483	BP	p	heterocycle metabolic process	192/3840	4543/54457	3	0.0
+GO:0006139	BP	p	nucleobase-containing compound metabolic process	192/3840	4543/54457	4	0.0
+GO:0006725	BP	p	cellular aromatic compound metabolic process	192/3840	4543/54457	3	0.0
+GO:0090304	BP	p	nucleic acid metabolic process	192/3840	4543/54457	5	0.0
+GO:0016043	BP	p	cellular component organization	0/3840	492/54457	2	0.0
+GO:0006996	BP	p	organelle organization	0/3840	492/54457	3	0.0
+GO:0006259	BP	p	DNA metabolic process	23/3840	1093/54457	6	0.0
+GO:0044281	BP	p	small molecule metabolic process	27/3840	1181/54457	2	0.0
+GO:0043436	BP	p	oxoacid metabolic process	27/3840	1032/54457	4	0.0
+GO:0006520	BP	p	cellular amino acid metabolic process	27/3840	1032/54457	6	0.0
+GO:0006082	BP	p	organic acid metabolic process	27/3840	1032/54457	3	0.0
+GO:0019752	BP	p	carboxylic acid metabolic process	27/3840	1032/54457	5	0.0
+GO:0016070	BP	p	RNA metabolic process	169/3840	3474/54457	6	0.0
+GO:0006807	BP	p	nitrogen compound metabolic process	479/3840	8325/54457	2	0.0
+GO:0044237	BP	p	cellular metabolic process	479/3840	8301/54457	2	0.0
+GO:0044271	BP	p	cellular nitrogen compound biosynthetic process	153/3840	3089/54457	4	0.0
+GO:0009058	BP	p	biosynthetic process	153/3840	3089/54457	2	0.0
+GO:0009059	BP	p	macromolecule biosynthetic process	153/3840	3089/54457	4	0.0
+GO:1901576	BP	p	organic substance biosynthetic process	153/3840	3089/54457	3	0.0
+GO:0044249	BP	p	cellular biosynthetic process	153/3840	3089/54457	3	0.0
+GO:0034645	BP	p	cellular macromolecule biosynthetic process	153/3840	3089/54457	5	0.0
+GO:0007049	BP	p	cell cycle	0/3840	164/54457	2	0.0
+GO:0006766	BP	p	vitamin metabolic process	0/3840	161/54457	3	0.0
+GO:0007010	BP	p	cytoskeleton organization	0/3840	142/54457	4	0.002
+GO:0006950	BP	p	response to stress	47/3840	1105/54457	2	0.004
+GO:0043170	BP	p	macromolecule metabolic process	468/3840	7701/54457	3	0.012
+GO:0044260	BP	p	cellular macromolecule metabolic process	468/3840	7665/54457	4	0.03
+GO:0042254	BP	p	ribosome biogenesis	0/3840	107/54457	4	0.044
+GO:0022613	BP	p	ribonucleoprotein complex biogenesis	0/3840	107/54457	3	0.044
+GO:0044085	BP	p	cellular component biogenesis	0/3840	107/54457	2	0.044
+GO:1990904	CC	p	ribonucleoprotein complex	0/3840	1063/54457	2	0.0
+GO:0030529	CC	p	intracellular ribonucleoprotein complex	0/3840	1063/54457	3	0.0
+GO:0005840	CC	p	ribosome	0/3840	1063/54457	5	0.0
+GO:0044424	CC	p	intracellular part	321/3840	5504/54457	2	0.006
+GO:0043229	CC	p	intracellular organelle	321/3840	5480/54457	3	0.008
+GO:0005739	CC	p	mitochondrion	0/3840	119/54457	5	0.024
+GO:0030312	CC	p	external encapsulating structure	0/3840	93/54457	2	0.09
+GO:0003723	MF	p	RNA binding	0/3840	1140/54457	4	0.0
+GO:0005515	MF	p	protein binding	248/3840	5731/54457	2	0.0
+GO:0016779	MF	p	nucleotidyltransferase activity	5/3840	639/54457	4	0.0
+GO:0042578	MF	p	phosphoric ester hydrolase activity	0/3840	320/54457	4	0.0
+GO:0016791	MF	p	phosphatase activity	0/3840	320/54457	5	0.0
+GO:1901363	MF	p	heterocyclic compound binding	257/3840	5030/54457	2	0.0
+GO:0003676	MF	p	nucleic acid binding	257/3840	5030/54457	3	0.0
+GO:0097159	MF	p	organic cyclic compound binding	257/3840	5030/54457	2	0.0
+GO:0004386	MF	p	helicase activity	0/3840	207/54457	7	0.0
+GO:0016818	MF	p	hydrolase activity, acting on acid anhydrides, in phosphorus-containing anhydrides	9/3840	408/54457	4	0.0
+GO:0016817	MF	p	hydrolase activity, acting on acid anhydrides	9/3840	408/54457	3	0.0
+GO:0016462	MF	p	pyrophosphatase activity	9/3840	408/54457	5	0.0
+GO:0017111	MF	p	nucleoside-triphosphatase activity	9/3840	408/54457	6	0.0
+GO:0016874	MF	p	ligase activity	53/3840	1202/54457	2	0.008
