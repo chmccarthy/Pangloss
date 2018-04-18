@@ -22,12 +22,12 @@ def matchdict(matchtable, core=True):
 			dict[row[0]] = row[1:]
 	return dict
 
-phen = reader(open("AF293_phenogram.txt"), delimiter="\t")
+phen = reader(open("t.txt"), delimiter="\t")
 core = matchdict(reader(open("new_matchtable.txt"), delimiter="\t"))
 soft = matchdict(reader(open("new_softtable.txt"), delimiter="\t"), core=False)
 non = matchdict(reader(open("new_nontable.txt"), delimiter="\t"), core=False)
 
-with open("phen_input.txt", "w") as outfile:
+with open("phen_names.txt", "w") as outfile:
 	for row in phen:
 		if row[1] in flatten(core.values()):
 			col = "3"
@@ -35,5 +35,5 @@ with open("phen_input.txt", "w") as outfile:
 			col = "1"
 		elif row[1] in flatten(non.values()):
 			col = "2"
-		outfile.write("\t".join([row[0], row[2], row[3], col]))
+		outfile.write("\t".join([row[0], row[2], row[3], col, row[4]]))
 		outfile.write("\n")

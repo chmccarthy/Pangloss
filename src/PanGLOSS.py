@@ -292,6 +292,10 @@ def paralog_finder(blast_results, seqindex, core, softcore, noncore, strain_cuto
     return paralogs
 
 
+
+
+
+
 def run_PanOCT(blast_results, fasta_handle, attributes, tags):
     """
     Wrapper for running PanOCT within PanGLOSS.
