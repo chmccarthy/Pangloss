@@ -381,7 +381,7 @@ def run_PanOCT(blast_results, fasta_handle, attributes, tags):
              "-g", attributes, "-P", fasta_handle])
 
 
-def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, strain_cutoff=1.0, iterations=3):
+def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, strain_cutoff=1.0, iterations=1):
     """
     Tidy up non-core clusters found by PanOCT.
 
@@ -424,6 +424,7 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             core[row[0]] = row[1:]  # Populating our core dict.
             if total == 0:
                 total = len(row) - 1  # Total number of genomes.
+                print total
                 start = total - 1  # Max noncore cluster size.
 
     mainlogfile.write(
@@ -504,30 +505,33 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
             # for sub_results in glob("*.results"):
             #    os.rename(sub_results, "{0}/sub_BLASTs/results/{1}".format(os.getcwd(), sub_results))
 
-    paralogs, nc_paralogs = paralog_finder(full_blast, db, core, softcore, noncore, strain_cutoff)
-    mainlogfile.write("Identified {0} pangenome clusters that have conserved paralogous clusters...\n".format(len(paralogs)))
-    mainlogfile.write("Total identified paralogous clusters: {0}. Total unique paralogous"
-                      "clusters: {1}\n".format(len(flatten(paralogs.values())), len(set(flatten(paralogs.values())))))
+    #paralogs, nc_paralogs = paralog_finder(full_blast, db, core, softcore, noncore, strain_cutoff)
+    #mainlogfile.write("Identified {0} pangenome clusters that have conserved paralogous clusters...\n".format(len(paralogs)))
+    #mainlogfile.write("Total identified paralogous clusters: {0}. Total unique paralogous"
+    #                  "clusters: {1}\n".format(len(flatten(paralogs.values())), len(set(flatten(paralogs.values())))))
     paralog_to_core = 0
-    for cluster in paralogs:
-        if cluster in core:
-            for hit in paralogs[cluster]:
-                if hit in noncore:
-                    mainlogfile.write("{0} (size: {1}) has a paralogous accessory cluster: {2} (size: {3})\n".format(
-                        cluster, len(core[cluster]), hit, len(filter(lambda x: x != "----------", noncore[hit]))))
-                    softcore[hit] = noncore[hit]
-                    del noncore[hit]
-                    paralog_to_core = paralog_to_core + 1
-                elif hit in softcore:
-                    mainlogfile.write("{0} has a paralogous accessory cluster {1} that has already"
-                                      "been reassigned to the softcore genome.".format(cluster, hit))
-    mainlogfile.write("Identified {0} accessory clusters paralogous to core clusters.\n".format(paralog_to_core))
+    #for cluster in paralogs:
+    #    if cluster in core:
+    #        for hit in paralogs[cluster]:
+    #            if hit in noncore:
+    #                mainlogfile.write("{0} (size: {1}) has a paralogous accessory cluster: {2} (size: {3})\n".format(
+    #                    cluster, len(core[cluster]), hit, len(filter(lambda x: x != "----------", noncore[hit]))))
+    #                softcore[hit] = noncore[hit]
+    #                del noncore[hit]
+    #                paralog_to_core = paralog_to_core + 1
+    #            elif hit in softcore:
+    #                mainlogfile.write("{0} has a paralogous accessory cluster {1} that has already"
+    #                                  "been reassigned to the softcore genome.".format(cluster, hit))
+    #mainlogfile.write("Identified {0} accessory clusters paralogous to core clusters.\n".format(paralog_to_core))
 
-    for cluster in nc_paralogs:
-        if cluster in noncore:
-            unconserved_paralogs[cluster] = noncore[cluster]
+    #for cluster in nc_paralogs:
+    #    if cluster in noncore:
+    #        unconserved_paralogs[cluster] = noncore[cluster]
 
     para_in_acc, nc_in_acc = accessory_paralog_finder(full_blast, db, noncore, strain_cutoff)
+    for cluster in para_in_acc:
+        if cluster in noncore:
+            accessory_paralogs[cluster] = noncore[cluster]
 
 
     with open("new_matchtable.txt", "w") as outmatch:
