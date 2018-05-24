@@ -53,25 +53,25 @@ def get_genome_enrichments(strain, states, annotations, go_terms, go_slim):
 
 
 def get_complement_enrichments(core, noncore, annotations, go_terms, go_slim):
-	# with open("pangenome_associations.txt", "w") as passocs, open("pangenome_population.txt", "w") as panpopl:
-	# 	print "Getting association and background population for pangenome..."
-	# 	for gene in annotations:
-	# 		if annotations[gene]["GO"]:
-	# 			passocs.write("{0}\t{1}\n".format(gene, ";".join(annotations[gene]["GO"])))
-	# 			panpopl.write("{0}\n".format(gene))
-	# sp.call(["map_to_slim.py", "--association_file=pangenome_associations.txt", go_terms, go_slim], stdout=open("pangenome_slim_temp.txt", "w"))
-	# with open("pangenome_slim.txt", "w") as panslim:
-	# 	print "Tidying GO Slim file..."
-	# 	for line in open("pangenome_slim_temp.txt").readlines():
-	# 		if "|" in line:
-	# 			panslim.write(line)
-	# with open("core_population.txt", "w") as corepop:
-	# 	print "Getting core study population..."
-	# 	for cluster in core:
-	# 		for gene in core[cluster]:
-	# 			if gene in annotations:
-	# 				if annotations[gene]["GO"]:
-	# 					corepop.write("{0}\n".format(gene))
+	with open("pangenome_associations.txt", "w") as passocs, open("pangenome_population.txt", "w") as panpopl:
+		print "Getting association and background population for pangenome..."
+		for gene in annotations:
+			if annotations[gene]["GO"]:
+				passocs.write("{0}\t{1}\n".format(gene, ";".join(annotations[gene]["GO"])))
+				panpopl.write("{0}\n".format(gene))
+	sp.call(["map_to_slim.py", "--association_file=pangenome_associations.txt", go_terms, go_slim], stdout=open("pangenome_slim_temp.txt", "w"))
+	with open("pangenome_slim.txt", "w") as panslim:
+		print "Tidying GO Slim file..."
+		for line in open("pangenome_slim_temp.txt").readlines():
+			if "|" in line:
+				panslim.write(line)
+	with open("core_population.txt", "w") as corepop:
+		print "Getting core study population..."
+		for cluster in core:
+			for gene in core[cluster]:
+				if gene in annotations:
+					if annotations[gene]["GO"]:
+						corepop.write("{0}\n".format(gene))
 	# with open("softcore_population.txt", "w") as softpop:
 	# 	print "Getting core study population..."
 	# 	for cluster in softcore:
@@ -79,22 +79,22 @@ def get_complement_enrichments(core, noncore, annotations, go_terms, go_slim):
 	# 			if gene in annotations:
 	# 				if annotations[gene]["GO"]:
 	# 					softpop.write("{0}\n".format(gene))
-	with open("noncore_population.txt", "w") as noncorepop:
-		print "Getting noncore study population..."
-		for cluster in noncore:
-			for gene in noncore[cluster]:
-				if gene != "----------":
-					if gene in annotations:
-						if annotations[gene]["GO"]:
-							noncorepop.write("{0}\n".format(gene))
-	# sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "core_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=core_enrichment.tsv"])
+	#with open("noncore_population.txt", "w") as noncorepop:
+	#	print "Getting noncore study population..."
+	#	for cluster in noncore:
+	#		for gene in noncore[cluster]:
+	#			if gene != "----------":
+	#				if gene in annotations:
+	#					if annotations[gene]["GO"]:
+	#						noncorepop.write("{0}\n".format(gene))
+	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "core_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=core_enrichment.tsv"])
 	# sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "softcore_population.txt",
 	# 		 "pangenome_population.txt", "pangenome_slim.txt", "--outfile=softcore_enrichment.tsv"])
-	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "noncore_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=noncore_enrichment.tsv"])
+	#sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "noncore_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=noncore_enrichment.tsv"])
 
 
 def main():
-	with open("new_matchtable.txt") as infile:
+	with open("../matchtable.txt") as infile:
 		matchtable = reader(infile, delimiter="\t")
 		for row in matchtable:
 			if "----------" in row:
@@ -102,22 +102,22 @@ def main():
 			else:
 				core[row[0]] = row[1:]  # Populating our core dict
 
-	with open("new_softtable.txt") as infile:
-		matchtable = reader(infile, delimiter="\t")
-		for row in matchtable:
-			softcore[row[0]] = row[1:]  # Populating our core dict
+#	with open("new_softtable.txt") as infile:
+#		matchtable = reader(infile, delimiter="\t")
+#		for row in matchtable:
+#			softcore[row[0]] = row[1:]  # Populating our core dict
 
-	with open("new_nontable.txt") as infile:
-		matchtable = reader(infile, delimiter="\t")
-		for row in matchtable:
-			noncore[row[0]] = row[1:]  # Populating our core dict
+#	with open("new_nontable.txt") as infile:
+#		matchtable = reader(infile, delimiter="\t")
+#		for row in matchtable:
+#			noncore[row[0]] = row[1:]  # Populating our core dict
 
 	print "Loading IPS annotations file..."
-	anno_dict = generate_annotation_dict("a_fumigatus_ips.txt")
+	anno_dict = generate_annotation_dict("yeast_ips.txt")
 	print "Loaded annotations.\nLoading TNT output..."
 	#cluster_states = generate_mapping_dict("tnt.output")
 	print "Loaded TNT output."
-	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_aspergillus.obo")
+	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_yeast.obo")
 
 
 if __name__ == "__main__":

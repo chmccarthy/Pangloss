@@ -1,3 +1,6 @@
 
 .DS_Store
 work/test.eps
+*.faa
+src/blast_results.txt
+src/hgt_blast.results
