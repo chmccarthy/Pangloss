@@ -25,7 +25,7 @@ def matchdict(matchtable, core=True):
 
 phen = reader(open("h99.txt"), delimiter="\t")
 core = matchdict(reader(open("new_matchtable.txt"), delimiter="\t"))
-soft = matchdict(reader(open("new_softtable.txt"), delimiter="\t"), core=False)
+soft = matchdict(reader(open("real_dupes.txt"), delimiter="\t"), core=False)
 non = matchdict(reader(open("new_nontable.txt"), delimiter="\t"), core=False)
 
 with open("phen_input.txt", "w") as outfile:
