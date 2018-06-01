@@ -1,7 +1,6 @@
 import subprocess as sp
 from csv import reader
 core = {}
-softcore = {}
 noncore = {}
 
 
@@ -79,26 +78,26 @@ def get_complement_enrichments(core, noncore, annotations, go_terms, go_slim):
 	# 			if gene in annotations:
 	# 				if annotations[gene]["GO"]:
 	# 					softpop.write("{0}\n".format(gene))
-	#with open("noncore_population.txt", "w") as noncorepop:
-	#	print "Getting noncore study population..."
-	#	for cluster in noncore:
-	#		for gene in noncore[cluster]:
-	#			if gene != "----------":
-	#				if gene in annotations:
-	#					if annotations[gene]["GO"]:
-	#						noncorepop.write("{0}\n".format(gene))
+	with open("noncore_population.txt", "w") as noncorepop:
+		print "Getting noncore study population..."
+		for cluster in noncore:
+			for gene in noncore[cluster]:
+				if gene != "----------":
+					if gene in annotations:
+						if annotations[gene]["GO"]:
+							noncorepop.write("{0}\n".format(gene))
 	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "core_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=core_enrichment.tsv"])
 	# sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "softcore_population.txt",
 	# 		 "pangenome_population.txt", "pangenome_slim.txt", "--outfile=softcore_enrichment.tsv"])
-	#sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "noncore_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=noncore_enrichment.tsv"])
+	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "noncore_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=noncore_enrichment.tsv"])
 
 
 def main():
-	with open("../matchtable.txt") as infile:
+	with open("new_matchtable.txt") as infile:
 		matchtable = reader(infile, delimiter="\t")
 		for row in matchtable:
 			if "----------" in row:
-				pass
+				noncore[row[0]] = row[1:]
 			else:
 				core[row[0]] = row[1:]  # Populating our core dict
 
@@ -113,11 +112,11 @@ def main():
 #			noncore[row[0]] = row[1:]  # Populating our core dict
 
 	print "Loading IPS annotations file..."
-	anno_dict = generate_annotation_dict("yeast_ips.txt")
+	anno_dict = generate_annotation_dict("crypto_ips.txt")
 	print "Loaded annotations.\nLoading TNT output..."
 	#cluster_states = generate_mapping_dict("tnt.output")
 	print "Loaded TNT output."
-	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_yeast.obo")
+	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_generic.obo")
 
 
 if __name__ == "__main__":
