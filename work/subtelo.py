@@ -32,5 +32,6 @@ with open("phen_input.txt") as phen:
 			if type == "3":
 				core[1] = core[1] + 1
 			else:
-				print row
 				acc[1] = acc[1] + 1
+print core, acc
+print sub_regions

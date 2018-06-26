@@ -1,8 +1,0 @@
-mxram 50000;
-proc tnt.input;
-proc tnt.tree;
-log tnt.output;
-naked -;
-tplot;
-apo -;
-quit

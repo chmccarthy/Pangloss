@@ -12,21 +12,18 @@ def flatten(iterable):
 
 def matchdict(matchtable, core=True):
 	dict = {}
+	d2 = {}
 	for row in matchtable:
 		if core:
 			if "----------" in row:
-				pass
+				d2[row[0]] = row[1:]
 			else:
 				dict[row[0]] = row[1:]  # Populating our core dict.
-		else:
-			dict[row[0]] = row[1:]
-	return dict
+	return dict, d2
 
 
-phen = reader(open("h99.txt"), delimiter="\t")
-core = matchdict(reader(open("new_matchtable.txt"), delimiter="\t"))
-soft = matchdict(reader(open("real_dupes.txt"), delimiter="\t"), core=False)
-non = matchdict(reader(open("new_nontable.txt"), delimiter="\t"), core=False)
+phen = reader(open("S288C_attributes.txt"), delimiter="\t")
+core, non = matchdict(reader(open("new_matchtable.txt"), delimiter="\t"))
 
 with open("phen_input.txt", "w") as outfile:
 	chrn = 0
@@ -37,15 +34,11 @@ with open("phen_input.txt", "w") as outfile:
 			chrn = chrn + 1
 		if row[1] in flatten(core.values()):
 			col = "3"
-			outfile.write("\t".join([str(chrn), str(row[2]), str(row[3]), col]))
-			outfile.write("\n")
-		elif row[1] in flatten(soft.values()):
-			col = "1"
-			outfile.write("\t".join([str(chrn), str(row[2]), str(row[3]), col]))
+			outfile.write("\t".join([row[0], str(row[2]), str(row[3]), col]))
 			outfile.write("\n")
 		elif row[1] in flatten(non.values()):
 			col = "2"
-			outfile.write("\t".join([str(chrn), str(row[2]), str(row[3]), col]))
+			outfile.write("\t".join([row[0], str(row[2]), str(row[3]), col]))
 			outfile.write("\n")
 		else:
 			print row[1], "not in pg"
