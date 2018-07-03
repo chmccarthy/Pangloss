@@ -112,11 +112,11 @@ def main():
 #			noncore[row[0]] = row[1:]  # Populating our core dict
 
 	print "Loading IPS annotations file..."
-	anno_dict = generate_annotation_dict("crypto_ips.txt")
+	anno_dict = generate_annotation_dict("yeast_ips.txt")
 	print "Loaded annotations.\nLoading TNT output..."
 	#cluster_states = generate_mapping_dict("tnt.output")
 	print "Loaded TNT output."
-	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_generic.obo")
+	get_complement_enrichments(core, noncore, anno_dict, "/Users/cmccarthy/Desktop/go.obo", "/Users/cmccarthy/Desktop/goslim_yeast.obo")
 
 
 if __name__ == "__main__":
