@@ -6,3 +6,6 @@ src/blast_results.txt
 src/hgt_blast.results
 work/Yeast/yeast_ips.txt
 src/can_pan.eps
+.DS_Store
+src/.DS_Store
+work/.DS_Store
