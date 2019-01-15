@@ -20,7 +20,8 @@ class ExonerateGene:
         - ref:           Reference homolog (i.e. seed gene for exonerate).
         - internal_stop: Internal stop codon present or not.
         - introns:       Number of introns in called gene.
-        - called:        Called gene's translated protein sequence.
+        - prot:          Called gene's translated protein sequence.
+        - nucl:          Called gene's nucleotide sequence.
 
         All attributes above are derived ultimately from exonerate output.
 
@@ -34,25 +35,28 @@ class ExonerateGene:
         """
         contig_id = ""
         introns = 0
-        called = []
+        prot = []
+        nucl = []
         for result in SearchIO.parse(string, "exonerate-text"):
             ref = result.id
             stop = False
             for hit in result:
                 contig_id = hit.id
-                called = []
                 introns = len(hit[0].hit_inter_ranges)
                 for fragment in hit[0].fragments:
                     for record in fragment.aln._records:
                         if record.name == "aligned hit sequence":
-                            called.append(str(record.seq))
+                            prot.append(str(record.seq))
                             if "*" in record.seq[:-1]:
                                 stop = True
+                    cds_region = filter(lambda x: len(x) == 3, fragment.aln_annotation["hit_annotation"])
+                    nucl.append(str("".join(cds_region)))
             self.ref = "Exonerate={0}".format(str(ref))
             self.contig_id = contig_id
             self.internal_stop = "IS={0}".format(str(stop))
             self.introns = "Introns={0}".format(str(introns))
-            self.called = "".join(called)
+            self.prot = "".join(prot)
+            self.nucl = "".join(nucl)
         string.seek(0)
         for result in SearchIO.parse(string, "exonerate-vulgar"):
             for hit in result:
