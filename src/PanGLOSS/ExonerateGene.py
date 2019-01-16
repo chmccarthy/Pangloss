@@ -9,7 +9,6 @@ class ExonerateGene:
     """
     An object that stores the attributes of a gene called via exonerate.
     """
-
     def __init__(self, string):
         """
         Define the attributes of a ExonerateGene object.
@@ -33,10 +32,16 @@ class ExonerateGene:
         a second parse using exonerate-vulgar to determine co-ordinates for
         genes.
         """
+        
+        # Temporary variables.
         contig_id = ""
         introns = 0
         prot = []
         nucl = []
+        
+        # Parse text alignment in exonerate result, get attributes and nuclear/protein data.
+        # When adding protein sequence from sequence with introns, remove ambiguous
+        # residues (X) that may arise from intron/exon boundaries (does happen).
         for result in SearchIO.parse(string, "exonerate-text"):
             ref = result.id
             stop = False
@@ -46,30 +51,41 @@ class ExonerateGene:
                 for fragment in hit[0].fragments:
                     for record in fragment.aln._records:
                         if record.name == "aligned hit sequence":
-                            prot.append(str(record.seq))
+                            seq = str(record.seq)
+                            if seq.startswith("X"):
+                                prot.append(seq[1:])
+                            elif seq.endswith("X"):
+                                prot.append(seq[:-1])
+                            else:
+                                prot.append(seq)
                             if "*" in record.seq[:-1]:
                                 stop = True
                     cds_region = filter(lambda x: len(x) == 3, fragment.aln_annotation["hit_annotation"])
                     nucl.append(str("".join(cds_region)))
+            
+            # Populate attributes.
             self.ref = "Exonerate={0}".format(str(ref))
             self.contig_id = contig_id
             self.internal_stop = "IS={0}".format(str(stop))
             self.introns = "Introns={0}".format(str(introns))
             self.prot = "".join(prot)
             self.nucl = "".join(nucl)
+        
+        # Reread result and parse the vulgar output.
         string.seek(0)
         for result in SearchIO.parse(string, "exonerate-vulgar"):
             for hit in result:
                 locs = hit[0].hit_range
-                gene_id = "{0}_{1}".format(hit.id, "_".join(str(loc) for
-                                                            loc in locs))
+                gene_id = "{0}_{1}".format(hit.id, "_".join(str(loc) for loc in locs))
+                
+                # Populate attributes.
                 self.locs = locs
                 self.id = gene_id
-
+                
     def __str__(self):
         """
         Return a string summary of a called gene, a la Biopython.SeqIO.
-
+        
         Useful for debugging.
         """
         lines = []

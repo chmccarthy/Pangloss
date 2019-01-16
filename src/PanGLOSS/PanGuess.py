@@ -5,9 +5,9 @@ PanGuess: Gene prediction for PanGLOSS using homology, Hidden Markov Models
 
 PanGuess is a gene prediction pipeline used to generate protein and genomic
 location data for pangenomic analysis of eukaryotes using PanGLOSS. PanGuess
-is the sister program to PanGLOSS and can be used in conjuction
-to determine pangenomic structure of species of interest based on microsynteny
-using only genomic data and a reference protein set.
+is a component of PanGLOSS and can be used in conjuction with PanGLOSS to determine
+pangenomic structure of species of interest based on microsynteny using only genomic data
+and a reference protein set.
 
 Requirements:
 	- Python (written for 2.7.x)
@@ -19,10 +19,13 @@ Requirements:
 
 	- TransDecoder (>5.0.2)
 
-	- MacOS (tested on MacOS >10.12) or Linux (tested on SLES 11)
+	- MacOS or Linux system.
 
 Recent changes:
-
+	v0.3.0 (January 2019)
+	- Added ability to get nucleotide sequence data from Exonerate (via ExonerateGene)
+	  and GeneMark-ES.
+	
 	v0.2.0 (March 2018)
 	- Defined ExonerateGene as class, moved some functions to Tools module.
 	- Better integrated codebase with PanGLOSS.
@@ -33,10 +36,11 @@ Recent changes:
 
 To-do:
 	- Improve CLI interface: add options, arguments, &c.
-	- Replace majority of path/string formatting with dedicated variable to make code easier to read.
+	- Replace majority of path/string formatting with dedicated variable to make
+	  code easier to read.
 
 Written by Charley McCarthy, Genome Evolution Lab, Department of Biology,
-Maynooth University in 2017-2018 (Charley.McCarthy@nuim.ie).
+Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 """
 
 from __future__ import division
@@ -55,7 +59,7 @@ from glob import glob
 
 from Bio import SearchIO, SeqIO
 
-from PanGLOSS.Tools import pairwise, get_gene_lengths, exoneratecmdline
+from Tools import pairwise, get_gene_lengths, exoneratecmdline
 
 logfile = open("PanGuess.log", "a", 0)
 
@@ -594,6 +598,34 @@ def merge_all_calls(tag):
             final_faa.write(">{0}\n{1}\n".format(new_line[1], transdecoder_index[seq].seq))
             final_attributes.write("\t".join(row for row in new_line) + "\n")
 
+def MakeWorkingDir(workdir):
+    """
+    Tries to make work directory if not already present.
+    """
+    try:
+        os.makedirs(workdir)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            raise
+
+def BuildRefSet(workdir, ref):
+    """
+    Build temporary set of reference proteins.
+    """
+    
+    # Make folder for reference proteins, if not already present.
+    ref_folder = "{0}/ref".format(workdir)
+    try:
+       os.makedirs(ref_folder)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            raise
+    
+    # Split user-provided reference set into individual proteins.
+    ref_db = SeqIO.index(ref, "fasta")
+    for seq in ref_db:
+        SeqIO.write(ref_db[seq], "{0}/{1}.faa".format(ref_folder, ref_db[seq].id), "fasta")
+    ref_db.close()
 
 ##### Main. #####
 def main():
