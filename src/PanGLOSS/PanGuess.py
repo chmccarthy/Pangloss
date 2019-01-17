@@ -59,39 +59,9 @@ from glob import glob
 
 from Bio import SearchIO, SeqIO
 
-from Tools import pairwise, get_gene_lengths, exoneratecmdline
+from Tools import pairwise, get_gene_lengths, ExonerateCmdLine
 
 logfile = open("PanGuess.log", "a", 0)
-
-
-##### Functions for gene prediction via exonerate. #####
-def buildrefset(fasta):
-    """
-	Given a reference protein FASTA file, build a reference protein bin.
-
-	Splitting an reference set-vs.-genome exonerate search is (probably) much
-	faster than searching every reference protein against a genome in one
-	command, plus this lets us parallelize searching later on.
-	"""
-    if not os.path.isdir("{0}/reference_proteins".format(os.getcwd())):
-        os.makedirs("{0}/reference_proteins".format(os.getcwd()))
-    db = SeqIO.index(fasta, "fasta")
-    for seq in db:
-        SeqIO.write(db[seq], "reference_proteins/{0}.faa".format(db[seq].id),
-                    "fasta")
-    db.close()
-
-
-def buildexontasks(genome, protein_dir):
-    """
-	Generate list of exonerate commands to run through multiprocessing.
-	"""
-    exon_cmds = []
-    for prot in glob("{0}/*.faa".format(protein_dir)):
-        exon_cmds.append(["exonerate", "--model", "protein2genome",
-                          "-t", genome, "-q", prot, "--bestn", "1"])
-    return exon_cmds
-
 
 def check_overlap(gene, ref_lengths):
     if gene:
@@ -105,27 +75,6 @@ def check_overlap(gene, ref_lengths):
             return False
     else:
         return False
-
-
-def run_exonerate(genome, protein_dir, len_dict=None, cores=None):
-    """
-	Farm list of exonerate commands to CPU threads using multiprocessing.
-
-	Returns an unordered list of ExonerateGene instances. Default number of
-	threads = (number of cores on computer - 1).
-	"""
-    exon_cmds = buildexontasks(genome, protein_dir)
-    if not cores:
-        cores = mp.cpu_count() - 1
-    farm = mp.Pool(processes=cores)
-    genes = farm.map(exoneratecmdline, exon_cmds)
-    farm.close()
-    farm.join()
-    if len_dict:
-        return [gene for gene in genes if check_overlap(gene, len_dict)]
-    else:
-        return [gene for gene in genes if gene]
-
 
 def run_exonerate_for_transdecoder(genome, protein_dir, cores=None):
     """
@@ -142,69 +91,6 @@ def run_exonerate_for_transdecoder(genome, protein_dir, cores=None):
     farm.close()
     farm.join()
     return [gene for gene in genes if gene]
-
-
-##### Functions for gene prediction using GeneMark-ES. #####
-def run_genemark(genome, cores=None):
-    """
-	Run GeneMark-ES gene prediction on a genome with multithreading.
-
-	Prediction method uses self-training and a specific fungal model. Also runs
-	(a customized version of) GeneMark's retrevial script to generate protein
-	sequences from GeneMark's own GTF/GFF output. Returns a CSV reader object.
-	Default number of threads = (number of cores on computer - 1).
-	"""
-    if not cores:
-        cores = mp.cpu_count() - 1
-    sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", str(cores), "--sequence", genome])
-    sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
-    return reader(open("genemark.gtf"), delimiter="\t")
-
-
-def genemark_gtf_to_attributes(gtf, tag):
-    """
-	Convert a GeneMark-produced GTF/GFF file (which is NOT in a valid format)
-	into an attributes file for easier merging with the predictions from
-	exonerate and TransDecoder downstream.
-
-	Uses a version of a FSM approach to get the correct locations of genes as
-	predicted by GeneMark-ES as well as exon count. I'm not a fan of the way
-	GeneMark produces GTF/GFF files or how its other Perl scripts parse them.
-	"""
-    attributes = []  # List for holding converted attribute info.
-    locs = []
-    exon_count = 0
-    for row, next_row in pairwise(gtf):  # "gtf" will be a CSV.reader object.
-        if next_row is not None:
-            if row[8].split("\"") == next_row[8].split("\""):
-                if row[2] == "exon":
-                    exon_count = exon_count + 1
-                locs = locs + [int(row[3]), int(row[4])]
-            else:
-                if row[2] == "exon":
-                    exon_count = exon_count + 1
-                locs = locs + [int(row[3]), int(row[4])]
-                contig_id = row[0].split(" ")[0]
-                gene_id = row[8].split("\"")[1]
-                annotations = "GeneMark={0};IS=False;Introns={1}".format(gene_id, exon_count - 1)
-                attributes.append([contig_id, gene_id, min(locs), max(locs),
-                                   annotations, tag])
-                locs = []
-                exon_count = 0
-        else:
-            if row[2] == "exon":
-                exon_count = exon_count + 1
-            locs = locs + [int(row[3]), int(row[4])]
-            contig_id = row[0].split(" ")[0]
-            gene_id = row[8].split("\"")[1]
-            annotations = "GeneMark={0};IS=False;Introns={1}".format(gene_id, exon_count - 1)
-            attributes.append([contig_id, gene_id, min(locs), max(locs),
-                               annotations, tag])
-    return sorted(attributes, key=lambda x: (x[0], int(x[2])))
-
-
-# For locs, we assume lowest value is start, highest is stop.
-
 
 def genemark_folder_handler(genome, to_move):
     """
@@ -626,6 +512,91 @@ def BuildRefSet(workdir, ref):
     for seq in ref_db:
         SeqIO.write(ref_db[seq], "{0}/{1}.faa".format(ref_folder, ref_db[seq].id), "fasta")
     ref_db.close()
+
+def BuildExonerateCmds(workdir, genome):
+    """
+    Generate list of exonerate commands to run through multiprocessing.
+    """
+    exon_cmds = []
+    for prot in glob("{0}/ref/*.faa".format(workdir)):
+        exon_cmds.append(["exonerate", "--model", "protein2genome",
+                          "-t", genome, "-q", prot, "--bestn", "1"])
+    return exon_cmds
+
+def RunExonerate(cmds, len_dict=None, cores=None):
+    """
+    Farm list of exonerate commands to CPU threads using multiprocessing.
+    
+    Returns an unordered list of ExonerateGene instances. Default number of
+    threads = (number of cores on computer - 1).
+    """
+    if not cores:
+        cores = mp.cpu_count() - 1
+    farm = mp.Pool(processes=cores)
+    genes = farm.map(ExonerateCmdLine, cmds)
+    farm.close()
+    farm.join()
+    if len_dict:
+        return [gene for gene in genes if check_overlap(gene, len_dict)]
+    else:
+        return [gene for gene in genes if gene]
+
+def RunGeneMark(genome, gm_branch):
+    if not cores:
+        cores = mp.cpu_count() - 1
+    if gm_branch:
+        sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", str(cores), "--sequence", genome])
+    else:
+        sp.call(["gmes_petap.pl", "--ES", "--cores", str(cores), "--sequence", genome])
+    sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
+    return reader(open("genemark.gtf"), delimiter="\t")
+
+def GeneMarkGTFConverter(genome, gtf):
+    """
+    Convert a GeneMark-produced GTF/GFF file (which is NOT in a valid format)
+    into an attributes file for easier merging with the predictions from
+    exonerate and TransDecoder downstream.
+    
+    Uses a version of a FSM approach to get the correct locations of genes as
+    predicted by GeneMark-ES as well as exon count. I'm not a fan of the way
+    GeneMark produces GTF/GFF files or how its other Perl scripts parse them.
+    """
+    attributes = []  # List for holding converted attribute info.
+    locs = []
+    exon_count = 0
+    for row, next_row in pairwise(gtf):  # "gtf" will be a CSV.reader object.
+        if next_row is not None:
+            if row[8].split("\"") == next_row[8].split("\""):
+                if row[2] == "exon":
+                    exon_count = exon_count + 1
+                locs = locs + [int(row[3]), int(row[4])]
+            else:
+                if row[2] == "exon":
+                    exon_count = exon_count + 1
+                locs = locs + [int(row[3]), int(row[4])]
+                contig_id = row[0].split(" ")[0]
+                gene_id = row[8].split("\"")[1]
+                annotations = "GeneMark={0};IS=False;Introns={1}".format(gene_id, exon_count - 1)
+                attributes.append([contig_id, gene_id, min(locs), max(locs),
+                                   annotations, tag])
+                locs = []
+                exon_count = 0
+        else:
+            if row[2] == "exon":
+                exon_count = exon_count + 1
+            locs = locs + [int(row[3]), int(row[4])]
+            contig_id = row[0].split(" ")[0]
+            gene_id = row[8].split("\"")[1]
+            annotations = "GeneMark={0};IS=False;Introns={1}".format(gene_id, exon_count - 1)
+            attributes.append([contig_id, gene_id, min(locs), max(locs),
+                               annotations, tag])
+    return sorted(attributes, key=lambda x: (x[0], int(x[2])))
+
+def MergeExonerateAndGeneMark(genome, exonerate_genes, genemark_gtf):
+    
+
+
+
 
 ##### Main. #####
 def main():

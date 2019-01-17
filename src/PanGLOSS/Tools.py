@@ -230,7 +230,7 @@ def gene_overlap(left_gene, right_gene, query_coords, threshold=0):
     return overlap
 
 
-def exoneratecmdline(cmd):
+def ExonerateCmdLine(cmd):
     """
     Carry out an exonerate command and return output as a ExonerateGene object.
 
