@@ -546,7 +546,7 @@ def RunExonerate(cmds, len_dict=None, cores=None):
         return [gene for gene in genes if gene]
 
 
-def RunGeneMark(genome, gm_branch):
+def RunGeneMark(genome, gm_branch, cores=1):
     if not cores:
         cores = mp.cpu_count() - 1
     if gm_branch:
