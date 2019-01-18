@@ -3,6 +3,7 @@ from Bio import SearchIO, SeqIO
 from ConfigParser import SafeConfigParser
 from PanGLOSS import PanGuess
 
+
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len):
     """
     Runs PanGuess from master script.
@@ -54,13 +55,16 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
         print "Converting GeneMark-ES GTF file to attributes...\t"
-        genemark_attributes = GeneMarkGTFConverter(genemark_gtf, tag)
+        genemark_attributes = GeneMarkGTFConverter(genemark_gtf)
         print "OK."
+
 
 def QualityCheck():
     pass
 
+
 ### Parser functions. ###
+
 
 def CmdLineParser():
     """
@@ -71,6 +75,7 @@ def CmdLineParser():
     args = ap.parse_args()
     return args
 
+
 def ConfigFileParser():
     """
     Create and return a configuration file parser.
@@ -78,7 +83,9 @@ def ConfigFileParser():
     cp = SafeConfigParser()
     return cp
 
+
 ### Main function. ###
+
 
 def main():
     """
@@ -100,6 +107,7 @@ def main():
     
     # Run PanGuess, unless disabled.
     PanGuessHandler(*panguess_args)
+
 
 if __name__ == "__main__":
     main()

@@ -484,6 +484,7 @@ def merge_all_calls(tag):
             final_faa.write(">{0}\n{1}\n".format(new_line[1], transdecoder_index[seq].seq))
             final_attributes.write("\t".join(row for row in new_line) + "\n")
 
+
 def MakeWorkingDir(workdir):
     """
     Tries to make work directory if not already present.
@@ -493,6 +494,7 @@ def MakeWorkingDir(workdir):
     except OSError as e:
         if e.errno != os.errno.EEXIST:
             raise
+
 
 def BuildRefSet(workdir, ref):
     """
@@ -513,6 +515,7 @@ def BuildRefSet(workdir, ref):
         SeqIO.write(ref_db[seq], "{0}/{1}.faa".format(ref_folder, ref_db[seq].id), "fasta")
     ref_db.close()
 
+
 def BuildExonerateCmds(workdir, genome):
     """
     Generate list of exonerate commands to run through multiprocessing.
@@ -522,6 +525,7 @@ def BuildExonerateCmds(workdir, genome):
         exon_cmds.append(["exonerate", "--model", "protein2genome",
                           "-t", genome, "-q", prot, "--bestn", "1"])
     return exon_cmds
+
 
 def RunExonerate(cmds, len_dict=None, cores=None):
     """
@@ -541,6 +545,7 @@ def RunExonerate(cmds, len_dict=None, cores=None):
     else:
         return [gene for gene in genes if gene]
 
+
 def RunGeneMark(genome, gm_branch):
     if not cores:
         cores = mp.cpu_count() - 1
@@ -551,7 +556,8 @@ def RunGeneMark(genome, gm_branch):
     sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
     return reader(open("genemark.gtf"), delimiter="\t")
 
-def GeneMarkGTFConverter(genome, gtf):
+
+def GeneMarkGTFConverter(gtf):
     """
     Convert a GeneMark-produced GTF/GFF file (which is NOT in a valid format)
     into an attributes file for easier merging with the predictions from
@@ -592,93 +598,92 @@ def GeneMarkGTFConverter(genome, gtf):
                                annotations, tag])
     return sorted(attributes, key=lambda x: (x[0], int(x[2])))
 
+
 def MergeExonerateAndGeneMark(genome, exonerate_genes, genemark_gtf):
-    
-
-
+    pass
 
 
 ##### Main. #####
-def main():
-    """
-	Main workflow of gene prediction per genome.
-
-		1.  Create master gene_calling folder (outside of per genome loop).
-		2.  Generate dictionary list of genes from genome/tag list file (ditto).
-		3.  Call genes in genome based on homology to reference genes using exonerate.
-		4.  Call genes using self-trained branching HMM analysis with GeneMark-ES.
-		5.  Write output from exonerate and GeneMark-ES into PanOCT-compatible format.
-		6.  Clean up output from GeneMark-ES (compress it in future maybe?).
-		7.  Identify genes called by GeneMark that are non-overlapping relative to exonerate.
-		8.  Remove gene calls from this combined prediction that have duplicated locations.
-		9.  Call potential ORFs in (still) non-coding regions of genome using TransDecoder.
-		10. Filter out dubious ORFs and filter remainder based on sequence length and coding potenital.
-		10. Merge unique TransDecoder calls with exonerate/GeneMark-ES calls.
-		11. Write unified protein set file and attributes file.
-	"""
-    try:
-        os.makedirs("{0}/gene_calling".format(os.getcwd()))
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            raise
-    genomes = od()
-    if not os.path.isdir("{0}/reference_proteins".format(os.getcwd())):
-        os.makedirs("{0}/reference_proteins".format(os.getcwd()))
-        buildrefset(proteins)
-    else:
-        pass
-    ref_lengths = get_gene_lengths(proteins)
-    for line in open(genomes_list):
-        genomes[line.split("\t")[1].strip("\n")] = line.split("\t")[0]
-    for genome in genomes.keys():
-        genome_time = time.time()
-        logfile.write("Predicting genes for {0}...\n".format(genome))
-        genome_tag = genomes[genome]
-        try:
-            os.makedirs("{0}/gene_calling/{1}".format(os.getcwd(), genome_tag))
-        except OSError as e:
-            if e.errno != os.errno.EEXIST:
-                raise
-        logfile.write("Exonerating reference genes against {0}...\n".format(genome))
-        exonerate_genes = run_exonerate(genome, "reference_proteins", ref_lengths)
-        ordered_exonerate_genes = sorted(exonerate_genes, key=lambda x: (x.contig_id, x.locs[0]))
-        logfile.write("Running GeneMark-ES for {0}...\n".format(genome))
-        genemark_genes = run_genemark(genome)
-        gm_temp_data = ["data", "info", "output", "run", "gmes.log", "run.cfg", "prot_seq.faa", "nuc_seq.fna"]
-        genemark_folder_handler(genome_tag, gm_temp_data)
-        write_gene_calls(ordered_exonerate_genes, genemark_genes, genome_tag)
-        if not os.path.isfile(
-                "{0}/gene_calling/{1}/genemark_output/{2}".format(os.getcwd(), genome_tag, "genemark.gtf")):
-            shutil.move("genemark.gtf", "{0}/gene_calling/{1}/genemark_output".format(os.getcwd(), genome_tag))
-        unique_genes = get_unique_calls("{0}/gene_calling/{1}/{1}_exonerate.txt".format(os.getcwd(), genome_tag),
-                                        "{0}/gene_calling/{1}/{1}_genemark.txt".format(os.getcwd(), genome_tag))
-        exon_coords = [line.strip("\n").split("\t") for line in
-                       open("{0}/gene_calling/{1}/{1}_exonerate.txt".format(os.getcwd(), genome_tag)).readlines()]
-        combined_coords = sorted(exon_coords + unique_genes, key=lambda x: (x[0], int(x[2])))
-        corrected_coords = strip_duplicates(combined_coords)
-        logfile.write("Combined and corrected Exonerate and GeneMark predictions...\n")
-        with open("{0}/gene_calling/{1}/{1}_exon_gm.txt".format(os.getcwd(), genome_tag), "w") as outfile:
-            for line in corrected_coords:
-                outfile.write("\t".join(element for element in line) + "\n")
-        run_transdecoder(genome, "{0}/gene_calling/{1}/{1}_exon_gm.txt".format(os.getcwd(), genome_tag), genome_tag)
-        transdecoder_folder_handler(genome_tag)
-        if os.path.isfile("{0}/dubious_orfs.faa".format(os.getcwd())):
-            logfile.write("Checking for dubious ORFs...\n")
-            remove_dubious_orfs(
-                "{0}/gene_calling/{1}/transdecoder_output/{1}_noncoding.fna.transdecoder.pep".format(os.getcwd(),
-                                                                                                     genome_tag),
-                "./dubious_orfs.faa")
-        filter_transdecoder_calls(genome_tag)
-        split_retained_orfs(genome_tag)
-        realign_orfs(genome, genome_tag)
-        logfile.write("Unifying all calls...\n")
-        remove_duplicates("{0}/gene_calling/{1}/{1}_exonerate.faa".format(os.getcwd(), genome_tag), genome_tag,
-                          "exonerate_unique.faa")
-        remove_duplicates("{0}/gene_calling/{1}/{1}_transdecoder.faa".format(os.getcwd(), genome_tag), genome_tag,
-                          "transdecoder_unique.faa")
-        merge_all_calls(genome_tag)
-        logfile.write(
-            "Gene prediction for {0} completed... ({1} seconds)\n".format(genome_tag, time.time() - genome_time))
+# def main():
+#     """
+#     Main workflow of gene prediction per genome.
+#
+# 		1.  Create master gene_calling folder (outside of per genome loop).
+# 		2.  Generate dictionary list of genes from genome/tag list file (ditto).
+# 		3.  Call genes in genome based on homology to reference genes using exonerate.
+# 		4.  Call genes using self-trained branching HMM analysis with GeneMark-ES.
+# 		5.  Write output from exonerate and GeneMark-ES into PanOCT-compatible format.
+# 		6.  Clean up output from GeneMark-ES (compress it in future maybe?).
+# 		7.  Identify genes called by GeneMark that are non-overlapping relative to exonerate.
+# 		8.  Remove gene calls from this combined prediction that have duplicated locations.
+# 		9.  Call potential ORFs in (still) non-coding regions of genome using TransDecoder.
+# 		10. Filter out dubious ORFs and filter remainder based on sequence length and coding potenital.
+# 		10. Merge unique TransDecoder calls with exonerate/GeneMark-ES calls.
+# 		11. Write unified protein set file and attributes file.
+# 	"""
+#     try:
+#         os.makedirs("{0}/gene_calling".format(os.getcwd()))
+#     except OSError as e:
+#         if e.errno != os.errno.EEXIST:
+#             raise
+#     genomes = od()
+#     if not os.path.isdir("{0}/reference_proteins".format(os.getcwd())):
+#         os.makedirs("{0}/reference_proteins".format(os.getcwd()))
+#         buildrefset(proteins)
+#     else:
+#         pass
+#     ref_lengths = get_gene_lengths(proteins)
+#     for line in open(genomes_list):
+#         genomes[line.split("\t")[1].strip("\n")] = line.split("\t")[0]
+#     for genome in genomes.keys():
+#         genome_time = time.time()
+#         logfile.write("Predicting genes for {0}...\n".format(genome))
+#         genome_tag = genomes[genome]
+#         try:
+#             os.makedirs("{0}/gene_calling/{1}".format(os.getcwd(), genome_tag))
+#         except OSError as e:
+#             if e.errno != os.errno.EEXIST:
+#                 raise
+#         logfile.write("Exonerating reference genes against {0}...\n".format(genome))
+#         exonerate_genes = run_exonerate(genome, "reference_proteins", ref_lengths)
+#         ordered_exonerate_genes = sorted(exonerate_genes, key=lambda x: (x.contig_id, x.locs[0]))
+#         logfile.write("Running GeneMark-ES for {0}...\n".format(genome))
+#         genemark_genes = run_genemark(genome)
+#         gm_temp_data = ["data", "info", "output", "run", "gmes.log", "run.cfg", "prot_seq.faa", "nuc_seq.fna"]
+#         genemark_folder_handler(genome_tag, gm_temp_data)
+#         write_gene_calls(ordered_exonerate_genes, genemark_genes, genome_tag)
+#         if not os.path.isfile(
+#                 "{0}/gene_calling/{1}/genemark_output/{2}".format(os.getcwd(), genome_tag, "genemark.gtf")):
+#             shutil.move("genemark.gtf", "{0}/gene_calling/{1}/genemark_output".format(os.getcwd(), genome_tag))
+#         unique_genes = get_unique_calls("{0}/gene_calling/{1}/{1}_exonerate.txt".format(os.getcwd(), genome_tag),
+#                                         "{0}/gene_calling/{1}/{1}_genemark.txt".format(os.getcwd(), genome_tag))
+#         exon_coords = [line.strip("\n").split("\t") for line in
+#                        open("{0}/gene_calling/{1}/{1}_exonerate.txt".format(os.getcwd(), genome_tag)).readlines()]
+#         combined_coords = sorted(exon_coords + unique_genes, key=lambda x: (x[0], int(x[2])))
+#         corrected_coords = strip_duplicates(combined_coords)
+#         logfile.write("Combined and corrected Exonerate and GeneMark predictions...\n")
+#         with open("{0}/gene_calling/{1}/{1}_exon_gm.txt".format(os.getcwd(), genome_tag), "w") as outfile:
+#             for line in corrected_coords:
+#                 outfile.write("\t".join(element for element in line) + "\n")
+#         run_transdecoder(genome, "{0}/gene_calling/{1}/{1}_exon_gm.txt".format(os.getcwd(), genome_tag), genome_tag)
+#         transdecoder_folder_handler(genome_tag)
+#         if os.path.isfile("{0}/dubious_orfs.faa".format(os.getcwd())):
+#             logfile.write("Checking for dubious ORFs...\n")
+#             remove_dubious_orfs(
+#                 "{0}/gene_calling/{1}/transdecoder_output/{1}_noncoding.fna.transdecoder.pep".format(os.getcwd(),
+#                                                                                                      genome_tag),
+#                 "./dubious_orfs.faa")
+#         filter_transdecoder_calls(genome_tag)
+#         split_retained_orfs(genome_tag)
+#         realign_orfs(genome, genome_tag)
+#         logfile.write("Unifying all calls...\n")
+#         remove_duplicates("{0}/gene_calling/{1}/{1}_exonerate.faa".format(os.getcwd(), genome_tag), genome_tag,
+#                           "exonerate_unique.faa")
+#         remove_duplicates("{0}/gene_calling/{1}/{1}_transdecoder.faa".format(os.getcwd(), genome_tag), genome_tag,
+#                           "transdecoder_unique.faa")
+#         merge_all_calls(genome_tag)
+#         logfile.write(
+#             "Gene prediction for {0} completed... ({1} seconds)\n".format(genome_tag, time.time() - genome_time))
 
 
 ##### Additional checks. ######
