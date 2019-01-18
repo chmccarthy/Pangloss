@@ -557,7 +557,7 @@ def RunGeneMark(genome, gm_branch, cores=1):
     return reader(open("genemark.gtf"), delimiter="\t")
 
 
-def GeneMarkGTFConverter(gtf):
+def GeneMarkGTFConverter(gtf, tag):
     """
     Convert a GeneMark-produced GTF/GFF file (which is NOT in a valid format)
     into an attributes file for easier merging with the predictions from

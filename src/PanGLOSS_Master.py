@@ -54,7 +54,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
         print "Converting GeneMark-ES GTF file to attributes...\t"
-        genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf)
+        genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
         print genemark_attributes
         print "OK."
 
