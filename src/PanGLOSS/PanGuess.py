@@ -61,8 +61,6 @@ from Bio import SearchIO, SeqIO
 
 from Tools import pairwise, get_gene_lengths, ExonerateCmdLine
 
-logfile = open("PanGuess.log", "a", 0)
-
 def check_overlap(gene, ref_lengths):
     if gene:
         longest = max(ref_lengths[gene.ref.split("=")[1]], len(gene.called))
@@ -600,7 +598,24 @@ def GeneMarkGTFConverter(gtf, tag):
 
 
 def MergeExonerateAndGeneMark(genome, exonerate_genes, genemark_gtf):
-    pass
+    """
+    Return genes called via GeneMark-ES that do not overlap with the
+    co-ordinates of genes called via exonerate.
+    """
+    unique_calls = []
+    for row in exonerate_csv:
+        if row[0] not in exonerate_dict.keys():
+            exonerate_dict[row[0]] = [row[1:]]
+        else:
+            exonerate_dict[row[0]].append(row[1:])
+    genemark_csv = reader(open(genemark_output), delimiter="\t")
+    for row in genemark_csv:  # Safest to do this on a per-chromosome basis.
+        if row[0] in exonerate_dict.keys():
+            if call_overlap((row[2], row[3]), exonerate_dict[row[0]]):
+                pass
+            else:
+                unique_calls.append(row)
+    return unique_calls
 
 
 ##### Main. #####

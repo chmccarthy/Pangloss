@@ -41,25 +41,27 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         cmds = PanGuess.BuildExonerateCmds(workdir, genome)
         exonerate_genes = PanGuess.RunExonerate(cmds)
         print "OK."
-        
-        # Order gene models predicted via Exonerate by Contig ID: Location.
-        print "Sorting predicted Exonerate gene models by genomic location...\t"
-        exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
-        print "OK."
-        
-        # Run prediction using GeneMark-ES.
-        print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
-        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
-        print "OK."
-        
-        # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
-        print "Converting GeneMark-ES GTF file to attributes...\t"
-        genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
-        print genemark_attributes
-        print "OK."
+
+    # Order gene models predicted via Exonerate by Contig ID: Location.
+    print "Sorting predicted Exonerate gene models by genomic location...\t"
+    exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
+    print "OK."
+
+    # Run prediction using GeneMark-ES.
+    print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
+    genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
+    print "OK."
+
+    # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
+    print "Converting GeneMark-ES GTF file to attributes...\t"
+    genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
+    return exonerate_genes, genemark_attributes
+    print "OK."
+
 
 def QualityCheck():
     pass
+
 
 ### Parser functions. ###
 
@@ -72,12 +74,14 @@ def CmdLineParser():
     args = ap.parse_args()
     return args
 
+
 def ConfigFileParser():
     """
     Create and return a configuration file parser.
     """
     cp = SafeConfigParser()
     return cp
+
 
 ### Main function. ###
 
@@ -93,7 +97,7 @@ def main():
     pangloss_args = []
     
     # Read config file.
-    cp.read(ap.config)
+    cp.read("config.txt")
     
     # Generate arguments for PanGuess (genome list, working directory, reference set).
     for arg in cp.items("Gene_model_prediction"):
