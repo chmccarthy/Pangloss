@@ -34,29 +34,39 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
     # Loop over each genome and carry out gene model prediction.
     for genome in genomes:
         # Make tag from genome name.
-        tag = genome.split(".")[0]
+        tag = genome.split(".")[0].split("/")[1]
         
         # Run prediction using Exonerate.
         print "Performing gene model prediction for {0} using Exonerate...\t".format(tag),
         cmds = PanGuess.BuildExonerateCmds(workdir, genome)
         exonerate_genes = PanGuess.RunExonerate(cmds)
         print "OK."
-
-    # Order gene models predicted via Exonerate by Contig ID: Location.
-    print "Sorting predicted Exonerate gene models by genomic location...\t"
-    exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
-    print "OK."
-
-    # Run prediction using GeneMark-ES.
-    print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
-    genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
-    print "OK."
-
-    # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
-    print "Converting GeneMark-ES GTF file to attributes...\t"
-    genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
-    return exonerate_genes, genemark_attributes
-    print "OK."
+        
+        # Order gene models predicted via Exonerate by Contig ID: Location.
+        print "Sorting predicted Exonerate gene models by genomic location...\t"
+        exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
+        print "OK."
+        
+        # Extract genomic attributes from Exonerate gene model set (easier to do at
+        # this point rather than later).
+        print "Extracting genomic attributes from Exonerate gene models...\t"
+        exonerate_attributes = PanGuess.GetExonerateAttributes(exonerate_genes, tag)
+        print "OK."
+        
+        # Run prediction using GeneMark-ES.
+        print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
+        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
+        print "OK."
+        
+        # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
+        print "Converting GeneMark-ES GTF file to attributes...\t"
+        genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
+        print "OK."
+        
+        # Merge unique gene model calls between the two different methods.
+        print "Merging unique gene calls...\t"
+        genemark_attributes = PanGuess.MergeGeneMarkAndExonerate(genemark_gtf, tag)
+        print "OK."
 
 
 def QualityCheck():
@@ -104,7 +114,7 @@ def main():
         panguess_args.append(arg[1])
     
     # Run PanGuess, unless disabled.
-    PanGuessHandler(*panguess_args)
+    exonout, gmout = PanGuessHandler(*panguess_args)
 
 if __name__ == "__main__":
     main()

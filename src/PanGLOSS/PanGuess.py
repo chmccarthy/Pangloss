@@ -59,7 +59,7 @@ from glob import glob
 
 from Bio import SearchIO, SeqIO
 
-from Tools import pairwise, get_gene_lengths, ExonerateCmdLine
+from Tools import CallOverlap, ExonerateCmdLine, Pairwise, get_gene_lengths
 
 def check_overlap(gene, ref_lengths):
     if gene:
@@ -544,6 +544,22 @@ def RunExonerate(cmds, len_dict=None, cores=None):
         return [gene for gene in genes if gene]
 
 
+def GetExonerateAttributes(exonerate_genes, tag):
+    # Master list of attributes.
+    exonerate_attributes = []
+    
+    # Loop through all called genes and extract their info.
+    for gene in exonerate_genes:
+        # Can be done in one line, obviously.
+        gene_att = [gene.contig_id, gene.id, gene.locs[0], gene.locs[1]]
+        gene_att.append("{0};{1};{2}".format(gene.ref, gene.internal_stop, gene.introns))
+        gene_att.append(tag)
+        
+        # Add to master list.
+        exonerate_attributes.append(gene_att)
+    return exonerate_attributes
+
+
 def RunGeneMark(genome, gm_branch, cores=1):
     if not cores:
         cores = mp.cpu_count() - 1
@@ -597,26 +613,22 @@ def GeneMarkGTFConverter(gtf, tag):
     return sorted(attributes, key=lambda x: (x[0], int(x[2])))
 
 
-def MergeExonerateAndGeneMark(genome, exonerate_genes, genemark_gtf):
+def MergeExonerateAndGeneMark(tag, exonerate_attributes, genemark_attributes):
     """
     Return genes called via GeneMark-ES that do not overlap with the
-    co-ordinates of genes called via exonerate.
+    co-ordinates of genes called via exonerate. Bit awkward because we're dealing
+    with two lists of different objects, 
     """
-    unique_calls = []
-    for row in exonerate_csv:
-        if row[0] not in exonerate_dict.keys():
-            exonerate_dict[row[0]] = [row[1:]]
-        else:
-            exonerate_dict[row[0]].append(row[1:])
-    genemark_csv = reader(open(genemark_output), delimiter="\t")
-    for row in genemark_csv:  # Safest to do this on a per-chromosome basis.
-        if row[0] in exonerate_dict.keys():
-            if call_overlap((row[2], row[3]), exonerate_dict[row[0]]):
-                pass
-            else:
-                unique_calls.append(row)
-    return unique_calls
-
+    unique_calls = exonerate_attributes + genemark_attributes
+    unique_calls.sort(key=lambda x: (x[0], int(x[2])))
+    to_remove = []
+    for call, next_call in pairwise(unique_calls):
+        if next_call:
+            overlap = LocationOverlap(call, next_call)
+            if overlap:
+                to_remove.append(overlap[1])
+    return [call for call in unique_calls if call[1] not in to_remove]
+    
 
 ##### Main. #####
 # def main():

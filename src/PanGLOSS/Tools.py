@@ -15,16 +15,6 @@ from itertools import chain, izip_longest, tee
 from Bio import SeqIO
 from ExonerateGene import ExonerateGene
 
-def pairwise(iterable):
-    """
-    Enable pairwise iteration.
-
-    Taken from the Python Standard Library.
-    """
-    a, b = tee(iterable)
-    next(b, None)
-    return izip_longest(a, b)  # Allows (line, None) for EOF.
-
 
 def grouper(iterable, n):
     """
@@ -230,6 +220,17 @@ def gene_overlap(left_gene, right_gene, query_coords, threshold=0):
     return overlap
 
 
+def Pairwise(iterable):
+    """
+    Enable pairwise iteration.
+
+    Taken from the Python Standard Library.
+    """
+    a, b = tee(iterable)
+    next(b, None)
+    return izip_longest(a, b)  # Allows (line, None) for EOF.
+
+
 def ExonerateCmdLine(cmd):
     """
     Carry out an exonerate command and return output as a ExonerateGene object.
@@ -246,3 +247,27 @@ def ExonerateCmdLine(cmd):
         return ExonerateGene(cStringIO.StringIO(process))
     else:
         pass
+
+
+def LocationOverlap(call, next_call):
+    """
+    Check overlapping co-ordinates for calls via exonerate vs. GeneMark-ES.
+    """
+    overlap = False
+    call_len = int(call[3]) - int(call[2])
+    next_call_len = int(next_call[3]) - int(next_call[2])
+    
+    if (int(call[2]) <= int(next_call[2]) <= int(call[3])):
+        overlap = True
+    elif (int(call[2]) <= int(next_call[3]) <= int(call[3])):
+        overlap = True
+    elif (int(next_call[2]) - int(call[3]) <= 20):
+        print call[3], next_call[2]
+        overlap = True
+    
+    if overlap:
+        if call_len > next_call_len:
+            return next_call
+        else:
+            return call
+
