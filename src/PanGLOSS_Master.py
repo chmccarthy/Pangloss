@@ -43,13 +43,13 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         print "OK."
         
         # Order gene models predicted via Exonerate by Contig ID: Location.
-        print "Sorting predicted Exonerate gene models by genomic location...\t"
+        print "Sorting predicted Exonerate gene models by genomic location...\t",
         exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
         print "OK."
         
         # Extract genomic attributes from Exonerate gene model set (easier to do at
         # this point rather than later).
-        print "Extracting genomic attributes from Exonerate gene models...\t"
+        print "Extracting genomic attributes from Exonerate gene models...\t",
         exonerate_attributes = PanGuess.GetExonerateAttributes(exonerate_genes, tag)
         print "OK."
         
@@ -59,13 +59,33 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         print "OK."
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
-        print "Converting GeneMark-ES GTF file to attributes...\t"
+        print "Converting GeneMark-ES GTF file to attributes...\t",
         genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
         print "OK."
         
         # Merge unique gene model calls between the two different methods.
-        print "Merging unique gene calls...\t"
-        genemark_attributes = PanGuess.MergeGeneMarkAndExonerate(genemark_gtf, tag)
+        print "Merging unique gene calls...\t",
+        merged_attributes = PanGuess.MergeExonerateAndGeneMark(tag, exonerate_attributes, genemark_attributes)
+        print "OK."
+        
+        # Clean up GeneMark-ES files and folders.
+        print "Tidying up GeneMark-ES temporary files and folders...\t",
+        PanGuess.MoveGeneMarkFiles(workdir, genome)
+        print "OK."
+        
+        # Extract NCRs into list.
+        print "Extracting non-coding regions of genome...\t",
+        noncoding = PanGuess.ExtractNCR(merged_attributes, genome)
+        print "OK."
+        
+        # Run TransDecoder on NCRs.
+        print "Running TransDecoder on non-coding regions...\t",
+        tdir = PanGuess.RunTransDecoder(noncoding, workdir, genome)
+        print "OK."
+        
+        # Move TransDecoder files.
+        print "Tidying up TransDecoder temporary files and folders...\t",
+        tdir = PanGuess.MoveTransDecoderFiles(tdir)
         print "OK."
 
 
@@ -114,7 +134,7 @@ def main():
         panguess_args.append(arg[1])
     
     # Run PanGuess, unless disabled.
-    exonout, gmout = PanGuessHandler(*panguess_args)
+    PanGuessHandler(*panguess_args)
 
 if __name__ == "__main__":
     main()

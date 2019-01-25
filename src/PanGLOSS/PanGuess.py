@@ -59,7 +59,7 @@ from glob import glob
 
 from Bio import SearchIO, SeqIO
 
-from Tools import CallOverlap, ExonerateCmdLine, Pairwise, get_gene_lengths
+from Tools import ExonerateCmdLine, LocationOverlap, Pairwise, get_gene_lengths
 
 def check_overlap(gene, ref_lengths):
     if gene:
@@ -90,94 +90,6 @@ def run_exonerate_for_transdecoder(genome, protein_dir, cores=None):
     farm.join()
     return [gene for gene in genes if gene]
 
-def genemark_folder_handler(genome, to_move):
-    """
-	Handles temporary folders/files created by GeneMark-ES.
-
-	For first-time predictions, folders/files are moved to an new folder within
-	a given genome's directory called "genemark_output" (which is created here
-	if not extant beforehand). For subsequent predictions (i.e. after aborted
-	runs), these temporary folders/files are deleted.
-	"""
-    try:
-        os.makedirs("{0}/gene_calling/{1}/genemark_output".format(os.getcwd(), genome))
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            raise
-    for f in to_move:
-        if os.path.isdir(f):
-            if not os.path.isdir("{0}/gene_calling/{1}/genemark_output/{2}".format(os.getcwd(), genome, f)):
-                shutil.move(f, "{0}/gene_calling/{1}/genemark_output".format(os.getcwd(), genome))
-            else:
-                shutil.rmtree(f)
-        elif os.path.isfile(f):
-            if not os.path.isfile("{0}/gene_calling/{1}/genemark_output/{2}".format(os.getcwd(), genome, f)):
-                shutil.move(f, "{0}/gene_calling/{1}/genemark_output".format(os.getcwd(), genome))
-            else:
-                os.remove(f)
-
-
-##### Functions for writing exonerate and GeneMark-ES output to files. ######
-def write_gene_calls(ordered_exonerate_genes, genemark_genes, tag):
-    """
-	Write gene calls from exonerate and GeneMark-ES to files.
-	"""
-    with open("{0}/gene_calling/{1}/{1}_exonerate.txt".format(os.getcwd(), tag), "w") as outfile, open(
-            "{0}/gene_calling/{1}/{1}_exonerate.faa".format(os.getcwd(), tag), "w") as outfaa:
-        for gene in ordered_exonerate_genes:
-            outfile.write("{0}\t{1}|{2}\t{3}\t{4}\t{5}\t{1}\n".format(gene.contig_id, tag,
-                                                                      gene.id, gene.locs[0], gene.locs[1],
-                                                                      ";".join([gene.ref, str(gene.internal_stop),
-                                                                                str(gene.introns)])))
-            outfaa.write(">{0}|{1}\n{2}\n".format(tag, gene.id, gene.called))
-    with open("{0}/gene_calling/{1}/{1}_genemark.txt".format(os.getcwd(), tag), "w") as outfile:
-        genemark_attributes = genemark_gtf_to_attributes(genemark_genes, tag)
-        for line in genemark_attributes:
-            outfile.write("\t".join([str(column) for column in line]) + "\n")
-
-
-##### Functions for merging exonerate and GeneMark-ES gene calls. ######
-def call_overlap(a, l):
-    """
-	Check overlapping co-ordinates for calls via exonerate vs. GeneMark-ES.
-	"""
-    for b in map(lambda x: (int(x[1]), int(x[2])), l):
-        if int(a[0]) <= b[0] <= int(a[1]):
-            return True
-        elif int(a[0]) <= b[1] <= int(a[1]):
-            return True
-        else:
-            for coord in a:
-                if b[0] <= int(coord) <= b[1]:
-                    return True
-                elif b[0] <= int(coord) - 20 <= b[1]:
-                    return True
-                elif b[0] <= int(coord) + 20 <= b[1]:
-                    return True
-
-
-def get_unique_calls(exonerate_output, genemark_output):
-    """
-	Return genes called via GeneMark-ES that do not overlap with the
-	co-ordinates of genes called via exonerate.
-	"""
-    unique_calls = []
-    exonerate_csv = reader(open(exonerate_output), delimiter="\t")
-    exonerate_dict = {}
-    for row in exonerate_csv:
-        if row[0] not in exonerate_dict.keys():
-            exonerate_dict[row[0]] = [row[1:]]
-        else:
-            exonerate_dict[row[0]].append(row[1:])
-    genemark_csv = reader(open(genemark_output), delimiter="\t")
-    for row in genemark_csv:  # Safest to do this on a per-chromosome basis.
-        if row[0] in exonerate_dict.keys():
-            if call_overlap((row[2], row[3]), exonerate_dict[row[0]]):
-                pass
-            else:
-                unique_calls.append(row)
-    return unique_calls
-
 
 def strip_duplicates(gtf):
     """
@@ -187,7 +99,7 @@ def strip_duplicates(gtf):
 	because PanOCT can't handle duplicate locations (i.e. isoforms).
 	"""
     stripped = []
-    for line, next_line in pairwise(gtf):
+    for line, next_line in Pairwise(gtf):
         if next_line is not None:
             if int(line[2]) == int(next_line[2]):
                 # If gene has identical start.
@@ -218,7 +130,7 @@ def get_noncoding_regions(seq_name, seq, list_of_coords):
 	Generate noncoding sequences from a genome by slicing around known coordinates.
 	"""
     ncr = []
-    for coord, next_coord in pairwise(list_of_coords):
+    for coord, next_coord in Pairwise(list_of_coords):
         if list_of_coords.index(coord) == 0:  # first gene in a chromosome.
             if coord[0] != 0:  # Check that gene's co-ord isn't 0-to-n!
                 ncr.append(">{0}\n{1}\n".format(seq_name + "_NCR_0_{0}".format(coord[0] - 1),
@@ -275,7 +187,7 @@ def transdecoder_gtf_to_attributes(feature_file, tag):
     exon_count = 0
     contig_id = ""
     gtf = reader(open(feature_file), delimiter="\t")
-    for row, next_row in pairwise(gtf):
+    for row, next_row in Pairwise(gtf):
         if len(row) == 9:
             if row[2] == "gene":
                 gene_id = row[8].split(";")[0].split("~")[2]
@@ -487,6 +399,8 @@ def MakeWorkingDir(workdir):
     """
     Tries to make work directory if not already present.
     """
+    
+    # Don't rewrite work directory if already there.
     try:
         os.makedirs(workdir)
     except OSError as e:
@@ -496,7 +410,9 @@ def MakeWorkingDir(workdir):
 
 def BuildRefSet(workdir, ref):
     """
-    Build temporary set of reference proteins.
+    Build temporary set of reference proteins. It's faster to run Exonerate by splitting
+    up the dataset into individual files and running them as separate queries against
+    the genome than as a full file.
     """
     
     # Make folder for reference proteins, if not already present.
@@ -507,7 +423,7 @@ def BuildRefSet(workdir, ref):
         if e.errno != os.errno.EEXIST:
             raise
     
-    # Split user-provided reference set into individual proteins.
+    # Split user-provided reference set into individual proteins (have to do this).
     ref_db = SeqIO.index(ref, "fasta")
     for seq in ref_db:
         SeqIO.write(ref_db[seq], "{0}/{1}.faa".format(ref_folder, ref_db[seq].id), "fasta")
@@ -518,7 +434,11 @@ def BuildExonerateCmds(workdir, genome):
     """
     Generate list of exonerate commands to run through multiprocessing.
     """
+    
+    # List of commands.
     exon_cmds = []
+    
+    # Generate and return commands.
     for prot in glob("{0}/ref/*.faa".format(workdir)):
         exon_cmds.append(["exonerate", "--model", "protein2genome",
                           "-t", genome, "-q", prot, "--bestn", "1"])
@@ -532,12 +452,18 @@ def RunExonerate(cmds, len_dict=None, cores=None):
     Returns an unordered list of ExonerateGene instances. Default number of
     threads = (number of cores on computer - 1).
     """
+    
+    # If user doesn't specify cores in command line, just leave them with one free.
     if not cores:
         cores = mp.cpu_count() - 1
+    
+    # Farm out Exonerate processes, wait for all to finish and merge together.
     farm = mp.Pool(processes=cores)
     genes = farm.map(ExonerateCmdLine, cmds)
     farm.close()
     farm.join()
+    
+    # Check overlap of predicted gene models against their query homolog.
     if len_dict:
         return [gene for gene in genes if check_overlap(gene, len_dict)]
     else:
@@ -545,46 +471,60 @@ def RunExonerate(cmds, len_dict=None, cores=None):
 
 
 def GetExonerateAttributes(exonerate_genes, tag):
+    """
+    Extract attributes from ExonerateGene data. Is somewhat redundant, but makes merging
+    Exonerate and GeneMark-ES calls easier downstream.
+    """
     # Master list of attributes.
     exonerate_attributes = []
     
-    # Loop through all called genes and extract their info.
+    # Loop through called genes and extract info. Could be done in one line, obviously.
     for gene in exonerate_genes:
-        # Can be done in one line, obviously.
         gene_att = [gene.contig_id, gene.id, gene.locs[0], gene.locs[1]]
         gene_att.append("{0};{1};{2}".format(gene.ref, gene.internal_stop, gene.introns))
         gene_att.append(tag)
         
         # Add to master list.
         exonerate_attributes.append(gene_att)
+    
+    # Return separate Exonerate attributes object.
     return exonerate_attributes
 
 
 def RunGeneMark(genome, gm_branch, cores=1):
+    """
+    Run GeneMark-ES on given genome, with optional arguments for fungal-specific
+    prediction models and number of cores.
+    """
+    
+    # If user doesn't specify cores in command line, just leave them with one free.
     if not cores:
         cores = mp.cpu_count() - 1
+    
+    # Run GeneMark-ES and extract data.
     if gm_branch:
         sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", str(cores), "--sequence", genome])
     else:
         sp.call(["gmes_petap.pl", "--ES", "--cores", str(cores), "--sequence", genome])
     sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
+    
+    # Return CSV object to convert into attribute data.
     return reader(open("genemark.gtf"), delimiter="\t")
 
 
 def GeneMarkGTFConverter(gtf, tag):
     """
-    Convert a GeneMark-produced GTF/GFF file (which is NOT in a valid format)
-    into an attributes file for easier merging with the predictions from
+    Convert a GeneMark-produced GTF/GFF file (which is NOT in a valid GTF/GFF format)
+    into an attributes object for easier merging with the predictions from
     exonerate and TransDecoder downstream.
     
     Uses a version of a FSM approach to get the correct locations of genes as
-    predicted by GeneMark-ES as well as exon count. I'm not a fan of the way
-    GeneMark produces GTF/GFF files or how its other Perl scripts parse them.
+    predicted by GeneMark-ES as well as exon count.
     """
     attributes = []  # List for holding converted attribute info.
     locs = []
     exon_count = 0
-    for row, next_row in pairwise(gtf):  # "gtf" will be a CSV.reader object.
+    for row, next_row in Pairwise(gtf):  # "gtf" will be a CSV.reader object.
         if next_row is not None:
             if row[8].split("\"") == next_row[8].split("\""):
                 if row[2] == "exon":
@@ -616,19 +556,127 @@ def GeneMarkGTFConverter(gtf, tag):
 def MergeExonerateAndGeneMark(tag, exonerate_attributes, genemark_attributes):
     """
     Return genes called via GeneMark-ES that do not overlap with the
-    co-ordinates of genes called via exonerate. Bit awkward because we're dealing
-    with two lists of different objects, 
+    co-ordinates of genes called via exonerate.
     """
     unique_calls = exonerate_attributes + genemark_attributes
     unique_calls.sort(key=lambda x: (x[0], int(x[2])))
     to_remove = []
-    for call, next_call in pairwise(unique_calls):
+    for call, next_call in Pairwise(unique_calls):
         if next_call:
             overlap = LocationOverlap(call, next_call)
             if overlap:
                 to_remove.append(overlap[1])
     return [call for call in unique_calls if call[1] not in to_remove]
+
+
+def MoveGeneMarkFiles(workdir, genome):
+    """
+    Handles temporary folders/files created by GeneMark-ES.
+    """
+    to_move = ["data", "info", "output", "run", "gmes.log", "run.cfg",
+               "prot_seq.faa", "nuc_seq.fna", "genemark.gtf"]
     
+    gmes = "{0}/gmes/{1}/".format(workdir, genome)
+    
+    try:
+        os.makedirs(gmes)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            raise
+    
+    for file in to_move:
+        if os.path.isdir(file):
+            if not os.path.isdir("{0}/{1}".format(gmes, file)):
+                shutil.move(file, gmes)
+            else:
+                shutil.rmtree(file)
+        elif os.path.isfile(file):
+            if not os.path.isfile("{0}/{1}".format(gmes, file)):
+                shutil.move(file, gmes)
+            else:
+                os.remove(file)
+
+
+def ExtractNCR(attributes, genome):
+    """
+    Generate noncoding sequences from a genome by slicing around known coordinates.
+    """
+    # List of non-coding regions of genome.
+    ncr = []
+    
+    # Strings for NCR IDs and sequence data.
+    extract_id = ""
+    extract = ""
+    
+    # Parse genome file.
+    db = SeqIO.parse(open(genome), "fasta")
+    
+    # Loop over every contig/chromosome in the genome.
+    for seq in db:
+        coding = filter(lambda x: x[0] == seq.id, attributes)
+        for gene, next_gene in Pairwise(coding):
+            if coding.index(gene) == 0:
+                if gene[2] != 0:
+                    extract_id = seq.id + "_NCR_0_{0}".format(gene[2] - 1)
+                    extract = seq.seq[0:gene[2] - 2]
+                    ncr.append(">{0}\n{1}\n".format(extract_id, extract))
+            elif next_gene is None:
+                extract_id = seq.id + "_NCR_{0}_{1}".format(gene[3] + 1, len(seq) + 1)
+                extract = seq.seq[gene[3]:]
+                ncr.append(">{0}\n{1}\n".format(extract_id, extract))
+            else:
+                extract_id = seq.id + "_NCR_{0}_{1}".format(gene[3] + 1, next_gene[2] - 1)
+                extract = seq.seq[gene[3]:next_gene[2] - 2]
+                ncr.append(">{0}\n{1}\n".format(extract_id, extract))
+    
+    return ncr
+
+
+def RunTransDecoder(ncr, workdir, genome):
+    """
+    """
+    
+    # Path to TransDecoder directory.
+    tdir = "{0}/td/{1}/".format(workdir, genome)
+    
+    # Try to make a directory for TransDecoder. Might as well do it now.
+    try:
+        os.makedirs(tdir)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            raise    
+    
+    # Write NCRs to FASTA file
+    with open("{0}/NCR.fna".format(tdir), "w") as outfile:
+        for line in ncr:
+            outfile.write(line)
+
+    # Run both TransDecoder processes sequentially
+    sp.call(["TransDecoder.LongOrfs", "-t", "{0}/NCR.fna".format(tdir), "-m", "200"])
+    sp.call(["TransDecoder.Predict", "-t", "{0}/NCR.fna".format(tdir), "--single_best_only"])
+
+    # Return the TransDecoder directory.
+    return tdir
+
+def MoveTransDecoderFiles(tdir):
+    """
+    """
+    
+    to_move = glob("NCR*") + glob("pipeliner*")
+    
+    # Move all files named "NCR*".
+    for file in glob("NCR*"):
+        if os.path.isdir(file):
+            if not os.path.isdir("{0}/{1}".format(tdir, file)):
+                shutil.move(file, tdir)
+            else:
+                shutil.rmtree(file)
+        elif os.path.isfile(file):
+            if not os.path.isfile("{0}/{1}".format(tdir, file)):
+                shutil.move(file, tdir)
+            else:
+                os.remove(file)
+
 
 ##### Main. #####
 # def main():
