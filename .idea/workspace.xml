@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,15 +16,15 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS.coverage" NAME="PanGLOSS Coverage Results" MODIFIED="1522675848851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS__1_.coverage" NAME="PanGLOSS (1) Coverage Results" MODIFIED="1525284573297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS__1_.coverage" NAME="PanGLOSS (1) Coverage Results" MODIFIED="1548460530840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-72">
-              <caret line="57" column="33" selection-start-line="57" selection-start-column="33" selection-end-line="57" selection-end-column="33" />
+            <state relative-caret-position="1320">
+              <caret line="88" column="19" lean-forward="true" selection-start-line="88" selection-start-column="19" selection-end-line="88" selection-end-column="19" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -34,8 +35,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="558">
-              <caret line="619" lean-forward="true" selection-start-line="619" selection-end-line="619" />
+            <state relative-caret-position="9270">
+              <caret line="634" lean-forward="true" selection-start-line="634" selection-end-line="634" />
             </state>
           </provider>
         </entry>
@@ -65,12 +66,12 @@
         <option value="$PROJECT_DIR$/PanGLOSS/Tools.py" />
         <option value="$PROJECT_DIR$/PanGLOSS.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="12" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
@@ -193,11 +194,12 @@
       <option name="presentableId" value="Default" />
       <updated>1522343156771</updated>
       <workItem from="1547815176527" duration="1148000" />
+      <workItem from="1548459996050" duration="555000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2515000" />
+    <option name="totallyTimeSpent" value="3070000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -209,12 +211,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="12" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.24892704" />
-      <window_info active="true" id="Structure" order="1" visible="true" weight="0.21959943" />
+      <window_info id="Structure" order="1" visible="true" weight="0.22246066" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" weight="0.3299363" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="1" />
       <window_info anchor="bottom" id="Message" order="2" />
@@ -231,7 +233,7 @@
       <window_info anchor="right" id="SciView" order="0" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" visible="true" weight="0.24964234" />
       <window_info anchor="right" id="Data View" order="4" />
       <window_info anchor="right" id="R Graphics" order="5" />
       <window_info anchor="right" id="R Packages" order="6" />
@@ -291,8 +293,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-72">
-          <caret line="57" column="33" selection-start-line="57" selection-start-column="33" selection-end-line="57" selection-end-column="33" />
+        <state relative-caret-position="1320">
+          <caret line="88" column="19" lean-forward="true" selection-start-line="88" selection-start-column="19" selection-end-line="88" selection-end-column="19" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
@@ -301,8 +303,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="619" lean-forward="true" selection-start-line="619" selection-end-line="619" />
+        <state relative-caret-position="9270">
+          <caret line="634" lean-forward="true" selection-start-line="634" selection-end-line="634" />
         </state>
       </provider>
     </entry>
