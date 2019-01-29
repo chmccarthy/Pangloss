@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from Bio import SearchIO, SeqIO
 from ConfigParser import SafeConfigParser
 from PanGLOSS import PanGuess
+from csv import reader
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len):
     """
@@ -55,7 +56,8 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Run prediction using GeneMark-ES.
         print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
-        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
+        #genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
+        genemark_gtf = reader(open("gm_pred/gmes/genomes/c.fna/genemark.gtf"), delimiter="\t")
         print "OK."
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
@@ -65,12 +67,12 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Merge unique gene model calls between the two different methods.
         print "Merging unique gene calls...\t",
-        merged_attributes = PanGuess.MergeExonerateAndGeneMark(tag, exonerate_attributes, genemark_attributes)
+        merged_attributes = PanGuess.MergeAttributes(tag, exonerate_attributes, genemark_attributes)
         print "OK."
         
         # Clean up GeneMark-ES files and folders.
         print "Tidying up GeneMark-ES temporary files and folders...\t",
-        PanGuess.MoveGeneMarkFiles(workdir, genome)
+        #PanGuess.MoveGeneMarkFiles(workdir, genome)
         print "OK."
         
         # Extract NCRs into list.
@@ -85,7 +87,21 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Move TransDecoder files.
         print "Tidying up TransDecoder temporary files and folders...\t",
-        tdir = PanGuess.MoveTransDecoderFiles(tdir)
+        PanGuess.MoveTransDecoderFiles(tdir)
+        print "OK."
+        
+        # Extract TransDecoder attributes.
+        print "Converting TransDecoder GTF file to attributes...\t"
+        trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
+        print "OK."
+        
+        # Merge unique gene model calls between the two different methods.
+        print "Merging remaining gene calls...\t",
+        full_attributes = PanGuess.MergeAttributes(tag, merged_attributes, trans_attributes)
+        print "OK."
+        
+        print "Writing gene calls and gene attributes...\t"
+        PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
         print "OK."
 
 
