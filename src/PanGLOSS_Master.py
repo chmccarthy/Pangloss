@@ -56,8 +56,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Run prediction using GeneMark-ES.
         print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
-        #genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
-        genemark_gtf = reader(open("gm_pred/gmes/genomes/c.fna/genemark.gtf"), delimiter="\t")
+        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
         print "OK."
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
@@ -72,7 +71,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Clean up GeneMark-ES files and folders.
         print "Tidying up GeneMark-ES temporary files and folders...\t",
-        #PanGuess.MoveGeneMarkFiles(workdir, genome)
+        PanGuess.MoveGeneMarkFiles(workdir, genome)
         print "OK."
         
         # Extract NCRs into list.

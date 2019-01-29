@@ -433,5 +433,3 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
     with open("{0}.attributes".format(tag), "w") as outatt:
          for line in attributes:
               outatt.write("\t".join(str(el) for el in line) + "\n")
-              
-              
