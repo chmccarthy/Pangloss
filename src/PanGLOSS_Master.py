@@ -35,6 +35,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
     # Loop over each genome and carry out gene model prediction.
     for genome in genomes:
         # Make tag from genome name.
+        print "Running gene model prediction for {0}.".format(genome)
         tag = genome.split(".")[0].split("/")[1]
         
         # Run prediction using Exonerate.
@@ -48,8 +49,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
         print "OK."
         
-        # Extract genomic attributes from Exonerate gene model set (easier to do at
-        # this point rather than later).
+        # Extract genomic attributes from Exonerate gene model set.
         print "Extracting genomic attributes from Exonerate gene models...\t",
         exonerate_attributes = PanGuess.GetExonerateAttributes(exonerate_genes, tag)
         print "OK."
@@ -64,7 +64,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
         print "OK."
         
-        # Merge unique gene model calls between the two different methods.
+        # Merge unique gene model calls between Exonerate and GeneMark-ES.
         print "Merging unique gene calls...\t",
         merged_attributes = PanGuess.MergeAttributes(tag, exonerate_attributes, genemark_attributes)
         print "OK."
@@ -90,18 +90,25 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         print "OK."
         
         # Extract TransDecoder attributes.
-        print "Converting TransDecoder GTF file to attributes...\t"
+        print "Converting TransDecoder GTF file to attributes...\t",
         trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
         print "OK."
         
-        # Merge unique gene model calls between the two different methods.
+        # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
         print "Merging remaining gene calls...\t",
         full_attributes = PanGuess.MergeAttributes(tag, merged_attributes, trans_attributes)
         print "OK."
         
-        print "Writing gene calls and gene attributes...\t"
+        # Write out gene set, protein set and attributes set.
+        print "Writing gene calls and gene attributes...\t",
         PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
         print "OK."
+        
+        # Compress temporary folders and finish up.
+        print "Compressing temporary GeneMark-ES and TransDecoder folders...\t",
+        PanGuess.TarballGenePredictionDirs(workdir, genome)
+        print "OK."
+        print "Finished gene model prediction for {0}.".format(genome)
 
 
 def QualityCheck():
@@ -150,6 +157,7 @@ def main():
     
     # Run PanGuess, unless disabled.
     PanGuessHandler(*panguess_args)
+
 
 if __name__ == "__main__":
     main()
