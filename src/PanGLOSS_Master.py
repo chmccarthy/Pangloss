@@ -1,8 +1,8 @@
 from argparse import ArgumentParser
-from Bio import SearchIO, SeqIO
 from ConfigParser import SafeConfigParser
-from PanGLOSS import PanGuess
-from csv import reader
+from glob import glob
+from PanGLOSS import PanGuess, QualityCheck
+
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len):
     """
@@ -20,6 +20,8 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
                        trans_coding_potential (int).
         td_len       = Amino acid sequence length cutoff for TransDecoder given by
                        trans_aa_length (int).
+
+    Find some way to incorporate exon_cov and td_potential into final product!
     """
     # Generate list of genomes from user-provided genome list file.
     print "Parsing list of genomes...\t",
@@ -66,7 +68,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Merge unique gene model calls between Exonerate and GeneMark-ES.
         print "Merging unique gene calls...\t",
-        merged_attributes = PanGuess.MergeAttributes(tag, exonerate_attributes, genemark_attributes)
+        merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
         print "OK."
         
         # Clean up GeneMark-ES files and folders.
@@ -81,7 +83,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Run TransDecoder on NCRs.
         print "Running TransDecoder on non-coding regions...\t",
-        tdir = PanGuess.RunTransDecoder(noncoding, workdir, genome)
+        tdir = PanGuess.RunTransDecoder(noncoding, workdir, genome, td_len)
         print "OK."
         
         # Move TransDecoder files.
@@ -96,7 +98,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
         print "Merging remaining gene calls...\t",
-        full_attributes = PanGuess.MergeAttributes(tag, merged_attributes, trans_attributes)
+        full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
         print "OK."
         
         # Write out gene set, protein set and attributes set.
@@ -111,7 +113,24 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         print "Finished gene model prediction for {0}.".format(genome)
 
 
-def QualityCheck():
+def QualityCheckHandler(gene_sets, queries):
+    """
+    Search a user-provided set of genes of dubious-quality (i.e. pseudogenes, transposable elements or
+    transposons &c.) against predicted gene model sets and filter out sufficiently similar genes in the latter.
+
+    Arguments:
+        gene_sets   = List of strains in analysis (easy access to all files associated with a strain).
+        queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
+    """
+    QualityCheck.BuildMakeBLASTDBs(gene_sets)
+    results = QualityCheck.QCBLAST(queries, gene_sets)
+    for result in results:
+        for q in result:
+            print q
+    pass
+
+
+def BUSCOHandler():
     pass
 
 
@@ -123,6 +142,9 @@ def CmdLineParser():
     """
     ap = ArgumentParser(description="Pan-genome analysis of microbial eukaryotes.")
     ap.add_argument("config", help="Path to PanGLOSS configuration file.")
+    ap.add_argument("--no_pred", action="store_true", help="Skip gene model prediction pipeline.")
+    ap.add_argument("--qc", action="store_true", help="Perform quality check on predicted gene model sets.")
+    ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
     args = ap.parse_args()
     return args
 
@@ -147,17 +169,24 @@ def main():
     # Create argument lists.
     panguess_args = []
     pangloss_args = []
-    
+
     # Read config file.
     cp.read("config.txt")
-    
-    # Generate arguments for PanGuess (genome list, working directory, reference set).
-    for arg in cp.items("Gene_model_prediction"):
-        panguess_args.append(arg[1])
-    
-    # Run PanGuess, unless disabled.
-    PanGuessHandler(*panguess_args)
+
+    # Unless disabled, parse arguments for PanGuess and run gene model prediction.
+    if not ap.no_pred:
+        for arg in cp.items("Gene_model_prediction"):
+            panguess_args.append(arg[1])
+        PanGuessHandler(*panguess_args)
+
+    # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements.
+    if ap.qc:
+        gene_sets = [i.split(".")[0] for i in glob("*.faa")]
+        for arg in cp.items("Quality_check"):
+            queries = arg[1]
+        QualityCheckHandler(gene_sets, queries)
 
 
 if __name__ == "__main__":
     main()
+

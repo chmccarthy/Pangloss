@@ -241,7 +241,6 @@ def ExonerateCmdLine(cmd):
     no information to make an object from). As such, the contains check makes
     sure only full exonerate hits are returned.
     """
-    print "Running {0}".format(" ".join(cmd))
     process = sp.check_output(cmd)
     if "C4 Alignment:" in process:  # Empty results don't contain this line!
         return ExonerateGene(cStringIO.StringIO(process))
@@ -271,3 +270,20 @@ def LocationOverlap(call, next_call):
         else:
             return call
 
+
+def MakeBLASTDBCmdLine(cmd):
+    """
+    Generalized function for running makeBLASTDB. Nothing fancy.
+    """
+    sp.call(cmd)
+
+
+def QCBLASTCmdLine(cmd):
+    """
+    BLAST pseudogenes/transposable elements/&c against a given gene model set.
+    """
+    process = sp.check_output(cmd)
+    if "<BlastOutput>" in process:  # Empty results don't contain this line!
+        return process
+    else:
+        pass

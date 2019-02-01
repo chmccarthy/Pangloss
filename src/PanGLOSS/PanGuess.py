@@ -36,23 +36,20 @@ Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 
 from __future__ import division
 
-import cStringIO
 import multiprocessing as mp
 import os
-import re
 import shutil
 import subprocess as sp
-import sys
-import time
-from collections import OrderedDict as od
+import tarfile
 from csv import reader
 from glob import glob
 
-from Bio import SearchIO, SeqIO
+from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from Tools import ExonerateCmdLine, LocationOverlap, Pairwise, get_gene_lengths
+from Tools import ExonerateCmdLine, LocationOverlap, Pairwise #get_gene_lengths
+
 
 def LengthOverlap(gene, ref_lengths):
     if gene:
@@ -71,7 +68,7 @@ def MakeWorkingDir(workdir):
     """
     Tries to make work directory if not already present.
     """
-    
+
     # Don't rewrite work directory if already there.
     try:
         os.makedirs(workdir)
@@ -89,11 +86,11 @@ def BuildRefSet(workdir, ref):
     # Make folder for reference proteins, if not already present.
     ref_folder = "{0}/ref".format(workdir)
     try:
-       os.makedirs(ref_folder)
+        os.makedirs(ref_folder)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
             raise
-    
+
     # Split user-provided reference set into individual proteins (have to do this).
     ref_db = SeqIO.index(ref, "fasta")
     for seq in ref_db:
@@ -107,7 +104,7 @@ def BuildExonerateCmds(workdir, genome):
     """
     # List of commands.
     exon_cmds = []
-    
+
     # Generate and return commands.
     for prot in glob("{0}/ref/*.faa".format(workdir)):
         exon_cmds.append(["exonerate", "--model", "protein2genome",
@@ -125,16 +122,17 @@ def RunExonerate(cmds, len_dict=None, cores=None):
     # If user doesn't specify cores in command line, just leave them with one free.
     if not cores:
         cores = mp.cpu_count() - 1
-    
+
     # Farm out Exonerate processes, wait for all to finish and merge together.
     farm = mp.Pool(processes=cores)
     genes = farm.map(ExonerateCmdLine, cmds)
     farm.close()
     farm.join()
-    
+
     # Check overlap of predicted gene models against their query homolog.
     if len_dict:
-        return [gene for gene in genes if check_overlap(gene, len_dict)]
+        #return [gene for gene in genes if check_overlap(gene, len_dict)]
+        pass
     else:
         return [gene for gene in genes if gene]
 
@@ -146,16 +144,14 @@ def GetExonerateAttributes(exonerate_genes, tag):
     """
     # Master list of attributes.
     exonerate_attributes = []
-    
-    # Loop through called genes and extract info. Could be done in one line, obviously.
+
+    # Loop through called genes and extract info.
     for gene in exonerate_genes:
-        gene_att = [gene.contig_id, gene.id, gene.locs[0], gene.locs[1]]
-        gene_att.append("{0};{1};{2}".format(gene.ref, gene.internal_stop, gene.introns))
-        gene_att.append(tag)
-        
+        att_column = ("{0};{1};{2}".format(gene.ref, gene.internal_stop, gene.introns))
+
         # Add to master list.
-        exonerate_attributes.append(gene_att)
-    
+        exonerate_attributes.append([gene.contig_id, gene.id, gene.locs[0], gene.locs[1], att_column, tag])
+
     # Return separate Exonerate attributes object.
     return exonerate_attributes
 
@@ -168,14 +164,14 @@ def RunGeneMark(genome, gm_branch, cores=1):
     # If user doesn't specify cores in command line, just leave them with one free.
     if not cores:
         cores = mp.cpu_count() - 1
-    
+
     # Run GeneMark-ES and extract data.
     if gm_branch:
         sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", str(cores), "--sequence", genome])
     else:
         sp.call(["gmes_petap.pl", "--ES", "--cores", str(cores), "--sequence", genome])
     sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
-    
+
     # Return CSV object to convert into attribute data.
     return reader(open("genemark.gtf"), delimiter="\t")
 
@@ -189,7 +185,7 @@ def GeneMarkGTFConverter(gtf, tag):
     attributes = []
     locs = []
     exon_count = 0
-    
+
     # Pairwise loop over GTF file, start extracting info.
     for row, next_row in Pairwise(gtf):
         if next_row is not None:
@@ -197,7 +193,7 @@ def GeneMarkGTFConverter(gtf, tag):
                 if row[2] == "exon":
                     exon_count = exon_count + 1
                 locs = locs + [int(row[3]), int(row[4])]
-            
+
             # End of info for current gene, get everything together and reset variables.
             else:
                 if row[2] == "exon":
@@ -210,7 +206,7 @@ def GeneMarkGTFConverter(gtf, tag):
                                    annotations, tag])
                 locs = []
                 exon_count = 0
-        
+
         # End of file.
         else:
             if row[2] == "exon":
@@ -221,12 +217,12 @@ def GeneMarkGTFConverter(gtf, tag):
             annotations = "GeneMark={0};IS=False;Introns={1}".format(gene_id, exon_count - 1)
             attributes.append([contig_id, gene_id, min(locs), max(locs),
                                annotations, tag])
-    
+
     # Return sorted GeneMark-ES attributes.
     return sorted(attributes, key=lambda x: (x[0], int(x[2])))
 
 
-def MergeAttributes(tag, first_attributes, second_attributes):
+def MergeAttributes(first_attributes, second_attributes):
     """
     Return called genes from two methods that do not overlap. Done for both adding
     Exonerate and GeneMark-ES calls together, and then later when adding TransDecoder
@@ -236,14 +232,14 @@ def MergeAttributes(tag, first_attributes, second_attributes):
     unique_calls = first_attributes + second_attributes
     unique_calls.sort(key=lambda x: (x[0], int(x[2])))
     to_remove = []
-    
+
     # Go through all calls and earmark overlapping/redundant calls for removal.
     for call, next_call in Pairwise(unique_calls):
         if next_call:
             overlap = LocationOverlap(call, next_call)
             if overlap:
                 to_remove.append(overlap[1])
-    
+
     # Return all unique and non-overlapped calls.
     return [call for call in unique_calls if call[1] not in to_remove]
 
@@ -255,7 +251,7 @@ def MoveGeneMarkFiles(workdir, genome):
     # GeneMark-ES produces these filenames for each genome run.
     to_move = ["data", "info", "output", "run", "gmes.log", "run.cfg",
                "prot_seq.faa", "nuc_seq.fna", "genemark.gtf"]
-    
+
     # Attempt to make GeneMark-ES temporary file folder if not extant.
     gmes = "{0}/gmes/{1}/".format(workdir, genome)
     try:
@@ -263,19 +259,19 @@ def MoveGeneMarkFiles(workdir, genome):
     except OSError as e:
         if e.errno != os.errno.EEXIST:
             raise
-    
+
     # Move all files and folders to new folder.
-    for file in to_move:
-        if os.path.isdir(file):
-            if not os.path.isdir("{0}/{1}".format(gmes, file)):
-                shutil.move(file, gmes)
+    for f in to_move:
+        if os.path.isdir(f):
+            if not os.path.isdir("{0}/{1}".format(gmes, f)):
+                shutil.move(f, gmes)
             else:
-                shutil.rmtree(file)
-        elif os.path.isfile(file):
-            if not os.path.isfile("{0}/{1}".format(gmes, file)):
-                shutil.move(file, gmes)
+                shutil.rmtree(f)
+        elif os.path.isfile(f):
+            if not os.path.isfile("{0}/{1}".format(gmes, f)):
+                shutil.move(f, gmes)
             else:
-                os.remove(file)
+                os.remove(f)
 
 
 def ExtractNCR(attributes, genome):
@@ -284,14 +280,10 @@ def ExtractNCR(attributes, genome):
     """
     # List of non-coding regions of genome.
     ncr = []
-    
-    # Strings for NCR IDs and sequence data.
-    extract_id = ""
-    extract = ""
-    
+
     # Parse genome file.
     db = SeqIO.parse(open(genome), "fasta")
-    
+
     # Loop over every contig/chromosome in the genome.
     for seq in db:
         coding = filter(lambda x: x[0] == seq.id, attributes)
@@ -309,12 +301,12 @@ def ExtractNCR(attributes, genome):
                 extract_id = seq.id + "_NCR_{0}_{1}".format(gene[3] + 1, next_gene[2] - 1)
                 extract = seq.seq[gene[3]:next_gene[2] - 2]
                 ncr.append(">{0}\n{1}\n".format(extract_id, extract))
-    
+
     # Return list of NCR sequences.
     return ncr
 
 
-def RunTransDecoder(ncr, workdir, genome):
+def RunTransDecoder(ncr, workdir, genome, td_len):
     """
     Run the two TransDecoder commands via the command line.
     """
@@ -324,15 +316,15 @@ def RunTransDecoder(ncr, workdir, genome):
         os.makedirs(tdir)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
-            raise    
-    
-    # Write NCRs to FASTA file
+            raise
+
+            # Write NCRs to FASTA file
     with open("{0}/NCR.fna".format(tdir), "w") as outfile:
         for line in ncr:
             outfile.write(line)
 
     # Run both TransDecoder processes sequentially
-    sp.call(["TransDecoder.LongOrfs", "-t", "{0}/NCR.fna".format(tdir), "-m", "200"])
+    sp.call(["TransDecoder.LongOrfs", "-t", "{0}/NCR.fna".format(tdir), "-m", "{0}".format(td_len)])
     sp.call(["TransDecoder.Predict", "-t", "{0}/NCR.fna".format(tdir), "--single_best_only"])
 
     # Return the TransDecoder directory for MoveTransDecoderFiles.
@@ -345,19 +337,19 @@ def MoveTransDecoderFiles(tdir):
     """
     # List of TransDecoder temporary files to move.
     to_move = glob("NCR*") + glob("pipeliner*")
-    
+
     # Move all files named "NCR*" and "pipeliner*".
-    for file in to_move:
-        if os.path.isdir(file):
-            if not os.path.isdir("{0}/{1}".format(tdir, file)):
-                shutil.move(file, tdir)
+    for f in to_move:
+        if os.path.isdir(f):
+            if not os.path.isdir("{0}/{1}".format(tdir, f)):
+                shutil.move(f, tdir)
             else:
-                shutil.rmtree(file)
-        elif os.path.isfile(file):
-            if not os.path.isfile("{0}/{1}".format(tdir, file)):
-                shutil.move(file, tdir)
+                shutil.rmtree(f)
+        elif os.path.isfile(f):
+            if not os.path.isfile("{0}/{1}".format(tdir, f)):
+                shutil.move(f, tdir)
             else:
-                os.remove(file)
+                os.remove(f)
 
 
 def TransDecoderGTFToAttributes(tdir, tag):
@@ -375,7 +367,10 @@ def TransDecoderGTFToAttributes(tdir, tag):
     attributes = []
     locs = []
     exon_count = 0
-    
+    contig_id = ""
+    gene_id = ""
+    annotations = ""
+
     # Pairwise loop, start extracting info if line in VALID GTF format.
     for row, next_row in Pairwise(gtf):
         if next_row is not None:
@@ -384,32 +379,32 @@ def TransDecoderGTFToAttributes(tdir, tag):
                     contig_id = row[0].split("_")[0]
                     global_locs = map(int, row[0].split("_")[2:])
                     if row[2] == "exon":
-                          exon_count + 1
+                        exon_count = exon_count + 1
                     if row[2] == "CDS":
-                          relative_locs = map(int, row[3:5])
-                          start = global_locs[0] + relative_locs[0] - 1
-                          stop = global_locs[0] + relative_locs[1] - 1
-                          locs = [start, stop]
-                          gene_id = row[-1].split(";")[1].strip("Parent=")
-                          annotations = "TransDecoder={0};IS=False;Introns={1}".format(
-                                        gene_id, exon_count)
-               
-               # Ignore comment line.
+                        relative_locs = map(int, row[3:5])
+                        start = global_locs[0] + relative_locs[0] - 1
+                        stop = global_locs[0] + relative_locs[1] - 1
+                        locs = [start, stop]
+                        gene_id = row[-1].split(";")[1].strip("Parent=")
+                        annotations = "TransDecoder={0};IS=False;Introns={1}".format(
+                            gene_id, exon_count - 1)
+
+                # Ignore comment line.
                 else:
                     pass
-            
+
             # End of gene info, add attributes into master list and reset variables.
             else:
                 attributes.append([contig_id, gene_id, min(locs), max(locs), annotations, tag])
                 locs = []
                 exon_count = 0
-        
+
         # End of file.
         else:
             attributes.append([contig_id, gene_id, min(locs), max(locs), annotations, tag])
             locs = []
             exon_count = 0
-    
+
     # Return sorted TransDecoder attributes.
     return sorted(attributes, key=lambda x: (x[0], int(x[2])))
 
@@ -423,15 +418,14 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
     gm_nucl_db = SeqIO.index("{0}/gmes/{1}/nuc_seq.fna".format(workdir, genome), "fasta")
     td_prot_db = SeqIO.index("{0}/td/{1}/NCR.fna.transdecoder.pep".format(workdir, genome), "fasta")
     td_nucl_db = SeqIO.index("{0}/td/{1}/NCR.fna.transdecoder.cds".format(workdir, genome), "fasta")
-    
+
     # Master lists.
     prot_models = []
     nucl_models = []
-    
+
     # Loop over attributes, extract gene from given source based on parent method.
     for gene in attributes:
         if gene[4].startswith("TransDecoder"):
-            print gene[1]
             prot_seq = td_prot_db[gene[1]]
             nucl_seq = td_nucl_db[gene[1]]
             prot_seq.id = "{0}|{1}_{2}_{3}".format(tag, gene[0], gene[2], gene[3])
@@ -440,7 +434,6 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
             prot_models.append(prot_seq)
             nucl_models.append(nucl_seq)
         elif gene[4].startswith("GeneMark"):
-            print gene[1]
             prot_seq = gm_prot_db[gene[1]]
             nucl_seq = gm_nucl_db[gene[1]]
             prot_seq.id = "{0}|{1}_{2}_{3}".format(tag, gene[0], gene[2], gene[3])
@@ -450,26 +443,26 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
             nucl_models.append(nucl_seq)
         elif gene[4].startswith("Exonerate"):
             match = filter(lambda x: x.id == gene[1], exonerate_genes)
-            prot_seq = SeqRecord(Seq(match[0].prot), id = match[0].id)
-            nucl_seq = SeqRecord(Seq(match[0].nucl), id = match[0].id)
+            prot_seq = SeqRecord(Seq(match[0].prot), id=match[0].id)
+            nucl_seq = SeqRecord(Seq(match[0].nucl), id=match[0].id)
             prot_seq.id = "{0}|{1}".format(tag, prot_seq.id)
             nucl_seq.id = "{0}|{1}".format(tag, nucl_seq.id)
             gene[1] = prot_seq.id
             prot_models.append(prot_seq)
             nucl_models.append(nucl_seq)
-    
+
     # Write protein sequences to file.
     with open("{0}.faa".format(tag), "w") as outpro:
         SeqIO.write(prot_models, outpro, "fasta")
-    
+
     # Write nucleotide sequences to file.
     with open("{0}.nucl".format(tag), "w") as outnuc:
         SeqIO.write(nucl_models, outnuc, "fasta")
-    
+
     # Write attributes to file.
     with open("{0}.attributes".format(tag), "w") as outatt:
-         for line in attributes:
-              outatt.write("\t".join(str(el) for el in line) + "\n")
+        for line in attributes:
+            outatt.write("\t".join(str(el) for el in line) + "\n")
 
 
 def TarballGenePredictionDirs(workdir, genome):
@@ -479,13 +472,13 @@ def TarballGenePredictionDirs(workdir, genome):
     # Tarball genome's GeneMark-ES folder, remove uncompressed copy.
     with tarfile.open("{0}/gmes/{1}.tar.gz".format(workdir, genome), "w:gz") as genemark_tar:
         for root, dirs, files in os.walk("{0}/gmes/{1}".format(workdir, genome)):
-           for f in files:
-               genemark_tar.add(os.path.join(root, f))
+            for f in files:
+                genemark_tar.add(os.path.join(root, f))
     shutil.rmtree("{0}/gmes/{1}".format(workdir, genome))
-    
+
     # Tarball genome's TransDecoder folder, remove uncompressed copy.
     with tarfile.open("{0}/td/{1}.tar.gz".format(workdir, genome), "w:gz") as td_tar:
         for root, dirs, files in os.walk("{0}/td/{1}".format(workdir, genome)):
-           for f in files:
-               td_tar.add(os.path.join(root, f))
+            for f in files:
+                td_tar.add(os.path.join(root, f))
     shutil.rmtree("{0}/td/{1}".format(workdir, genome))
