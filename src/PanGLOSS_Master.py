@@ -123,10 +123,13 @@ def QualityCheckHandler(gene_sets, queries):
         queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
     """
     QualityCheck.BuildMakeBLASTDBs(gene_sets)
-    results = QualityCheck.QCBLAST(queries, gene_sets)
-    for result in results:
+    blasts = QualityCheck.QCBLAST(queries, gene_sets)
+    for result in blasts:
         for q in result:
-            print q
+            if q.hits:
+                query_len = q.seq_len
+                print dir(q.hits[0].hsps[0])
+                subj_len = q.hits[0]
     pass
 
 

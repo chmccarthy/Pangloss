@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/PanGLOSS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PanGLOSS.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,24 +21,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="127" column="24" selection-start-line="127" selection-start-column="24" selection-end-line="127" selection-end-column="24" />
+            <state relative-caret-position="414">
+              <caret line="130" column="43" selection-start-line="130" selection-start-column="43" selection-end-line="130" selection-end-column="43" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
-                <element signature="e#257#5193#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-178">
-              <caret line="6" column="24" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+            <state relative-caret-position="693">
+              <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#16#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -49,7 +48,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4906">
+            <state relative-caret-position="1815">
               <caret line="121" selection-start-line="121" selection-end-line="123" selection-end-column="34" />
               <folding>
                 <element signature="e#1228#1259#0" expanded="true" />
@@ -107,11 +106,10 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="12" />
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
-    <option name="width" value="1442" />
-    <option name="height" value="878" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -236,12 +234,13 @@
       <updated>1522343156771</updated>
       <workItem from="1547815176527" duration="1148000" />
       <workItem from="1548459996050" duration="555000" />
-      <workItem from="1549022662166" duration="9802000" />
+      <workItem from="1549022662166" duration="9843000" />
+      <workItem from="1549279445952" duration="1203000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12872000" />
+    <option name="totallyTimeSpent" value="14116000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -253,12 +252,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="24" width="1920" height="1057" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="1057" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24866879" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2513312" />
       <window_info id="Structure" order="1" weight="0.22470714" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Inspection Results" visible="true" weight="0.32953367" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="1" />
       <window_info anchor="bottom" id="Message" order="2" />
@@ -273,6 +272,7 @@
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32884097" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32884097" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.3299363" />
+      <window_info active="true" anchor="bottom" id="Inspection Results" order="14" visible="true" weight="0.32953367" />
       <window_info anchor="right" id="SciView" order="0" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
@@ -342,7 +342,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4906">
+        <state relative-caret-position="1815">
           <caret line="121" selection-start-line="121" selection-end-line="123" selection-end-column="34" />
           <folding>
             <element signature="e#1228#1259#0" expanded="true" />
@@ -357,20 +357,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-178">
-          <caret line="6" column="24" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+        <state relative-caret-position="414">
+          <caret line="130" column="43" selection-start-line="130" selection-start-column="43" selection-end-line="130" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="127" column="24" selection-start-line="127" selection-start-column="24" selection-end-line="127" selection-end-column="24" />
+        <state relative-caret-position="693">
+          <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
           <folding>
-            <element signature="e#0#35#0" expanded="true" />
-            <element signature="e#257#5193#0" />
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>

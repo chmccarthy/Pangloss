@@ -42,11 +42,14 @@ def BuildMakeBLASTDBs(gene_sets, cores=None):
 
 def QCBLAST(queries, gene_sets, cores=None):
     """
+    BLASTs user-provided proteins against strains datasets and returns a list of parsed SearchIO objects. We parse the
+    results of the BLAST(s) as SearchIO objects in the return statement rather than within QCBLASTCmdLine (see Tools.py)
+    because mp.Pool can't handle lists of SearchIO objects (something to do with pickling non-standard data types?).
     """
     if not cores:
         cores = mp.cpu_count() - 1
 
-    # Holds makeblastdb commands.
+    # Holds BLASTp commands.
     blast_cmds = []
 
     # Generate commands for every strain.
@@ -55,12 +58,13 @@ def QCBLAST(queries, gene_sets, cores=None):
                "-num_alignments", "1"]
         blast_cmds.append(cmd)
 
-    # Run simultaneous makeblastdb commands.
+    # Run simultaneous BLASTp commands.
     farm = mp.Pool(processes=cores)
     blasts = farm.map(QCBLASTCmdLine, blast_cmds)
     farm.close()
     farm.join()
 
+    # Return list of parsed BLASTp results.
     return [SearchIO.parse(cStringIO.StringIO(blast), "blast-xml") for blast in blasts]
 
 
