@@ -1,10 +1,13 @@
+import logging
+
 from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
+from datetime import datetime
 from glob import glob
 from PanGLOSS import PanGuess, QualityCheck
 
 
-def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len):
+def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None):
     """
     Runs PanGuess from master script.
     
@@ -43,7 +46,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         # Run prediction using Exonerate.
         print "Performing gene model prediction for {0} using Exonerate...\t".format(tag),
         cmds = PanGuess.BuildExonerateCmds(workdir, genome)
-        exonerate_genes = PanGuess.RunExonerate(cmds)
+        exonerate_genes = PanGuess.RunExonerate(cmds, cores)
         print "OK."
         
         # Order gene models predicted via Exonerate by Contig ID: Location.
@@ -58,7 +61,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Run prediction using GeneMark-ES.
         print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
-        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch)
+        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch, cores)
         print "OK."
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
@@ -113,7 +116,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         print "Finished gene model prediction for {0}.".format(genome)
 
 
-def QualityCheckHandler(gene_sets, queries):
+def QualityCheckHandler(tags, queries, cores=None):
     """
     Search a user-provided set of genes of dubious-quality (i.e. pseudogenes, transposable elements or
     transposons &c.) against predicted gene model sets and filter out sufficiently similar genes in the latter.
@@ -122,18 +125,22 @@ def QualityCheckHandler(gene_sets, queries):
         gene_sets   = List of strains in analysis (easy access to all files associated with a strain).
         queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
     """
-    QualityCheck.BuildMakeBLASTDBs(gene_sets)
-    blasts = QualityCheck.QCBLAST(queries, gene_sets)
-    for result in blasts:
-        for q in result:
-            if q.hits:
-                query_len = q.seq_len
-                print dir(q.hits[0].hsps[0])
-                subj_len = q.hits[0]
+    QualityCheck.BuildMakeBLASTDBs(tags, cores)
+    blasts = QualityCheck.QCBLAST(queries, tags, cores)
+    QualityCheck.RemoveDubiousCalls(blasts, tags)
+
+
+def BLASTAllHandler(tags, cores=None):
+    """
+    """
     pass
 
 
 def BUSCOHandler():
+    pass
+
+
+def IPSHandler():
     pass
 
 
@@ -165,6 +172,11 @@ def ConfigFileParser():
 def main():
     """
     """
+    # Create logfile and assign it to all child modules.
+    start_time = datetime.now()
+    logging.basicConfig(filename="PanGLOSS_Run_{0}.log".format(str(start_time).replace(" ", "_")),
+                        level=logging.INFO, format="%(asctime)s: %(levelname)s: %(message)s")
+
     # Create parser objects.
     ap = CmdLineParser()
     cp = ConfigFileParser()
@@ -174,20 +186,29 @@ def main():
     pangloss_args = []
 
     # Read config file.
+    logging.info("Master: Read config file.")
     cp.read("config.txt")
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if not ap.no_pred:
+        logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
             panguess_args.append(arg[1])
         PanGuessHandler(*panguess_args)
+        logging.info("Master: Gene prediction finished.")
+    else:
+        logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
 
-    # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements.
+    # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
     if ap.qc:
-        gene_sets = [i.split(".")[0] for i in glob("*.faa")]
+        logging.info("Master: Performing gene model QC using QualityCheck.")
+        qc_args = [[i.split(".")[0] for i in glob("*.faa")]]
         for arg in cp.items("Quality_check"):
-            queries = arg[1]
-        QualityCheckHandler(gene_sets, queries)
+            qc_args.append(arg[1])
+        QualityCheckHandler(*qc_args)
+        logging.info("Master: QC analysis finished.")
+    else:
+        logging.info("Master: Skipped gene model QC (--qc not enabled).")
 
 
 if __name__ == "__main__":

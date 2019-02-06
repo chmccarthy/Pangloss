@@ -121,10 +121,10 @@ def RunExonerate(cmds, len_dict=None, cores=None):
     """
     # If user doesn't specify cores in command line, just leave them with one free.
     if not cores:
-        cores = mp.cpu_count() - 1
+        cores = str(mp.cpu_count() - 1)
 
     # Farm out Exonerate processes, wait for all to finish and merge together.
-    farm = mp.Pool(processes=cores)
+    farm = mp.Pool(processes=int(cores))
     genes = farm.map(ExonerateCmdLine, cmds)
     farm.close()
     farm.join()
@@ -156,20 +156,20 @@ def GetExonerateAttributes(exonerate_genes, tag):
     return exonerate_attributes
 
 
-def RunGeneMark(genome, gm_branch, cores=1):
+def RunGeneMark(genome, gm_branch, cores=None):
     """
     Run GeneMark-ES on given genome, with optional arguments for fungal-specific
     prediction models and number of cores.
     """
     # If user doesn't specify cores in command line, just leave them with one free.
     if not cores:
-        cores = mp.cpu_count() - 1
+        cores = str(mp.cpu_count() - 1)
 
     # Run GeneMark-ES and extract data.
     if gm_branch:
-        sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", str(cores), "--sequence", genome])
+        sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", cores, "--sequence", genome])
     else:
-        sp.call(["gmes_petap.pl", "--ES", "--cores", str(cores), "--sequence", genome])
+        sp.call(["gmes_petap.pl", "--ES", "--cores", cores, "--sequence", genome])
     sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
 
     # Return CSV object to convert into attribute data.

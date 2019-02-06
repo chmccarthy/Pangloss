@@ -59,20 +59,6 @@ def merge_clusters(larger_cluster, smaller_cluster):
             larger_cluster[index] = smaller_cluster[index]
     return larger_cluster
 
-
-def seq_ratio(seqindex, query, subject):
-    """
-    Return the ratio of the lengths of two sequences.
-
-    Essential for GapFinder, and useful downstream too.
-    """
-    lengths = [len(seqindex[query].seq), len(seqindex[subject].seq)]
-    longest = max(lengths)
-    shortest = min(lengths)
-    ratio = shortest / longest
-    return ratio
-
-
 def called_ratio(called_alignment, query_gene):
     """
     Return the ratio of lengths for a query sequence and a called gene.
