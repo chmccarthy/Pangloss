@@ -1,10 +1,12 @@
 import logging
+import sys
 
 from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
-from PanGLOSS import PanGuess, QualityCheck
+
+from PanGLOSS import BLASTAll, PanGuess, QualityCheck
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None):
@@ -150,11 +152,30 @@ def CmdLineParser():
     """
     Create and return a configuration file parser.
     """
+    # Create our argument parser
     ap = ArgumentParser(description="Pan-genome analysis of microbial eukaryotes.")
-    ap.add_argument("config", help="Path to PanGLOSS configuration file.")
-    ap.add_argument("--no_pred", action="store_true", help="Skip gene model prediction pipeline.")
+
+    # The argument group for the gene model prediction step.
+    pred = ap.add_mutually_exclusive_group(required=True)
+
+    # Add arguments for gene model prediction.
+    pred.add_argument("--pred", action="store_true", help="Perform gene model prediction.")
+    pred.add_argument("--pred_only", action="store_true", help="Only perform gene model prediction. "
+                      "Allows users to generate their own all-vs.-all BLASTp data (e.g. on HPC environments), "
+                      "and rerun full analysis later on.")
+    pred.add_argument("--no_pred", action="store_true", help="Skip gene model prediction.")
+
+    # Add arguments for optional quality control analyses.
     ap.add_argument("--qc", action="store_true", help="Perform quality check on predicted gene model sets.")
     ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
+
+    # Add argument for skipping all-vs.-all BLASTp step (usually faster to generate data elsewhere).
+    ap.add_argument("--no_blast", action="store_true", help="Skip all-vs.-all BLASTp step for PanOCT.")
+
+    # Add mandatory positional argument for path to config file.
+    ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
+
+    # Parse and return args.
     args = ap.parse_args()
     return args
 
@@ -180,10 +201,6 @@ def main():
     # Create parser objects.
     ap = CmdLineParser()
     cp = ConfigFileParser()
-    
-    # Create argument lists.
-    panguess_args = []
-    pangloss_args = []
 
     # Read config file.
     logging.info("Master: Read config file.")
@@ -191,6 +208,7 @@ def main():
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if not ap.no_pred:
+        panguess_args = []
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
             panguess_args.append(arg[1])
@@ -204,11 +222,37 @@ def main():
         logging.info("Master: Performing gene model QC using QualityCheck.")
         qc_args = [[i.split(".")[0] for i in glob("*.faa")]]
         for arg in cp.items("Quality_check"):
-            qc_args.append(arg[1])
+            if arg[1]:
+                qc_args.append(arg[1])
         QualityCheckHandler(*qc_args)
         logging.info("Master: QC analysis finished.")
     else:
         logging.info("Master: Skipped gene model QC (--qc not enabled).")
+
+    # If enabled, run BUSCO completedness analysis of all gene model sets.
+    if ap.busco:
+        pass
+
+    # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
+    if ap.pred_only:
+        logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own"
+                     "all-vs.-all BLAST data, run PanGLOSS with the --no_pred and --no_blast flags.")
+        logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
+        sys.exit(0)
+
+    # Run all-vs.-all BLASTp, unless --no_blast is enabled (i.e., user provides own blast file).
+    if not ap.no_blast:
+        logging.info("Master: Performing all-vs.-all BLASTp searches for entire dataset.")
+        blast_args = []
+        for arg in cp.items("BLASTAll_settings"):
+            if arg[1]:
+                blast_args.append(arg[1])
+        BLASTAll.ConcatenateDatasets(blast_args[0])
+
+        sys.exit(0)
+    else:
+        logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
+        sys.exit(0)
 
 
 if __name__ == "__main__":

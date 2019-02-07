@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,10 +24,28 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="828">
-              <caret line="216" lean-forward="true" selection-start-line="216" selection-end-line="216" />
+            <state relative-caret-position="618">
+              <caret line="243" column="4" selection-start-line="243" selection-start-column="4" selection-end-line="243" selection-end-column="4" />
               <folding>
-                <element signature="e#1#15#0" expanded="true" />
+                <element signature="e#0#14#0" expanded="true" />
+                <element signature="e#239#5253#0" />
+                <element signature="e#5305#5891#0" />
+                <element signature="e#5962#5966#0" />
+                <element signature="e#5990#5994#0" />
+                <element signature="e#6167#7133#0" />
+                <element signature="e#6637#6741#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
+              <folding>
+                <element signature="e#2#30#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -37,8 +54,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="658">
-              <caret line="72" column="40" selection-start-line="72" selection-start-column="40" selection-end-line="72" selection-end-column="40" />
+            <state relative-caret-position="405">
+              <caret line="27" selection-start-line="27" selection-end-line="30" selection-end-column="34" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -46,11 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="797">
-              <caret line="150" lean-forward="true" selection-start-line="150" selection-end-line="150" />
+            <state relative-caret-position="-6115">
+              <caret line="23" column="4" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
               <folding>
                 <element signature="e#1228#1259#0" expanded="true" />
               </folding>
@@ -106,15 +123,16 @@
         <option value="$PROJECT_DIR$/src/PanGLOSS.py" />
         <option value="$PROJECT_DIR$/src/QualityCheck.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="96" />
-    <option name="y" value="23" />
+    <option name="x" value="264" />
+    <option name="y" value="49" />
     <option name="width" value="1920" />
     <option name="height" value="1057" />
   </component>
@@ -242,12 +260,12 @@
       <workItem from="1547815176527" duration="1148000" />
       <workItem from="1548459996050" duration="555000" />
       <workItem from="1549022662166" duration="9843000" />
-      <workItem from="1549279445952" duration="9989000" />
+      <workItem from="1549279445952" duration="16336000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22902000" />
+    <option name="totallyTimeSpent" value="29249000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -259,7 +277,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="96" y="23" width="1920" height="1057" extended-state="0" />
+    <frame x="264" y="49" width="1920" height="1057" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2513312" />
@@ -347,6 +365,16 @@
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6115">
+          <caret line="23" column="4" lean-forward="true" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+          <folding>
+            <element signature="e#1228#1259#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -359,8 +387,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="658">
-          <caret line="72" column="40" selection-start-line="72" selection-start-column="40" selection-end-line="72" selection-end-column="40" />
+        <state relative-caret-position="405">
+          <caret line="27" selection-start-line="27" selection-end-line="30" selection-end-column="34" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -369,20 +397,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="216" lean-forward="true" selection-start-line="216" selection-end-line="216" />
+        <state relative-caret-position="618">
+          <caret line="243" column="4" selection-start-line="243" selection-start-column="4" selection-end-line="243" selection-end-column="4" />
           <folding>
-            <element signature="e#1#15#0" expanded="true" />
+            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#239#5253#0" />
+            <element signature="e#5305#5891#0" />
+            <element signature="e#5962#5966#0" />
+            <element signature="e#5990#5994#0" />
+            <element signature="e#6167#7133#0" />
+            <element signature="e#6637#6741#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="797">
-          <caret line="150" lean-forward="true" selection-start-line="150" selection-end-line="150" />
+        <state relative-caret-position="165">
+          <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
           <folding>
-            <element signature="e#1228#1259#0" expanded="true" />
+            <element signature="e#2#30#0" expanded="true" />
           </folding>
         </state>
       </provider>

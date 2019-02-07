@@ -5,11 +5,9 @@ import logging
 import multiprocessing as mp
 import os
 import shutil
-import subprocess as sp
 
 from Bio import SeqIO, SearchIO
 from csv import reader
-from datetime import datetime
 
 from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine
 
