@@ -273,3 +273,16 @@ def QCBLASTCmdLine(cmd):
         return process
     else:
         pass
+
+
+def StringBLAST(query):
+    """
+
+    """
+    cmd = ['blastp', '-db', 'allprot.db', '-evalue', '0.0001', '-outfmt', '7', '-query', "-"]
+    process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE)
+    output = process.communicate(query)
+    if not "# 0 hits found" in output[0]:  # Empty results don't contain this line!
+        return output[0]
+    else:
+        pass

@@ -1,3 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+PanGLOSS: A pipeline for pangenome analysis of microbial eukaryotes.
+
+Requirements:
+    - Python (written for 2.7.x)
+        - BioPython (1.70)
+    - Exonerate (>2.2)
+    - GeneMark-ES (>4.30)
+    - TransDecoder (>5.0.2)
+    - BLAST+ (>2.7.1)
+    -
+
+Recent changes:
+    v0.2.0 (March 2018)
+    - Defined ExonerateGene as class, moved some functions to Tools module.
+    - Better integrated codebase with PanGLOSS.
+    - Removed other old functions.
+
+    v0.1.0 (January 2019)
+    - Created
+
+
+
+Written by Charley McCarthy, Genome Evolution Lab, Department of Biology,
+Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
+"""
+
 import logging
 import sys
 
@@ -9,7 +37,7 @@ from glob import glob
 from PanGLOSS import BLASTAll, PanGuess, QualityCheck
 
 
-def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None):
+def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
     """
     Runs PanGuess from master script.
     
@@ -26,40 +54,46 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         td_len       = Amino acid sequence length cutoff for TransDecoder given by
                        trans_aa_length (int).
 
+    Arguments activated by command line flags:
+        skip         = Skip Exonerate gene model predictions.
+
     Find some way to incorporate exon_cov and td_potential into final product!
     """
     # Generate list of genomes from user-provided genome list file.
-    print "Parsing list of genomes...\t",
+    logging.info("Master: Parsing genome list.")
     genomes = [line.strip("\n") for line in open(genomelist)]
-    print "OK."
     
-    # Create working directory and split reference protein set if not already present.
-    print "Creating working directory and building reference protein set...\t",
+    # Create working directory if not present.
+    logging.info("Master: Building working directory for gene model prediction.")
     PanGuess.MakeWorkingDir(workdir)
-    PanGuess.BuildRefSet(workdir, ref)
-    print "OK."
+
+    #
+    if not skip:
+        logging.info("Master: Building working directory for gene model prediction.")
+        PanGuess.BuildRefSet(workdir, ref)
     
     # Loop over each genome and carry out gene model prediction.
     for genome in genomes:
         # Make tag from genome name.
-        print "Running gene model prediction for {0}.".format(genome)
         tag = genome.split(".")[0].split("/")[1]
+        tags.append(tag)
+        logging.info("Master: Running gene model prediction for {0}.".format(tag))
+
+        if not skip:
+            # Run prediction using Exonerate.
+            cmds = PanGuess.BuildExonerateCmds(workdir, genome)
+            exonerate_genes = PanGuess.RunExonerate(cmds, cores)
         
-        # Run prediction using Exonerate.
-        print "Performing gene model prediction for {0} using Exonerate...\t".format(tag),
-        cmds = PanGuess.BuildExonerateCmds(workdir, genome)
-        exonerate_genes = PanGuess.RunExonerate(cmds, cores)
-        print "OK."
+            # Order gene models predicted via Exonerate by Contig ID: Location.
+            logging.info("Master: Sorting gene model predictions by genomic location.")
+            exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
         
-        # Order gene models predicted via Exonerate by Contig ID: Location.
-        print "Sorting predicted Exonerate gene models by genomic location...\t",
-        exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
-        print "OK."
-        
-        # Extract genomic attributes from Exonerate gene model set.
-        print "Extracting genomic attributes from Exonerate gene models...\t",
-        exonerate_attributes = PanGuess.GetExonerateAttributes(exonerate_genes, tag)
-        print "OK."
+            # Extract genomic attributes from Exonerate gene model set.
+            exonerate_attributes = PanGuess.GetExonerateAttributes(exonerate_genes, tag)
+
+        else:
+            logging.info("Master: Skipping gene model prediction via Exonerate (--no_exonerate enabled).")
+            exonerate_genes = None
         
         # Run prediction using GeneMark-ES.
         print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
@@ -72,9 +106,13 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         print "OK."
         
         # Merge unique gene model calls between Exonerate and GeneMark-ES.
-        print "Merging unique gene calls...\t",
-        merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
-        print "OK."
+        if not skip:
+            merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
+
+        else:
+            merged_attributes = genemark_attributes
+            del genemark_attributes
+
         
         # Clean up GeneMark-ES files and folders.
         print "Tidying up GeneMark-ES temporary files and folders...\t",
@@ -116,6 +154,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         PanGuess.TarballGenePredictionDirs(workdir, genome)
         print "OK."
         print "Finished gene model prediction for {0}.".format(genome)
+
 
 
 def QualityCheckHandler(tags, queries, cores=None):
@@ -165,6 +204,9 @@ def CmdLineParser():
                       "and rerun full analysis later on.")
     pred.add_argument("--no_pred", action="store_true", help="Skip gene model prediction.")
 
+    # Add argument to skip Exonerate steps during gene model prediction.
+    ap.add_argument("--no_exonerate", action="store_true", help="Skip gene model prediction via Exonerate.")
+
     # Add arguments for optional quality control analyses.
     ap.add_argument("--qc", action="store_true", help="Perform quality check on predicted gene model sets.")
     ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
@@ -207,11 +249,13 @@ def main():
     cp.read("config.txt")
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
-    if not ap.no_pred:
+    if ap.pred:
         panguess_args = []
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
             panguess_args.append(arg[1])
+        if ap.no_exonerate:
+            panguess_args.append(True)
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
     else:
@@ -235,7 +279,7 @@ def main():
 
     # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
     if ap.pred_only:
-        logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own"
+        logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
                      "all-vs.-all BLAST data, run PanGLOSS with the --no_pred and --no_blast flags.")
         logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
         sys.exit(0)
@@ -247,8 +291,9 @@ def main():
         for arg in cp.items("BLASTAll_settings"):
             if arg[1]:
                 blast_args.append(arg[1])
-        BLASTAll.ConcatenateDatasets(blast_args[0])
-
+        #BLASTAll.ConcatenateDatasets(blast_args[0])
+        blasts = BLASTAll.BLASTAll(*blast_args[1:])
+        print blasts
         sys.exit(0)
     else:
         logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))

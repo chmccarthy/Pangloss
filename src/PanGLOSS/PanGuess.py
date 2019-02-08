@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-PanGuess: Gene prediction for PanGLOSS using homology, Hidden Markov Models
-          and PVM prediction.
+PanGuess: Gene prediction for PanGLOSS.
 
 PanGuess is a gene prediction pipeline used to generate protein and genomic
 location data for pangenomic analysis of eukaryotes using PanGLOSS. PanGuess
@@ -9,15 +8,12 @@ is a component of PanGLOSS and can be used in conjuction with PanGLOSS to determ
 pangenomic structure of species of interest based on microsynteny using only genomic data
 and a reference protein set.
 
-Requirements:
-    - Python (written for 2.7.x)
-        - BioPython (1.70)
-    - Exonerate (>2.2)
-    - GeneMark-ES (>4.30)
-    - TransDecoder (>5.0.2)
-    - MacOS or Linux system.
-
 Recent changes:
+    v0.4.0 (February 2019)
+    - Making Exonerate prediction optional.
+    - Slight changes to ExonerateGene.
+    - Improved logging, tying in with other modules and master script.
+
     v0.3.0 (January 2019)
     - Massive rewrite, improved code in a number of ways.
     - ExonerateGene now includes nucleotide sequence data for yn00 analysis.
@@ -36,6 +32,7 @@ Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 
 from __future__ import division
 
+import logging
 import multiprocessing as mp
 import os
 import shutil
@@ -74,6 +71,7 @@ def MakeWorkingDir(workdir):
         os.makedirs(workdir)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
+            logging.info("PanGuess: Working directory already exists, using it instead.")
             raise
 
 
@@ -89,10 +87,12 @@ def BuildRefSet(workdir, ref):
         os.makedirs(ref_folder)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
+            logging.info("PanGuess: Reference directory already exists, using it instead.")
             raise
 
     # Split user-provided reference set into individual proteins (have to do this).
     ref_db = SeqIO.index(ref, "fasta")
+    logging.info("PanGuess: Building reference protein sequence dataset.")
     for seq in ref_db:
         SeqIO.write(ref_db[seq], "{0}/{1}.faa".format(ref_folder, ref_db[seq].id), "fasta")
     ref_db.close()
@@ -106,6 +106,7 @@ def BuildExonerateCmds(workdir, genome):
     exon_cmds = []
 
     # Generate and return commands.
+    logging.info("PanGuess: Working directory already exists, using it instead.")
     for prot in glob("{0}/ref/*.faa".format(workdir)):
         exon_cmds.append(["exonerate", "--model", "protein2genome",
                           "-t", genome, "-q", prot, "--bestn", "1"])

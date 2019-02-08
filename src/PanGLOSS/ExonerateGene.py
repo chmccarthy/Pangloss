@@ -1,13 +1,13 @@
 from Bio import SearchIO
 
 """
-ExonerateGene: Gene object called through exonerate.
+ExonerateGene: Gene object called through Exonerate.
 """
 
 
 class ExonerateGene:
     """
-    An object that stores the attributes of a gene called via exonerate.
+    An object that stores the attributes of a gene called via Exonerate.
     """
     def __init__(self, string):
         """
@@ -86,7 +86,7 @@ class ExonerateGene:
         """
         Return a string summary of a called gene, a la Biopython.SeqIO.
         
-        Useful for debugging.
+        Useful for debugging?
         """
         lines = []
         if not self.contig_id:
@@ -113,8 +113,8 @@ class ExonerateGene:
             lines.append("Number of introns: 0")
         else:
             lines.append("Number of introns: {0}".format(str(self.introns)))
-        if not self.called:
+        if not self.prot:
             lines.append("Called protein sequence: No hit on genome.")
         else:
-            lines.append("Called protein sequence: {0}\n".format(self.called))
+            lines.append("Called protein sequence: {0}\n".format(self.prot))
         return "\n".join(lines)
