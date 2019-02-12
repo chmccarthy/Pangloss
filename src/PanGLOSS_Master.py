@@ -4,7 +4,7 @@ PanGLOSS: A pipeline for pangenome analysis of microbial eukaryotes.
 
 Requirements:
     - Python (written for 2.7.x)
-        - BioPython (1.70)
+        - BioPython (1.73)
     - Exonerate (>2.2)
     - GeneMark-ES (>4.30)
     - TransDecoder (>5.0.2)
@@ -12,13 +12,13 @@ Requirements:
     -
 
 Recent changes:
-    v0.2.0 (March 2018)
-    - Defined ExonerateGene as class, moved some functions to Tools module.
-    - Better integrated codebase with PanGLOSS.
-    - Removed other old functions.
+    v0.2.0 (February 2019)
+
 
     v0.1.0 (January 2019)
-    - Created
+    - Added config file and command line parsers.
+    - Rewrote PanGuess and how it's handled from master script.
+    - Created master script based on old pangenome pipelines.
 
 
 
@@ -34,7 +34,7 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
 
-from PanGLOSS import BLASTAll, PanGuess, QualityCheck
+from PanGLOSS import BLASTAll, PanGuess, PanOCT, QualityCheck
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -96,65 +96,53 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
             exonerate_genes = None
         
         # Run prediction using GeneMark-ES.
-        print "Running gene model prediction for {0} using GeneMark-ES...\t".format(genome),
+        logging.info("Master: Running gene model prediction for {0} using GeneMark-ES.".format(genome))
         genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch, cores)
-        print "OK."
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
-        print "Converting GeneMark-ES GTF file to attributes...\t",
+        logging.info("Master: Converting GeneMark GTF data to attribute data.")
         genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
-        print "OK."
         
         # Merge unique gene model calls between Exonerate and GeneMark-ES.
         if not skip:
+            logging.info("Master: Merging Exonerate and GeneMark-ES gene calls.")
             merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
-
         else:
             merged_attributes = genemark_attributes
             del genemark_attributes
 
-        
         # Clean up GeneMark-ES files and folders.
-        print "Tidying up GeneMark-ES temporary files and folders...\t",
+        logging.info("Master: Tidying up GeneMark-ES temporary files.")
         PanGuess.MoveGeneMarkFiles(workdir, genome)
-        print "OK."
         
         # Extract NCRs into list.
-        print "Extracting non-coding regions of genome...\t",
+        logging.info("Master: Extracting non-coding regions of {0} for TransDecoder analysis.".format(genome))
         noncoding = PanGuess.ExtractNCR(merged_attributes, genome)
-        print "OK."
         
         # Run TransDecoder on NCRs.
-        print "Running TransDecoder on non-coding regions...\t",
+        logging.info("Master: Running TransDecoder on non-coding regions of {0}.".format(genome))
         tdir = PanGuess.RunTransDecoder(noncoding, workdir, genome, td_len)
-        print "OK."
         
         # Move TransDecoder files.
-        print "Tidying up TransDecoder temporary files and folders...\t",
+        logging.info("Master: Tidying up TransDecoder temporary files.")
         PanGuess.MoveTransDecoderFiles(tdir)
-        print "OK."
         
         # Extract TransDecoder attributes.
-        print "Converting TransDecoder GTF file to attributes...\t",
+        logging.info("Master: Converting TransDecoder GTF data to attribute data.")
         trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
-        print "OK."
         
         # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
-        print "Merging remaining gene calls...\t",
+        logging.info("Master: Merging all remmaining gene calls for {0}.".format(genome))
         full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
-        print "OK."
         
         # Write out gene set, protein set and attributes set.
-        print "Writing gene calls and gene attributes...\t",
+        logging.info("Master: Writing out datasets for {0}.".format(genome))
         PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
-        print "OK."
         
         # Compress temporary folders and finish up.
-        print "Compressing temporary GeneMark-ES and TransDecoder folders...\t",
+        logging.info("Master: Compressing temporary folders for {0}.".format(genome))
         PanGuess.TarballGenePredictionDirs(workdir, genome)
-        print "OK."
-        print "Finished gene model prediction for {0}.".format(genome)
-
+        logging.info("Master: Finished gene model predction for {0}.".format(genome))
 
 
 def QualityCheckHandler(tags, queries, cores=None):
@@ -171,14 +159,25 @@ def QualityCheckHandler(tags, queries, cores=None):
     QualityCheck.RemoveDubiousCalls(blasts, tags)
 
 
-def BLASTAllHandler(tags, cores=None):
-    """
-    """
-    pass
-
-
 def BUSCOHandler():
     pass
+
+
+def BLASTAllHandler(tags, evalue=0.0001, cores=None):
+    """
+    Runs all-vs.-all BLASTp search of gene model dataset as required for PanOCT.
+    """
+    BLASTAll.ConcatenateDatasets(tags)
+    blasts = BLASTAll.BLASTAll(evalue, cores)
+    BLASTAll.MergeBLASTsAndWrite(blasts)
+
+
+def PanOCTHandler(fasta_db, attributes, blast, tags, **kwargs):
+    """
+    Runs PanOCT.
+    """
+    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    PanOCT.PanOCTOutputHandler()
 
 
 def IPSHandler():
@@ -291,13 +290,22 @@ def main():
         for arg in cp.items("BLASTAll_settings"):
             if arg[1]:
                 blast_args.append(arg[1])
-        #BLASTAll.ConcatenateDatasets(blast_args[0])
-        blasts = BLASTAll.BLASTAll(*blast_args[1:])
-        print blasts
-        sys.exit(0)
+        BLASTAllHandler(*blast_args)
+        logging.info("Master: All-vs.-all analysis finished.")
     else:
-        logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
-        sys.exit(0)
+        logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
+
+    # Run PanOCT on full dataset.
+    panoct_default_args = []
+    panoct_extra_args = []
+    for arg in cp.items("PanOCT_settings"):
+        if arg[1]:
+            panoct_default_args.append(arg[1])
+
+    if panoct_extra_args:
+        pass
+    else:
+        PanOCTHandler(panoct_default_args)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Search a user-provided set of genes of dubious-quality (i.e. pseudogenes, transposable elements or
+transposons &c.) against predicted gene model sets and filter out sufficiently similar genes in the latter.
+
+Arguments:
+    gene_sets   = List of strains in analysis (easy access to all files associated with a strain).
+    queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
+"""
+
 from __future__ import division
 
 import cStringIO
@@ -10,15 +20,6 @@ from Bio import SeqIO, SearchIO
 from csv import reader
 
 from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine
-
-"""
-Search a user-provided set of genes of dubious-quality (i.e. pseudogenes, transposable elements or
-transposons &c.) against predicted gene model sets and filter out sufficiently similar genes in the latter.
-
-Arguments:
-    gene_sets   = List of strains in analysis (easy access to all files associated with a strain).
-    queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
-"""
 
 
 def BuildMakeBLASTDBs(gene_sets, cores=None):

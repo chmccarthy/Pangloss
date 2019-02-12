@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Short functions used throughout PanGLOSS and PanGuess.
 
@@ -277,7 +278,9 @@ def QCBLASTCmdLine(cmd):
 
 def StringBLAST(query):
     """
-
+    Runs BLASTp against an intended all-vs.-all database given a valid FASTA gene model as
+    a pipeable string. We run BLASTp with an output format set to tabular with comments to
+    enable a check for empty results (see if line).
     """
     cmd = ['blastp', '-db', 'allprot.db', '-evalue', '0.0001', '-outfmt', '7', '-query', "-"]
     process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE)

@@ -106,7 +106,7 @@ def BuildExonerateCmds(workdir, genome):
     exon_cmds = []
 
     # Generate and return commands.
-    logging.info("PanGuess: Working directory already exists, using it instead.")
+    logging.info("PanGuess: Building set of Exonerate commands.")
     for prot in glob("{0}/ref/*.faa".format(workdir)):
         exon_cmds.append(["exonerate", "--model", "protein2genome",
                           "-t", genome, "-q", prot, "--bestn", "1"])
@@ -125,6 +125,7 @@ def RunExonerate(cmds, len_dict=None, cores=None):
         cores = str(mp.cpu_count() - 1)
 
     # Farm out Exonerate processes, wait for all to finish and merge together.
+    logging.info("PanGuess: Running Exonerate searches on {0} threads".format(cores))
     farm = mp.Pool(processes=int(cores))
     genes = farm.map(ExonerateCmdLine, cmds)
     farm.close()
@@ -154,6 +155,7 @@ def GetExonerateAttributes(exonerate_genes, tag):
         exonerate_attributes.append([gene.contig_id, gene.id, gene.locs[0], gene.locs[1], att_column, tag])
 
     # Return separate Exonerate attributes object.
+    logging.info("PanGuess: Identified {0} gene model attributes via Exonerate.".format(len(exonerate_attributes)))
     return exonerate_attributes
 
 
@@ -168,8 +170,10 @@ def RunGeneMark(genome, gm_branch, cores=None):
 
     # Run GeneMark-ES and extract data.
     if gm_branch:
+        logging.info("PanGuess: Running GeneMark-ES on {0} threads with branching model.".format(cores))
         sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", cores, "--sequence", genome])
     else:
+        logging.info("PanGuess: Running GeneMark-ES on {0} threads.".format(cores))
         sp.call(["gmes_petap.pl", "--ES", "--cores", cores, "--sequence", genome])
     sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
 
@@ -220,6 +224,7 @@ def GeneMarkGTFConverter(gtf, tag):
                                annotations, tag])
 
     # Return sorted GeneMark-ES attributes.
+    logging.info("PanGuess: Converted and sorted {0} GeneMark-ES attributes.".format(len(attributes)))
     return sorted(attributes, key=lambda x: (x[0], int(x[2])))
 
 
@@ -242,6 +247,7 @@ def MergeAttributes(first_attributes, second_attributes):
                 to_remove.append(overlap[1])
 
     # Return all unique and non-overlapped calls.
+    logging.info("PanGuess: Found {0} attributes to remove. Merging all other attributes.".format(len(to_remove)))
     return [call for call in unique_calls if call[1] not in to_remove]
 
 
@@ -259,9 +265,11 @@ def MoveGeneMarkFiles(workdir, genome):
         os.makedirs(gmes)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
+            logging.info("PanGuess: GeneMark-ES temporary folder already exists, using it instead.")
             raise
 
     # Move all files and folders to new folder.
+    logging.info("PanGuess: Moving/Removing GeneMark-ES temporary files and folders.")
     for f in to_move:
         if os.path.isdir(f):
             if not os.path.isdir("{0}/{1}".format(gmes, f)):
@@ -283,6 +291,7 @@ def ExtractNCR(attributes, genome):
     ncr = []
 
     # Parse genome file.
+    logging.info("PanGuess: Parsed genome file for non-coding region extraction.")
     db = SeqIO.parse(open(genome), "fasta")
 
     # Loop over every contig/chromosome in the genome.
@@ -304,6 +313,7 @@ def ExtractNCR(attributes, genome):
                 ncr.append(">{0}\n{1}\n".format(extract_id, extract))
 
     # Return list of NCR sequences.
+    logging.info("PanGuess: Extracted {0} NCR sequences from {1}.".format(len(ncr), genome))
     return ncr
 
 
@@ -317,14 +327,15 @@ def RunTransDecoder(ncr, workdir, genome, td_len):
         os.makedirs(tdir)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
+            logging.info("PanGuess: TransDecoder temporary folder already exists, using it instead.")
             raise
 
-            # Write NCRs to FASTA file
+    # Write NCRs to FASTA file
     with open("{0}/NCR.fna".format(tdir), "w") as outfile:
         for line in ncr:
             outfile.write(line)
 
-    # Run both TransDecoder processes sequentially
+    # Run both TransDecoder processes sequentially.
     sp.call(["TransDecoder.LongOrfs", "-t", "{0}/NCR.fna".format(tdir), "-m", "{0}".format(td_len)])
     sp.call(["TransDecoder.Predict", "-t", "{0}/NCR.fna".format(tdir), "--single_best_only"])
 
