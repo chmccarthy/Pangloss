@@ -2,23 +2,44 @@
 """
 PanGLOSS: A pipeline for pangenome analysis of microbial eukaryotes.
 
-Requirements:
-    - Python (written for 2.7.x)
-        - BioPython (1.73)
+Dependencies (* = required):
+    - Python (written for 2.7.x) (*)
+        - BioPython (1.73)       (*)
+    - Perl                       (*)
     - Exonerate (>2.2)
-    - GeneMark-ES (>4.30)
-    - TransDecoder (>5.0.2)
+    - GeneMark-ES (>4.30)        (*)
+    - TransDecoder (>5.0.2)      (*)
     - BLAST+ (>2.7.1)
+    - BUSCO ()
+    - yn
+    - InterProScan ()
+    - GOATools ()
     -
 
 Recent changes:
+    v0.4.0 (February 2019)
+    -
+
+    v0.3.0 (February 2019)
+    - PanGLOSS now requires Biopython >1.73 for correct handling and parsing of SearchIO objects in BLASTAll.
+    - Added in BLASTAll module to handle (optional) all-vs.-all BLASTp searches for PanOCT.
+    - Added in PanOCT module to handle PanOCT analysis with default parameters.
+    - Redesigned workflow to allow user to solely carry out gene model prediction.
+    - Redesigned workflow to allow user to skip prediction and BLASTAll steps if specified.
+    - Redesigned main function to reflect optional arguments/workflows.
+    - Improved logging.
+
+
     v0.2.0 (February 2019)
+    - Added in QualityCheck module to handle (optional) filtering for pseudogenes.
+    - Incorporated logging.
 
 
     v0.1.0 (January 2019)
+    - Constructed basic version of PanGLOSS-compatible config file.
     - Added config file and command line parsers.
-    - Rewrote PanGuess and how it's handled from master script.
-    - Created master script based on old pangenome pipelines.
+    - Rewrote PanGuess as module, and changed how it's handled from master script.
+    - Created master script based on old pangenome pipelines from 2017-18.
 
 
 
@@ -301,11 +322,10 @@ def main():
     for arg in cp.items("PanOCT_settings"):
         if arg[1]:
             panoct_default_args.append(arg[1])
-
     if panoct_extra_args:
         pass
     else:
-        PanOCTHandler(panoct_default_args)
+        PanOCTHandler(*panoct_default_args)
 
 
 if __name__ == "__main__":

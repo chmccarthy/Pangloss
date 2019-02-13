@@ -2,5 +2,6 @@
 <project version="4">
   <component name="Perl5LocalSettings">
     <option name="DISABLE_NO_INTERPRETER_WARNING" value="true" />
+    <option name="DISABLE_ASSOCIATIONS_CHECKING" value="true" />
   </component>
 </project>

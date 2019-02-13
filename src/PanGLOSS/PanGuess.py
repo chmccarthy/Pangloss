@@ -10,7 +10,7 @@ and a reference protein set.
 
 Recent changes:
     v0.4.0 (February 2019)
-    - Making Exonerate prediction optional.
+    - Made Exonerate prediction optional.
     - Slight changes to ExonerateGene.
     - Improved logging, tying in with other modules and master script.
 
