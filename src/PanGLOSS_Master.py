@@ -11,7 +11,7 @@ Dependencies (* = required):
     - TransDecoder (>5.0.2)      (*)
     - BLAST+ (>2.7.1)
     - BUSCO ()
-    - yn
+    - PAML (>4.8a)
     - InterProScan ()
     - GOATools ()
     -
@@ -55,7 +55,7 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
 
-from PanGLOSS import BLASTAll, PanGuess, PanOCT, QualityCheck
+from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -205,6 +205,11 @@ def IPSHandler():
     pass
 
 
+def PAMLHandler():
+    pass
+
+
+
 ### Parser functions. ###
 
 def CmdLineParser():
@@ -317,15 +322,15 @@ def main():
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
     # Run PanOCT on full dataset.
-    panoct_default_args = []
-    panoct_extra_args = []
-    for arg in cp.items("PanOCT_settings"):
-        if arg[1]:
-            panoct_default_args.append(arg[1])
-    if panoct_extra_args:
-        pass
-    else:
-        PanOCTHandler(*panoct_default_args)
+    #panoct_default_args = []
+    #panoct_extra_args = []
+    #for arg in cp.items("PanOCT_settings"):
+    #    if arg[1]:
+    #        panoct_default_args.append(arg[1])
+    #if panoct_extra_args:
+    #    pass
+    #else:
+    #    PanOCTHandler(*panoct_default_args)
 
 
 if __name__ == "__main__":
