@@ -289,3 +289,26 @@ def StringBLAST(query):
         return output[0]
     else:
         pass
+
+def StringMUSCLE(seqs):
+    """
+
+    """
+    cmd = ["muscle", "-quiet"]
+    process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
+    SeqIO.write(seqs, process.stdin, "fasta")
+    process.stdin.close()
+    return process.stdout.read()
+
+
+def Untranslate(aseq, nseq):
+    unseq = ""
+    locs = [0, 3]
+    for site in aseq:
+        if site == "-":
+            unseq += "---"
+        else:
+            unseq += nseq[locs[0]:locs[1]]
+        locs[0] = locs[0] + 3
+        locs[1] = locs[1] + 3
+    return unseq

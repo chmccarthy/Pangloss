@@ -206,7 +206,12 @@ def IPSHandler():
 
 
 def PAMLHandler():
-    pass
+    nucl, seqs = PAML.TranslateCDS()
+    alignment = PAML.MUSCLEAlign(seqs)
+    nucl_aln = PAML.PutGaps(alignment, nucl)
+    for n in nucl_aln:
+        print len(n), n.seq
+
 
 
 
@@ -331,7 +336,7 @@ def main():
     #    pass
     #else:
     #    PanOCTHandler(*panoct_default_args)
-
+    PAMLHandler()
 
 if __name__ == "__main__":
     main()

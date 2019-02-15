@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PAML.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PAML.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,11 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="514">
-              <caret line="334" lean-forward="true" selection-start-line="334" selection-end-line="334" />
+            <state relative-caret-position="404">
+              <caret line="216" lean-forward="true" selection-start-line="216" selection-end-line="216" />
               <folding>
                 <element signature="e#668#682#0" expanded="true" />
                 <element signature="e#1007#6334#0" />
@@ -39,13 +40,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+            <state relative-caret-position="375">
+              <caret line="25" column="43" lean-forward="true" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
               <folding>
-                <element signature="e#0#4#0" expanded="true" />
+                <element signature="e#0#6#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -102,8 +103,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3641">
-              <caret column="23" selection-start-column="23" selection-end-column="23" />
+            <state relative-caret-position="619">
+              <caret line="312" column="29" lean-forward="true" selection-start-line="312" selection-start-column="29" selection-end-line="312" selection-end-column="29" />
+              <folding>
+                <element signature="e#159#190#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -146,17 +150,17 @@
         <option value="$PROJECT_DIR$/src/PanGLOSS/ExonerateGene.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PAML.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="666" />
-    <option name="y" value="115" />
+    <option name="x" value="738" />
+    <option name="y" value="76" />
     <option name="width" value="1920" />
     <option name="height" value="1057" />
   </component>
@@ -311,12 +315,12 @@
       <workItem from="1548459996050" duration="555000" />
       <workItem from="1549022662166" duration="9843000" />
       <workItem from="1549279445952" duration="37935000" />
-      <workItem from="1550059267064" duration="6201000" />
+      <workItem from="1550059267064" duration="11955000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57049000" />
+    <option name="totallyTimeSpent" value="62803000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -328,7 +332,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="666" y="115" width="1920" height="1057" extended-state="0" />
+    <frame x="738" y="76" width="1920" height="1057" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0857295" />
       <window_info id="Structure" order="1" weight="0.22470714" />
@@ -436,13 +441,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="69" selection-start-line="69" selection-end-line="74" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="64">
@@ -453,17 +451,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="69" selection-start-line="69" selection-end-line="74" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3641">
-          <caret column="23" selection-start-column="23" selection-end-column="23" />
+        <state relative-caret-position="619">
+          <caret line="312" column="29" lean-forward="true" selection-start-line="312" selection-start-column="29" selection-end-line="312" selection-end-column="29" />
+          <folding>
+            <element signature="e#159#190#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="43" lean-forward="true" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#6#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="334" lean-forward="true" selection-start-line="334" selection-end-line="334" />
+        <state relative-caret-position="404">
+          <caret line="216" lean-forward="true" selection-start-line="216" selection-end-line="216" />
           <folding>
             <element signature="e#668#682#0" expanded="true" />
             <element signature="e#1007#6334#0" />
@@ -472,16 +490,6 @@
             <element signature="e#7087#7305#0" />
             <element signature="e#7587#9281#0" />
             <element signature="e#9312#9416#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#4#0" expanded="true" />
           </folding>
         </state>
       </provider>
