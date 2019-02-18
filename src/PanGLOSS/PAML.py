@@ -1,7 +1,8 @@
 import cStringIO
 
-from Bio import AlignIO, SeqIO, SeqRecord
-from Bio.Phylo.PAML import codeml
+from Bio import AlignIO, SeqIO
+from Bio.Align import MultipleSeqAlignment
+from Bio.Phylo.PAML import yn00
 
 from Tools import StringMUSCLE, Untranslate
 
@@ -24,11 +25,22 @@ def MUSCLEAlign(seqs):
 
 def PutGaps(alignment, nucl):
     nucl = SeqIO.index("test.faa", "fasta")
-    nucl_aln = []
+    nucl_aln = ""
     for aln in alignment:
         for seq in aln._records:
             nseq = nucl[seq.id].seq
             aseq = seq.seq
             unseq = Untranslate(aseq, nseq)
-            nucl_aln.append(SeqRecord.SeqRecord(unseq, id=seq.id))
-    return nucl_aln
+            unseq.id = seq.id
+            nucl_aln += (">{0}\n{1}\n".format(unseq.id, unseq.seq))
+    with open("test.phylip", "w") as h:
+        for seq in nucl_aln:
+            h.write(seq)
+
+
+def RunYn00(alignment):
+    yn = yn00.Yn00(alignment=alignment, out_file="test.yn00")
+    yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
+    results = yn.run(ctl_file=None, command="yn00", parse=True)
+    print results
+

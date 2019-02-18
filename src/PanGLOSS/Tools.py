@@ -13,7 +13,7 @@ import subprocess as sp
 from difflib import SequenceMatcher
 from itertools import chain, izip_longest, tee
 
-from Bio import SeqIO
+from Bio import SeqIO, SeqRecord
 from ExonerateGene import ExonerateGene
 
 
@@ -209,9 +209,7 @@ def gene_overlap(left_gene, right_gene, query_coords, threshold=0):
 
 def Pairwise(iterable):
     """
-    Enable pairwise iteration.
-
-    Taken from the Python Standard Library.
+    Enables pairwise iteration. Taken from the Python Standard Library.
     """
     a, b = tee(iterable)
     next(b, None)
@@ -220,7 +218,7 @@ def Pairwise(iterable):
 
 def ExonerateCmdLine(cmd):
     """
-    Carry out an exonerate command and return output as a ExonerateGene object.
+    Carries out an exonerate command and return output as a ExonerateGene object.
 
     If an exonerate command does not find a suitable homolog to the query gene
     within the target genome (which is fine!), then the output will fail to be
@@ -290,9 +288,11 @@ def StringBLAST(query):
     else:
         pass
 
+
 def StringMUSCLE(seqs):
     """
-
+    Runs a MUSCLE alignment given a valid set of translated nucleotides as stdin, returns
+    the alignment to stdout which is then processed within memory.
     """
     cmd = ["muscle", "-quiet"]
     process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
@@ -302,13 +302,20 @@ def StringMUSCLE(seqs):
 
 
 def Untranslate(aseq, nseq):
+    """
+    Untranslates translated nucleotide alignments back to nucleotides but keeps codons together.
+    """
     unseq = ""
     locs = [0, 3]
+    stops = ["TAG", "TAA", "TGA"]
     for site in aseq:
         if site == "-":
             unseq += "---"
         else:
-            unseq += nseq[locs[0]:locs[1]]
-        locs[0] = locs[0] + 3
-        locs[1] = locs[1] + 3
-    return unseq
+            if nseq[locs[0]:locs[1]] in stops:
+                unseq += "AAA"
+            else:
+                unseq += nseq[locs[0]:locs[1]]
+            locs[0] = locs[0] + 3
+            locs[1] = locs[1] + 3
+    return SeqRecord.SeqRecord(unseq)

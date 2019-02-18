@@ -12,6 +12,7 @@ Dependencies (* = required):
     - BLAST+ (>2.7.1)
     - BUSCO ()
     - PAML (>4.8a)
+    - MUSCLE (>3.8.31)
     - InterProScan ()
     - GOATools ()
     -
@@ -206,11 +207,10 @@ def IPSHandler():
 
 
 def PAMLHandler():
-    nucl, seqs = PAML.TranslateCDS()
-    alignment = PAML.MUSCLEAlign(seqs)
-    nucl_aln = PAML.PutGaps(alignment, nucl)
-    for n in nucl_aln:
-        print len(n), n.seq
+    #nucl, seqs = PAML.TranslateCDS()
+    #alignment = PAML.MUSCLEAlign(seqs)
+    #PAML.PutGaps(alignment, nucl)
+    PAML.RunYn00("test.phylip")
 
 
 
@@ -237,12 +237,16 @@ def CmdLineParser():
     # Add argument to skip Exonerate steps during gene model prediction.
     ap.add_argument("--no_exonerate", action="store_true", help="Skip gene model prediction via Exonerate.")
 
+    # Add argument for skipping all-vs.-all BLASTp step (usually faster to generate data elsewhere).
+    ap.add_argument("--no_blast", action="store_true", help="Skip all-vs.-all BLASTp step for PanOCT.")
+
     # Add arguments for optional quality control analyses.
     ap.add_argument("--qc", action="store_true", help="Perform quality check on predicted gene model sets.")
     ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
 
-    # Add argument for skipping all-vs.-all BLASTp step (usually faster to generate data elsewhere).
-    ap.add_argument("--no_blast", action="store_true", help="Skip all-vs.-all BLASTp step for PanOCT.")
+    # Add argument for selection analysis using yn00.
+    ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene"
+                                                        "families using yn00 (must have MUSCLE installed).")
 
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
@@ -336,7 +340,11 @@ def main():
     #    pass
     #else:
     #    PanOCTHandler(*panoct_default_args)
-    PAMLHandler()
+
+    # If enabled, run selection analysis using yn00.
+    if ap.yn00:
+        logging.info("Master: Performing selection analysis using yn00.")
+        PAMLHandler()
 
 if __name__ == "__main__":
     main()
