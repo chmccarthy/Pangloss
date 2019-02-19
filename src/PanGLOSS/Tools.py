@@ -10,10 +10,12 @@ from __future__ import division
 import cStringIO
 import subprocess as sp
 
+from csv import reader
 from difflib import SequenceMatcher
 from itertools import chain, izip_longest, tee
 
 from Bio import SeqIO, SeqRecord
+from Bio.Phylo.PAML import yn00
 from ExonerateGene import ExonerateGene
 
 
@@ -289,6 +291,24 @@ def StringBLAST(query):
         pass
 
 
+def ParseMatchtable(matchtable):
+    """
+    """
+    core = {}
+    acc = {}
+    count = 1
+    clusters = reader(open(matchtable), delimiter="\t")
+
+    for cluster in clusters:
+        if "----------" in cluster:
+            members = [gene if gene != "----------" else None for gene in cluster[1:]]
+            acc[count] = members
+        else:
+            core[count] = cluster[1:]
+        count = count + 1
+    return core, acc
+
+
 def StringMUSCLE(seqs):
     """
     Runs a MUSCLE alignment given a valid set of translated nucleotides as stdin, returns
@@ -319,3 +339,11 @@ def Untranslate(aseq, nseq):
             locs[0] = locs[0] + 3
             locs[1] = locs[1] + 3
     return SeqRecord.SeqRecord(unseq)
+
+
+def RunYn00(alignment):
+    yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
+    yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
+    yn.run(ctl_file=None, command="yn00", parse=True)
+
+

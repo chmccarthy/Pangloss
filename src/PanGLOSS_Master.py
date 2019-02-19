@@ -1,25 +1,40 @@
 # -*- coding: utf-8 -*-
 """
-PanGLOSS: A pipeline for pangenome analysis of microbial eukaryotes.
+PanGLOSS: A pipeline for pan-genome analysis of microbial eukaryotes.
 
-Dependencies (* = required):
-    - Python (written for 2.7.x) (*)
-        - BioPython (1.73)       (*)
-    - Perl                       (*)
-    - Exonerate (>2.2)
-    - GeneMark-ES (>4.30)        (*)
-    - TransDecoder (>5.0.2)      (*)
-    - BLAST+ (>2.7.1)
-    - BUSCO ()
-    - PAML (>4.8a)
-    - MUSCLE (>3.8.31)
-    - InterProScan ()
-    - GOATools ()
-    -
+Dependencies (version tested) (* = required):
+    - Python (2.7.10)           (*)
+        - BioPython (1.73)      (*)
+    - Perl                      (*)
+    - GeneMark-ES (4.30)        (*)
+    - TransDecoder (5.0.2)      (*)
+    - PanOCT (3.23)             (*)
+    - Exonerate (2.2)
+    - BLAST+ (2.7.1)
+    - BUSCO (3.1.0)
+    - PAML (4.8a)
+    - MUSCLE (3.8.31)
+    - InterProScan (5.33-72.0)  (Linux only)
+    - GOATools
+
+To-do:
+    - BUSCO assessment of gene set completedness.
+    - Annotation of pan-genomes using InterProScan.
+    - Assess ancestry of pan-genome complements using BLASTp.
+    - Improve logging.
+    - Improve config file.
+        - Add check for depencies based on paths in file.
+        - Add in section for PanOCT parameters.
+        - Add in section for yn00 parameters.
+
 
 Recent changes:
     v0.4.0 (February 2019)
-    -
+    - Added in yn00 module for running selection analysis on nucleotide sequences.
+        - A bug in Biopython prevents yn00 from running if a dot is in the sequence name,
+          will incorporate a workaround into future versions until bug is fixed.
+    - Added functions in Tools for yn00 analysis workflow.
+    - Added --yn00 flag to command line.
 
     v0.3.0 (February 2019)
     - PanGLOSS now requires Biopython >1.73 for correct handling and parsing of SearchIO objects in BLASTAll.
@@ -30,19 +45,15 @@ Recent changes:
     - Redesigned main function to reflect optional arguments/workflows.
     - Improved logging.
 
-
     v0.2.0 (February 2019)
     - Added in QualityCheck module to handle (optional) filtering for pseudogenes.
     - Incorporated logging.
-
 
     v0.1.0 (January 2019)
     - Constructed basic version of PanGLOSS-compatible config file.
     - Added config file and command line parsers.
     - Rewrote PanGuess as module, and changed how it's handled from master script.
     - Created master script based on old pangenome pipelines from 2017-18.
-
-
 
 Written by Charley McCarthy, Genome Evolution Lab, Department of Biology,
 Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
@@ -200,6 +211,7 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, **kwargs):
     """
     PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
     PanOCT.PanOCTOutputHandler()
+    PanOCT.GenerateClusterFASTAs()
 
 
 def IPSHandler():
@@ -207,10 +219,10 @@ def IPSHandler():
 
 
 def PAMLHandler():
-    #nucl, seqs = PAML.TranslateCDS()
-    #alignment = PAML.MUSCLEAlign(seqs)
-    #PAML.PutGaps(alignment, nucl)
-    PAML.RunYn00("test.phylip")
+    seqs = PAML.TranslateCDS()
+    alignment = PAML.MUSCLEAlign(seqs)
+    PAML.PutGaps(alignment, seqs)
+    PAML.RunYn00(seqs)
 
 
 
@@ -331,15 +343,15 @@ def main():
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
     # Run PanOCT on full dataset.
-    #panoct_default_args = []
-    #panoct_extra_args = []
-    #for arg in cp.items("PanOCT_settings"):
-    #    if arg[1]:
-    #        panoct_default_args.append(arg[1])
-    #if panoct_extra_args:
-    #    pass
-    #else:
-    #    PanOCTHandler(*panoct_default_args)
+    panoct_default_args = []
+    panoct_extra_args = []
+    for arg in cp.items("PanOCT_settings"):
+        if arg[1]:
+            panoct_default_args.append(arg[1])
+    if panoct_extra_args:
+        pass
+    else:
+        PanOCTHandler(*panoct_default_args)
 
     # If enabled, run selection analysis using yn00.
     if ap.yn00:
