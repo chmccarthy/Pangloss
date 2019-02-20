@@ -16,6 +16,9 @@ Dependencies (version tested) (* = required):
     - MUSCLE (3.8.31)
     - InterProScan (5.33-72.0)  (Linux only)
     - GOATools
+    - R (>3.5.2)
+        - Bioconductor (
+        - KaryoploteR
 
 To-do:
     - BUSCO assessment of gene set completedness.
@@ -67,7 +70,7 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
 
-from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck
+from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck, Karotype
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -343,20 +346,21 @@ def main():
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
     # Run PanOCT on full dataset.
-    panoct_default_args = []
-    panoct_extra_args = []
-    for arg in cp.items("PanOCT_settings"):
-        if arg[1]:
-            panoct_default_args.append(arg[1])
-    if panoct_extra_args:
-        pass
-    else:
-        PanOCTHandler(*panoct_default_args)
+    #panoct_default_args = []
+    #panoct_extra_args = []
+    #for arg in cp.items("PanOCT_settings"):
+    #    if arg[1]:
+    #        panoct_default_args.append(arg[1])
+    #if panoct_extra_args:
+    #    pass
+    #else:
+    #    PanOCTHandler(*panoct_default_args)
 
     # If enabled, run selection analysis using yn00.
-    if ap.yn00:
-        logging.info("Master: Performing selection analysis using yn00.")
-        PAMLHandler()
+    #if ap.yn00:
+    #    logging.info("Master: Performing selection analysis using yn00.")
+    #    PAMLHandler()
+    Karotype.GenerateContigLengths("genomes")
 
 if __name__ == "__main__":
     main()

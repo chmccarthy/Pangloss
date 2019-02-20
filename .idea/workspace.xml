@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PAML.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PAML.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,18 +21,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="228" lean-forward="true" selection-start-line="228" selection-end-line="228" />
+            <state relative-caret-position="454">
+              <caret line="359" column="16" lean-forward="true" selection-start-line="359" selection-start-column="16" selection-end-line="359" selection-end-column="16" />
               <folding>
-                <element signature="e#668#682#0" expanded="true" />
+                <element signature="e#2525#2539#0" expanded="true" />
                 <element signature="e#1007#6334#0" />
                 <element signature="e#6393#6995#0" />
                 <element signature="e#7022#7026#0" />
                 <element signature="e#7087#7305#0" />
                 <element signature="e#9312#9416#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karotype.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -90,15 +99,16 @@
         <option value="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PAML.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS/Karotype.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="852" />
-    <option name="y" value="105" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="287" />
+    <option name="y" value="158" />
     <option name="width" value="1920" />
     <option name="height" value="1057" />
   </component>
@@ -253,12 +263,12 @@
       <workItem from="1548459996050" duration="555000" />
       <workItem from="1549022662166" duration="9843000" />
       <workItem from="1549279445952" duration="37935000" />
-      <workItem from="1550059267064" duration="25348000" />
+      <workItem from="1550059267064" duration="29171000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76196000" />
+    <option name="totallyTimeSpent" value="80019000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -270,7 +280,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="852" y="105" width="1920" height="1057" extended-state="0" />
+    <frame x="287" y="158" width="1920" height="1057" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0857295" />
@@ -418,15 +428,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="228" lean-forward="true" selection-start-line="228" selection-end-line="228" />
+        <state relative-caret-position="454">
+          <caret line="359" column="16" lean-forward="true" selection-start-line="359" selection-start-column="16" selection-end-line="359" selection-end-column="16" />
           <folding>
-            <element signature="e#668#682#0" expanded="true" />
+            <element signature="e#2525#2539#0" expanded="true" />
             <element signature="e#1007#6334#0" />
             <element signature="e#6393#6995#0" />
             <element signature="e#7022#7026#0" />
             <element signature="e#7087#7305#0" />
             <element signature="e#9312#9416#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karotype.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
