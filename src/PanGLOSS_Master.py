@@ -361,6 +361,7 @@ def main():
     #    logging.info("Master: Performing selection analysis using yn00.")
     #    PAMLHandler()
     Karotype.GenerateContigLengths("genomes")
+    Karotype.GenerateKaryotypeFiles()
 
 if __name__ == "__main__":
     main()

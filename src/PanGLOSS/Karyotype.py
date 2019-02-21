@@ -20,3 +20,10 @@ def GenerateContigLengths(genomes):
                 row += "\n"
                 out.write(row)
 
+def GenerateKaryotypeFiles(attributes, matchtable):
+    """
+    
+    :param attributes:
+    :param matchtable:
+    :return:
+    """
