@@ -70,7 +70,7 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
 
-from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck, Karotype
+from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck, Karyotype
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -360,8 +360,8 @@ def main():
     #if ap.yn00:
     #    logging.info("Master: Performing selection analysis using yn00.")
     #    PAMLHandler()
-    Karotype.GenerateContigLengths("genomes")
-    Karotype.GenerateKaryotypeFiles()
+    Karyotype.GenerateContigLengths("genomes")
+    Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
 
 if __name__ == "__main__":
     main()

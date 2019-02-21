@@ -46,16 +46,6 @@ def get_gene_lengths(fasta):
         ref_lengths[db[seq].id] = len(db[seq].seq)
     return ref_lengths
 
-
-def flatten(iterable):
-    """
-    Flatten a list of lists, essential for ClusterClean and GapFinder.
-
-    Taken from the Python Standard Library.
-    """
-    return list(chain.from_iterable(iterable))
-
-
 def merge_clusters(larger_cluster, smaller_cluster):
     for index, member in enumerate(larger_cluster):
         if member == "----------":
@@ -218,6 +208,15 @@ def Pairwise(iterable):
     return izip_longest(a, b)  # Allows (line, None) for EOF.
 
 
+def Flatten(iterable):
+    """
+    Flatten a list of lists, essential for ClusterClean and GapFinder.
+
+    Taken from the Python Standard Library.
+    """
+    return list(chain.from_iterable(iterable))
+
+
 def ExonerateCmdLine(cmd):
     """
     Carries out an exonerate command and return output as a ExonerateGene object.
@@ -301,10 +300,10 @@ def ParseMatchtable(matchtable):
 
     for cluster in clusters:
         if "----------" in cluster:
-            members = [gene if gene != "----------" else None for gene in cluster[1:]]
+            members = [gene if gene != "----------" else None for gene in cluster]
             acc[count] = members
         else:
-            core[count] = cluster[1:]
+            core[count] = cluster
         count = count + 1
     return core, acc
 
