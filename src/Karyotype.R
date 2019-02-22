@@ -26,7 +26,7 @@ for (tag in tags)
   kpAddMainTitle(kp, main=tag, col="black")
   kpPlotRegions(kp, data = custom.cytobands[custom.cytobands$component == "core"], avoid.overlapping = TRUE, data.panel = "ideogram", col = "darkgreen")
   kpPlotRegions(kp, data = custom.cytobands[custom.cytobands$component == "acc"], avoid.overlapping = TRUE, data.panel = "ideogram", col = "red")
-  kpBars(kp, data = custom.cytobands[custom.cytobands$orthologs], data.panel = 1)
+  kpBars(kp, y0=start(custom.cytobands[custom.cytobands$orthologs]), y1=end(custom.cytobands[custom.cytobands$orthologs]), data.panel = 1)
   dev.off()
   }
 
