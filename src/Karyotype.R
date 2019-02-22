@@ -1,13 +1,26 @@
+if (!require(karyoploteR))
+{
+  if (!require(BiocManager))
+  {
+    install.packages("BiocManager")
+  }
+  BiocManager::install("karyoploteR", version = "3.8")
+}
+
 library(karyoploteR)
 setEPS()
 
-tags = readLines("~/Dropbox/Genes_Paper/panoct_tags.txt")
-karyotypes = read.table("~/Dropbox/Genes_Paper/karyotypes.txt")
-lengths = read.table("~/Dropbox/Genes_Paper/genomes/lengths.txt")
+args = commandArgs(trailingOnly = TRUE)
+print(args)
+
+tags <- readLines(args[1])
+karyotypes <- read.table(args[2])
+lengths <- read.table(args[3])
+
 
 for (tag in tags)
 {
-  postscript("test.eps", height=8.5, width=8.5)
+  postscript(stringr::str_interp("${name}.eps", list(name = tag)), height=8.5, width=8.5)
   genes = karyotypes[karyotypes$V5 == tag, ]
   contigs = lengths[lengths$V4 == tag, ]
   
@@ -26,7 +39,6 @@ for (tag in tags)
   kpAddMainTitle(kp, main=tag, col="black")
   kpPlotRegions(kp, data = custom.cytobands[custom.cytobands$component == "core"], avoid.overlapping = TRUE, data.panel = "ideogram", col = "darkgreen")
   kpPlotRegions(kp, data = custom.cytobands[custom.cytobands$component == "acc"], avoid.overlapping = TRUE, data.panel = "ideogram", col = "red")
-  kpBars(kp, y0=start(custom.cytobands[custom.cytobands$orthologs]), y1=end(custom.cytobands[custom.cytobands$orthologs]), data.panel = 1)
   dev.off()
   }
 

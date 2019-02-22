@@ -17,8 +17,8 @@ Dependencies (version tested) (* = required):
     - InterProScan (5.33-72.0)  (Linux only)
     - GOATools
     - R (>3.5.2)
-        - Bioconductor (
-        - KaryoploteR
+        - Bioconductor (>3.8)
+        - KaryoploteR (>1.8.5)
 
 To-do:
     - BUSCO assessment of gene set completedness.
@@ -26,12 +26,16 @@ To-do:
     - Assess ancestry of pan-genome complements using BLASTp.
     - Improve logging.
     - Improve config file.
-        - Add check for depencies based on paths in file.
+        - Add check for dependencies based on paths in file.
         - Add in section for PanOCT parameters.
         - Add in section for yn00 parameters.
 
 
 Recent changes:
+    v0.5.0 (February 2019)
+    - Made fixes in PanGuess.
+    - Added karyotype plotting of PanOCT clusters for all genomes using KaryoploteR (see Karyotype.py and .R files).
+
     v0.4.0 (February 2019)
     - Added in yn00 module for running selection analysis on nucleotide sequences.
         - A bug in Biopython prevents yn00 from running if a dot is in the sequence name,
@@ -69,7 +73,6 @@ from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
-
 from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck, Karyotype
 
 
@@ -95,6 +98,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
 
     Find some way to incorporate exon_cov and td_potential into final product!
     """
+
     # Generate list of genomes from user-provided genome list file.
     logging.info("Master: Parsing genome list.")
     genomes = [line.strip("\n") for line in open(genomelist)]
@@ -103,7 +107,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
     logging.info("Master: Building working directory for gene model prediction.")
     PanGuess.MakeWorkingDir(workdir)
 
-    #
+    # Build reference protein directory for Exonerate (unless --no_exonerate is enabled).
     if not skip:
         logging.info("Master: Building working directory for gene model prediction.")
         PanGuess.BuildRefSet(workdir, ref)
@@ -112,7 +116,6 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
     for genome in genomes:
         # Make tag from genome name.
         tag = genome.split(".")[0].split("/")[1]
-        tags.append(tag)
         logging.info("Master: Running gene model prediction for {0}.".format(tag))
 
         if not skip:
@@ -144,6 +147,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
             logging.info("Master: Merging Exonerate and GeneMark-ES gene calls.")
             merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
         else:
+            pass
             merged_attributes = genemark_attributes
             del genemark_attributes
 
@@ -166,7 +170,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         # Extract TransDecoder attributes.
         logging.info("Master: Converting TransDecoder GTF data to attribute data.")
         trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
-        
+
         # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
         logging.info("Master: Merging all remmaining gene calls for {0}.".format(genome))
         full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
@@ -228,6 +232,12 @@ def PAMLHandler():
     PAML.RunYn00(seqs)
 
 
+def KaryoploteRHandler():
+    """
+    """
+    Karyotype.GenerateContigLengths("genomes")
+    Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
+    Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
 
 
 ### Parser functions. ###
@@ -260,9 +270,11 @@ def CmdLineParser():
     ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
 
     # Add argument for selection analysis using yn00.
-    ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene"
+    ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
                                                         "families using yn00 (must have MUSCLE installed).")
-
+    # Add argument to produce karyotype plots.
+    ap.add_argument("--karyo", action="store_true", help="Generate karyotype plots for all genomes in a "
+                                                         "database based on PanOCT results.")
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
 
@@ -298,7 +310,7 @@ def main():
     cp.read("config.txt")
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
-    if ap.pred:
+    if any([ap.pred, ap.pred_only]):
         panguess_args = []
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
@@ -307,8 +319,16 @@ def main():
             panguess_args.append(True)
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
+
+        # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
+        if ap.pred_only:
+            logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
+                         "all-vs.-all BLAST data, run PanGLOSS with the --no_pred and --no_blast flags.")
+            logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
+            sys.exit(0)
     else:
         logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
+
 
     # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
     if ap.qc:
@@ -326,13 +346,6 @@ def main():
     if ap.busco:
         pass
 
-    # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
-    if ap.pred_only:
-        logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
-                     "all-vs.-all BLAST data, run PanGLOSS with the --no_pred and --no_blast flags.")
-        logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
-        sys.exit(0)
-
     # Run all-vs.-all BLASTp, unless --no_blast is enabled (i.e., user provides own blast file).
     if not ap.no_blast:
         logging.info("Master: Performing all-vs.-all BLASTp searches for entire dataset.")
@@ -346,22 +359,25 @@ def main():
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
     # Run PanOCT on full dataset.
-    #panoct_default_args = []
-    #panoct_extra_args = []
-    #for arg in cp.items("PanOCT_settings"):
-    #    if arg[1]:
-    #        panoct_default_args.append(arg[1])
-    #if panoct_extra_args:
-    #    pass
-    #else:
-    #    PanOCTHandler(*panoct_default_args)
+    panoct_default_args = []
+    panoct_extra_args = []
+    for arg in cp.items("PanOCT_settings"):
+        if arg[1]:
+            panoct_default_args.append(arg[1])
+    if panoct_extra_args:
+        pass
+    else:
+        PanOCTHandler(*panoct_default_args)
 
     # If enabled, run selection analysis using yn00.
     #if ap.yn00:
     #    logging.info("Master: Performing selection analysis using yn00.")
     #    PAMLHandler()
-    Karyotype.GenerateContigLengths("genomes")
-    Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
+
+    if ap.karyo:
+        logging.info("Master: Generating karyotype plots for all genomes in database.")
+        KaryoploteRHandler()
+
 
 if __name__ == "__main__":
     main()

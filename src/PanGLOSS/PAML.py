@@ -1,6 +1,7 @@
 import cStringIO
 
 from Bio import AlignIO, SeqIO
+from Bio.Phylo.PAML import yn00
 from Tools import StringMUSCLE, Untranslate
 
 
@@ -46,6 +47,10 @@ def PutGaps(seqs, alignment):
     return seqs
 
 
+def RunYn00(alignment):
+    yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
+    yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
+    yn.run(ctl_file=None, command="yn00", parse=True)
 
 
 

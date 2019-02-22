@@ -10,13 +10,11 @@ from __future__ import division
 import cStringIO
 import subprocess as sp
 
+from Bio import SeqIO, SeqRecord
 from csv import reader
+from ExonerateGene import ExonerateGene
 from difflib import SequenceMatcher
 from itertools import chain, izip_longest, tee
-
-from Bio import SeqIO, SeqRecord
-from Bio.Phylo.PAML import yn00
-from ExonerateGene import ExonerateGene
 
 
 def grouper(iterable, n):
@@ -338,11 +336,5 @@ def Untranslate(aseq, nseq):
             locs[0] = locs[0] + 3
             locs[1] = locs[1] + 3
     return SeqRecord.SeqRecord(unseq)
-
-
-def RunYn00(alignment):
-    yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
-    yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
-    yn.run(ctl_file=None, command="yn00", parse=True)
 
 

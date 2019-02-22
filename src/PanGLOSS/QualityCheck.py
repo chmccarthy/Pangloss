@@ -18,7 +18,6 @@ import shutil
 
 from Bio import SeqIO, SearchIO
 from csv import reader
-
 from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine
 
 

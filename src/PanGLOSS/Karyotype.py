@@ -1,11 +1,16 @@
-from Bio import SeqIO
+import os
+import shutil
+import subprocess as sp
+import sys
 
+from Bio import SeqIO
 from csv import reader
 from glob import glob
 from Tools import Flatten, ParseMatchtable
 
 def GenerateContigLengths(genomes):
     """
+    Parse sequences in original genomes (contigs, chromosomes, &c.) and write their lengths to file.
     """
     lengths = []
     for genome in glob("{0}/*.fna".format(genomes)):
@@ -24,10 +29,7 @@ def GenerateContigLengths(genomes):
 
 def GenerateKaryotypeFiles(attributes, matchtable):
     """
-    
-    :param attributes:
-    :param matchtable:
-    :return:
+    Parse concatenated attributes file and PanOCT matchtable, and
     """
     attread = reader(open(attributes), delimiter="\t")
     core, acc = ParseMatchtable(matchtable)
@@ -51,3 +53,27 @@ def GenerateKaryotypeFiles(attributes, matchtable):
             line = "\t".join(karyo)
             line += "\n"
             out.write(line)
+
+
+def KaryoPloteR(tags, karyotypes, lengths):
+    """
+    :param tags:
+    :param karyotypes:
+    :param lengths:
+    :return:
+    """
+    karyopath = os.path.dirname(os.path.realpath(sys.argv[0])) + "/Karyotype.R"
+    sp.call(["Rscript", karyopath, tags, karyotypes, lengths])
+
+    # Don't rewrite work directory if already there.
+    try:
+        os.makedirs("karyoplots")
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            logging.info("Karyotype: Plot directory already exists, using it instead.")
+            raise
+
+    for f in glob("*.eps"):
+        shutil.move(f, "karyoplots")
+
+

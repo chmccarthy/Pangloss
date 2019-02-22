@@ -9,6 +9,12 @@ pangenomic structure of species of interest based on microsynteny using only gen
 and a reference protein set.
 
 Recent changes:
+    v0.5.0 (February 2019)
+    - Changed way that contig ID is extracted in TransDecoderGTFToAttributes from a row.split method
+      to a regex match to account for contig IDs that contain underscores.
+    - Changed way that global_locs is extracted in TransDecoderGTFToAttributes by just taking last two
+      elements of a row.split method list.
+
     v0.4.0 (February 2019)
     - Made Exonerate prediction optional.
     - Slight changes to ExonerateGene.
@@ -37,14 +43,14 @@ import multiprocessing as mp
 import os
 import shutil
 import subprocess as sp
+import re
 import tarfile
+
 from csv import reader
 from glob import glob
-
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-
 from Tools import ExonerateCmdLine, LocationOverlap, Pairwise #get_gene_lengths
 
 
@@ -382,14 +388,15 @@ def TransDecoderGTFToAttributes(tdir, tag):
     contig_id = ""
     gene_id = ""
     annotations = ""
+    cregex = r"(.*)_NCR_"
 
     # Pairwise loop, start extracting info if line in VALID GTF format.
     for row, next_row in Pairwise(gtf):
         if next_row is not None:
             if row:
                 if len(row) == 9:
-                    contig_id = row[0].split("_")[0]
-                    global_locs = map(int, row[0].split("_")[2:])
+                    contig_id = re.match(cregex, row[0]).group()[:-5]
+                    global_locs = map(int, row[0].split("_")[-2:])
                     if row[2] == "exon":
                         exon_count = exon_count + 1
                     if row[2] == "CDS":
