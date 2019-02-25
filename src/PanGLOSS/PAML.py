@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+PAML: Module for handling yn00 selection analysis (and maybe CodeML in the future), if enabled by user.
+"""
+
 import cStringIO
 
 from Bio import AlignIO, SeqIO

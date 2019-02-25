@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+ExonerateGene: Module defining gene object called through Exonerate.
+"""
+
 from Bio import SearchIO
-
-"""
-ExonerateGene: Gene object called through Exonerate.
-"""
-
 
 class ExonerateGene:
     """

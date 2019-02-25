@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+BLASTAll: Module for handling parallelized all-vs.-all BLASTp searches, if enabled by user.
+"""
+
 import cStringIO
 import logging
 import multiprocessing as mp

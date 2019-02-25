@@ -71,7 +71,6 @@ def MakeWorkingDir(workdir):
     """
     Tries to make work directory if not already present.
     """
-
     # Don't rewrite work directory if already there.
     try:
         os.makedirs(workdir)

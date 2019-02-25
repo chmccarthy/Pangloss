@@ -6,6 +6,9 @@ Dependencies (version tested) (* = required):
     - Python (2.7.10)           (*)
         - BioPython (1.73)      (*)
     - Perl                      (*)
+        - YAML                  (for GeneMark-ES)
+        - Logger::Simple        (for GeneMark-ES)
+        - Parallel::Manager     (for GeneMark-ES)
     - GeneMark-ES (4.30)        (*)
     - TransDecoder (5.0.2)      (*)
     - PanOCT (3.23)             (*)
@@ -98,7 +101,6 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
 
     Find some way to incorporate exon_cov and td_potential into final product!
     """
-
     # Generate list of genomes from user-provided genome list file.
     logging.info("Master: Parsing genome list.")
     genomes = [line.strip("\n") for line in open(genomelist)]
@@ -194,6 +196,7 @@ def QualityCheckHandler(tags, queries, cores=None):
         gene_sets   = List of strains in analysis (easy access to all files associated with a strain).
         queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
     """
+    # Build BLAST DB, run QC searches against DB and filter out any dubious gene calls.
     QualityCheck.BuildMakeBLASTDBs(tags, cores)
     blasts = QualityCheck.QCBLAST(queries, tags, cores)
     QualityCheck.RemoveDubiousCalls(blasts, tags)
@@ -207,6 +210,8 @@ def BLASTAllHandler(tags, evalue=0.0001, cores=None):
     """
     Runs all-vs.-all BLASTp search of gene model dataset as required for PanOCT.
     """
+    # Concatenate all protein sequence datasets together, BLAST them against themselves, pool all farmed results
+    # together and write output (in tabular format) to file.
     BLASTAll.ConcatenateDatasets(tags)
     blasts = BLASTAll.BLASTAll(evalue, cores)
     BLASTAll.MergeBLASTsAndWrite(blasts)
@@ -214,9 +219,12 @@ def BLASTAllHandler(tags, evalue=0.0001, cores=None):
 
 def PanOCTHandler(fasta_db, attributes, blast, tags, **kwargs):
     """
-    Runs PanOCT.
+    Runs PanOCT, and does some post-run cleanup and sequence extraction.
     """
+    # Run PanOCT with provided files (and optional additional arguments.
     PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+
+    # Move all output from PanOCT into dedicated subfolder, and extract syntenic clusters to their own subfolder.
     PanOCT.PanOCTOutputHandler()
     PanOCT.GenerateClusterFASTAs()
 
@@ -226,6 +234,9 @@ def IPSHandler():
 
 
 def PAMLHandler():
+    """
+    Run
+    """
     seqs = PAML.TranslateCDS()
     alignment = PAML.MUSCLEAlign(seqs)
     PAML.PutGaps(alignment, seqs)
@@ -234,9 +245,14 @@ def PAMLHandler():
 
 def KaryoploteRHandler():
     """
+    Generates chromosomal plots of core and accessory gene models for each genome in a dataset, similar to
+    the Ruby program PhenoGram but with less overhead.
     """
+    # Make lengths and karyotypes files (don't think these can be passed as objects to R without a lot of effort).
     Karyotype.GenerateContigLengths("genomes")
     Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
+
+    # Pass required files to KaryPloteR and run R script.
     Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
 
 
@@ -246,7 +262,7 @@ def CmdLineParser():
     """
     Create and return a configuration file parser.
     """
-    # Create our argument parser
+    # Create our argument parser.
     ap = ArgumentParser(description="Pan-genome analysis of microbial eukaryotes.")
 
     # The argument group for the gene model prediction step.

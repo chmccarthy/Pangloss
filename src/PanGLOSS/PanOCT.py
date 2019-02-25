@@ -4,9 +4,7 @@ import shutil
 import subprocess as sp
 
 from Bio import SeqIO
-
 from glob import glob
-
 from Tools import ParseMatchtable
 
 
@@ -15,12 +13,13 @@ def RunPanOCT(fasta_db, attributes, blast, tags, **kwargs):
     Run PanOCT analysis of gene model dataset. By default, PanGLOSS runs PanOCT with the default parameters
     without specifiying anything.
     """
-    cmd = ["/Users/cmccarthy/Documents/GitHub/PanGLOSS/src/panoct.pl", "-t", blast, "-f",
+    cmd = ["/Users/charley/Documents/GitHub/PanGLOSS/src/panoct.pl", "-t", blast, "-f",
            tags, "-g", attributes, "-P", fasta_db]
     if kwargs:
         pass
     else:
         pass
+    logging.info("PanOCT: Running PanOCT on species dataset.")
     sp.call(cmd)
 
 
@@ -55,6 +54,7 @@ def PanOCTOutputHandler():
 
 def GenerateClusterFASTAs():
     """
+    Extract gene model clusters from full database and write out nucleotide and protein sequence families to file.
     """
     nt_index = SeqIO.index("allnucl.db", "fasta")
     aa_index = SeqIO.index("allprot.db", "fasta")
