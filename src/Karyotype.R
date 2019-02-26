@@ -11,7 +11,6 @@ library(karyoploteR)
 setEPS()
 
 args = commandArgs(trailingOnly = TRUE)
-print(args)
 
 tags <- readLines(args[1])
 karyotypes <- read.table(args[2])
@@ -20,6 +19,7 @@ lengths <- read.table(args[3])
 
 for (tag in tags)
 {
+  print(tag)
   postscript(stringr::str_interp("${name}.eps", list(name = tag)), height=8.5, width=8.5)
   genes = karyotypes[karyotypes$V5 == tag, ]
   contigs = lengths[lengths$V4 == tag, ]

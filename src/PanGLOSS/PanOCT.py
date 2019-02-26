@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+import logging
 import os
 import shutil
+import sys
 import subprocess as sp
 
 from Bio import SeqIO
@@ -13,8 +15,8 @@ def RunPanOCT(fasta_db, attributes, blast, tags, **kwargs):
     Run PanOCT analysis of gene model dataset. By default, PanGLOSS runs PanOCT with the default parameters
     without specifiying anything.
     """
-    cmd = ["/Users/charley/Documents/GitHub/PanGLOSS/src/panoct.pl", "-t", blast, "-f",
-           tags, "-g", attributes, "-P", fasta_db]
+    panoct_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "/panoct.pl"
+    cmd = [panoct_path, "-t", blast, "-f", tags, "-g", attributes, "-P", fasta_db]
     if kwargs:
         pass
     else:

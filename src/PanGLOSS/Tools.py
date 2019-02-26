@@ -282,7 +282,7 @@ def StringBLAST(query):
     cmd = ['blastp', '-db', 'allprot.db', '-evalue', '0.0001', '-outfmt', '7', '-query', "-"]
     process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE)
     output = process.communicate(query)
-    print "cmd finished"
+    print "{0} searched".format(query.split("\n")[0])
     if not "# 0 hits found" in output[0]:  # Empty results don't contain this line!
         return output[0]
     else:
