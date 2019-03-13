@@ -203,6 +203,9 @@ def QualityCheckHandler(tags, queries, cores=None):
 
 
 def BUSCOHandler():
+    """
+    Run BUSCO on all gene sets in a pan-genome dataset. Returns a text file detailing completedness
+    """
     pass
 
 
@@ -230,12 +233,15 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, **kwargs):
 
 
 def IPSHandler():
+    """
+    Run InterProScan on all genes in a dataset, if IPS is installed.
+    """
     pass
 
 
 def PAMLHandler():
     """
-    Run
+    Run Yn00 on x sequences.
     """
     seqs = PAML.TranslateCDS()
     alignment = PAML.MUSCLEAlign(seqs)
@@ -285,6 +291,13 @@ def CmdLineParser():
     ap.add_argument("--qc", action="store_true", help="Perform quality check on predicted gene model sets.")
     ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
 
+    # Add argument for gap filling in PanOCT-dervied pangenome.
+    ap.add_argument("--fillgaps", action="store_true", help="Attempt to fill potential gaps in syntenic clusters.")
+
+    # Add arguments for annotation and GO-enrichment analysis.
+    ap.add_argument("--ips", action="store_true", help="Perform InterProScan analysis of gene model sets.")
+    ap.add_argument("--goatools", action="store_true", help="Perform GO-slim enrichment analysis using GOATools.")
+
     # Add argument for selection analysis using yn00.
     ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
                                                         "families using yn00 (must have MUSCLE installed).")
@@ -311,6 +324,7 @@ def ConfigFileParser():
 
 def main():
     """
+    Main function.
     """
     # Create logfile and assign it to all child modules.
     start_time = datetime.now()
@@ -384,6 +398,18 @@ def main():
         pass
     else:
         PanOCTHandler(*panoct_default_args)
+
+    # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
+    if ap.fillgaps:
+        pass
+
+    # If enabled, run InterProScan analysis on entire dataset.
+    if ap.ips:
+        pass
+
+    # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
+    if ap.goatools:
+        pass
 
     # If enabled, run selection analysis using yn00.
     #if ap.yn00:
