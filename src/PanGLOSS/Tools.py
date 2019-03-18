@@ -86,16 +86,6 @@ def subject_top_hit(list_of_lists, gene_id, size, strain_cutoff):
         top = False
     return top
 
-
-def query_hit_dict(members, blast_results, min_id_cutoff):
-    """
-    Generate dictionary of all hits for all members of a query cluster >min_id_cutoff identity.
-    """
-    blast_hit_dict = {member: [hit.id for hit in blast_results[member].hits if hit.hsps[0].ident_pct
-                               >= float(min_id_cutoff)] for member in members if member in blast_results}
-    return blast_hit_dict
-
-
 def subject_hit_dict(subject_cluster, blast_results, min_id_cutoff):
     """
     Generate dictionary of all hits for all members of a subject cluster >min_id_cutoff identity.
@@ -339,3 +329,24 @@ def Untranslate(aseq, nseq):
     return SeqRecord.SeqRecord(unseq)
 
 
+def QueryClusterFirstHits(q_cluster, blast_idx, ident, tags):
+    """
+    Generate dictionary of all hits for all members of a query cluster >min_id_cutoff identity.
+    """
+    hit_dict = {member: [hit.id for hit in blast_idx[member].hits if hit.hsps[0].ident_pct
+                               >= float(ident)] for member in q_cluster if member in blast_idx}
+    for member in q_cluster:
+        top_hits = []
+        if member in hit_dict:
+            for tag in tags:
+                top_hits.append(next((hit for hit in hit_dict[member] if hit.startswith(tag)), None))
+            hit_dict[member] = top_hits
+    return hit_dict
+
+
+def CheckRecips(new_cluster):
+    """
+    Return True if all first hits for the source strain of a cluster member are the member itself, otherwise False.
+    """
+    for member in new_cluster:
+        print member

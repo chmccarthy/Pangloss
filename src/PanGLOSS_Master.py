@@ -220,28 +220,39 @@ def BLASTAllHandler(tags, evalue=0.0001, cores=None):
     BLASTAll.MergeBLASTsAndWrite(blasts)
 
 
-def PanOCTHandler(fasta_db, attributes, blast, tags, **kwargs):
+def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     """
-    Runs PanOCT, and does some post-run cleanup and sequence extraction.
+    Runs PanOCT and does some post-run cleanup and sequence extraction.
     """
     # Run PanOCT with provided files (and optional additional arguments.
-    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    #PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+
+    # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
+    if gaps:
+        PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
 
     # Move all output from PanOCT into dedicated subfolder, and extract syntenic clusters to their own subfolder.
-    PanOCT.PanOCTOutputHandler()
-    PanOCT.GenerateClusterFASTAs()
+    #PanOCT.PanOCTOutputHandler()
+    #PanOCT.GenerateClusterFASTAs()
 
 
 def IPSHandler():
     """
-    Run InterProScan on all genes in a dataset, if IPS is installed.
+    Run InterProScan on all gene models in a dataset, if IPS is installed.
+    """
+    pass
+
+
+def GOAToolsHandler():
+    """
+    Run GO-slim enrichment analysis on pangenome datasets using GOATools.
     """
     pass
 
 
 def PAMLHandler():
     """
-    Run Yn00 on x sequences.
+    Run Yn00 on core and accessory gene model clusters.
     """
     seqs = PAML.TranslateCDS()
     alignment = PAML.MUSCLEAlign(seqs)
@@ -394,21 +405,21 @@ def main():
     for arg in cp.items("PanOCT_settings"):
         if arg[1]:
             panoct_default_args.append(arg[1])
+    if ap.fillgaps:
+        panoct_default_args.append(True)
     if panoct_extra_args:
         pass
     else:
         PanOCTHandler(*panoct_default_args)
 
-    # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
-    if ap.fillgaps:
-        pass
-
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
+        #IPSHandler()
         pass
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.goatools:
+        #GOAToolsHandler()
         pass
 
     # If enabled, run selection analysis using yn00.
@@ -416,8 +427,9 @@ def main():
     #    logging.info("Master: Performing selection analysis using yn00.")
     #    PAMLHandler()
 
+    # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
-        logging.info("Master: Generating karyotype plots for all genomes in database.")
+        logging.info("Master: Generating karyotype plots for all genomes in dataset.")
         KaryoploteRHandler()
 
 
