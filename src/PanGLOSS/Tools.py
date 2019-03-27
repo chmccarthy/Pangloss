@@ -344,9 +344,8 @@ def QueryClusterFirstHits(q_cluster, blast_idx, ident, tags):
     return hit_dict
 
 
-def CheckRecips(new_cluster):
+def Reciprocal(q_cluster, q_first_hits, s_cluster, s_first_hits):
     """
     Return True if all first hits for the source strain of a cluster member are the member itself, otherwise False.
     """
-    for member in new_cluster:
-        print member
+    pass
