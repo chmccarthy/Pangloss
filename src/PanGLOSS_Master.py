@@ -26,18 +26,15 @@ Dependencies (version tested) (* = required):
 To-do:
     - BUSCO assessment of gene set completedness.
     - Annotation of pan-genomes using InterProScan.
-    - GO-slim analysis.
+    - Assess ancestry of pan-genome complements using BLASTp.
     - Improve logging.
     - Improve config file.
         - Add check for dependencies based on paths in file.
         - Add in section for PanOCT parameters.
         - Add in section for yn00 parameters.
 
-Recent changes:
-    v0.6.0 (March 2019)
-    - Added gap filler function within PanOCT.py to handle merging syntenic clusters based on sufficient sequence
-      similarity between all members of both clusters (see PanOCT.py for more detail).
 
+Recent changes:
     v0.5.0 (February 2019)
     - Made fixes in PanGuess.
     - Added karyotype plotting of PanOCT clusters for all genomes using KaryoploteR (see Karyotype.py and .R files).
@@ -207,8 +204,7 @@ def QualityCheckHandler(tags, queries, cores=None):
 
 def BUSCOHandler():
     """
-    Run BUSCO on all gene sets in a pan-genome dataset using a . Returns a text file detailing completedness of
-    each
+    Run BUSCO on all gene sets in a pan-genome dataset. Returns a text file detailing completedness
     """
     pass
 
@@ -242,14 +238,14 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
 
 def IPSHandler():
     """
-    Runs InterProScan on all gene models in a dataset, if IPS is installed.
+    Run InterProScan on all gene models in a dataset, if IPS is installed.
     """
     pass
 
 
 def GOAToolsHandler():
     """
-    Runs GO-slim enrichment analysis on pangenome datasets using GOATools, if installed.
+    Run GO-slim enrichment analysis on pangenome datasets using GOATools.
     """
     pass
 
@@ -331,7 +327,6 @@ def ConfigFileParser():
     """
     Create and return a configuration file parser.
     """
-    # Create parser.
     cp = SafeConfigParser()
     return cp
 
@@ -419,18 +414,18 @@ def main():
 
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
-        IPSHandler()
+        #IPSHandler()
         pass
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.goatools:
-        GOAToolsHandler()
+        #GOAToolsHandler()
         pass
 
     # If enabled, run selection analysis using yn00.
-    if ap.yn00:
-        logging.info("Master: Performing selection analysis using yn00.")
-        PAMLHandler()
+    #if ap.yn00:
+    #    logging.info("Master: Performing selection analysis using yn00.")
+    #    PAMLHandler()
 
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:

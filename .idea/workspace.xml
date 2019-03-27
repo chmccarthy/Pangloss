@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/PanGLOSS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PanGLOSS.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,14 +25,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3537">
-              <caret line="59" lean-forward="true" selection-start-line="59" selection-end-line="59" />
+            <state relative-caret-position="141">
+              <caret line="78" selection-start-line="78" selection-end-line="78" />
               <folding>
-                <element signature="e#2867#2881#0" expanded="true" />
                 <element signature="e#3222#8617#0" />
+                <element signature="e#11177#13395#0" />
               </folding>
             </state>
           </provider>
@@ -58,7 +62,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1095">
+            <state relative-caret-position="141">
               <caret line="73" selection-start-line="73" selection-end-line="73" />
               <folding>
                 <element signature="e#24#38#0" expanded="true" />
@@ -67,11 +71,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="408">
-              <caret line="336" column="95" selection-start-line="336" selection-start-column="95" selection-end-line="336" selection-end-column="95" />
+              <caret line="336" column="95" lean-forward="true" selection-start-line="336" selection-start-column="95" selection-end-line="336" selection-end-column="95" />
               <folding>
                 <element signature="e#159#190#0" expanded="true" />
               </folding>
@@ -82,7 +86,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6180">
+            <state relative-caret-position="502">
               <caret line="427" selection-start-line="427" selection-end-line="427" />
             </state>
           </provider>
@@ -133,15 +137,15 @@
         <option value="$PROJECT_DIR$/src/Karyotype.R" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/FillGaps.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="99" />
-    <option name="y" value="51" />
+    <option name="x" value="92" />
+    <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
   </component>
@@ -295,12 +299,11 @@
       <workItem from="1550843832869" duration="10757000" />
       <workItem from="1551259913609" duration="261000" />
       <workItem from="1552011879876" duration="28254000" />
-      <workItem from="1553181642304" duration="2557000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127704000" />
+    <option name="totallyTimeSpent" value="125147000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -312,7 +315,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="99" y="51" width="1440" height="877" extended-state="0" />
+    <frame x="92" y="23" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.08798283" />
@@ -428,50 +431,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/FillGaps.py" />
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karyotype.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="60" selection-start-line="60" selection-end-line="60" />
-          <folding>
-            <element signature="e#11#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6180">
-          <caret line="427" selection-start-line="427" selection-end-line="427" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="336" column="95" selection-start-line="336" selection-start-column="95" selection-end-line="336" selection-end-column="95" />
-          <folding>
-            <element signature="e#159#190#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1095">
-          <caret line="73" selection-start-line="73" selection-end-line="73" />
-          <folding>
-            <element signature="e#24#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/FillGaps.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Karyotype.R">
       <provider selected="true" editor-type-id="text-editor">
@@ -490,13 +451,57 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="502">
+          <caret line="427" selection-start-line="427" selection-end-line="427" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karyotype.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="60" selection-start-line="60" selection-end-line="60" />
+          <folding>
+            <element signature="e#11#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3537">
-          <caret line="59" lean-forward="true" selection-start-line="59" selection-end-line="59" />
+        <state relative-caret-position="141">
+          <caret line="78" selection-start-line="78" selection-end-line="78" />
           <folding>
-            <element signature="e#2867#2881#0" expanded="true" />
             <element signature="e#3222#8617#0" />
+            <element signature="e#11177#13395#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="73" selection-start-line="73" selection-end-line="73" />
+          <folding>
+            <element signature="e#24#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="336" column="95" lean-forward="true" selection-start-line="336" selection-start-column="95" selection-end-line="336" selection-end-column="95" />
+          <folding>
+            <element signature="e#159#190#0" expanded="true" />
           </folding>
         </state>
       </provider>
