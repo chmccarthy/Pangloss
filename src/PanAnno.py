@@ -71,13 +71,6 @@ def get_complement_enrichments(core, noncore, annotations, go_terms, go_slim):
 				if gene in annotations:
 					if annotations[gene]["GO"]:
 						corepop.write("{0}\n".format(gene))
-	# with open("softcore_population.txt", "w") as softpop:
-	# 	print "Getting core study population..."
-	# 	for cluster in softcore:
-	# 		for gene in softcore[cluster]:
-	# 			if gene in annotations:
-	# 				if annotations[gene]["GO"]:
-	# 					softpop.write("{0}\n".format(gene))
 	with open("noncore_population.txt", "w") as noncorepop:
 		print "Getting noncore study population..."
 		for cluster in noncore:
@@ -87,8 +80,6 @@ def get_complement_enrichments(core, noncore, annotations, go_terms, go_slim):
 						if annotations[gene]["GO"]:
 							noncorepop.write("{0}\n".format(gene))
 	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "core_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=core_enrichment.tsv"])
-	# sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "softcore_population.txt",
-	# 		 "pangenome_population.txt", "pangenome_slim.txt", "--outfile=softcore_enrichment.tsv"])
 	sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_terms, "noncore_population.txt", "pangenome_population.txt", "pangenome_slim.txt", "--outfile=noncore_enrichment.tsv"])
 
 
