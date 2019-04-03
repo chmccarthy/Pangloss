@@ -348,4 +348,11 @@ def Reciprocal(q_cluster, q_first_hits, s_cluster, s_first_hits):
     """
     Return True if all first hits for the source strain of a cluster member are the member itself, otherwise False.
     """
-    pass
+    reciprocal = False
+    q_members = set([member for member in q_cluster if member])
+    q_value = bool(q_members <= s_first_hits)
+    s_members = set([member for member in s_cluster if member])
+    s_value = bool(s_members <= q_first_hits)
+    if all([q_value, s_value]):
+        reciprocal = True
+    return reciprocal

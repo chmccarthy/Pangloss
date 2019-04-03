@@ -50,29 +50,32 @@ def FillGaps(blast, matchtable, seqs, tags):
             q_missing = filter(lambda tag: tag not in q_present, tags)
             q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
             q_first_hits = set(Flatten(q_blasts.values()))
-            intersect = []
-            if q_first_hits:
+            merger = []
+            if None not in q_first_hits:
                 if len(q_first_hits) == len(q_missing):
                     for s_cluster_id in current_acc:
-                        s_cluster = acc[s_cluster_id]
-                        s_present = [gene.split("|")[0] for gene in s_cluster if gene]
-                        s_missing = filter(lambda tag: tag not in s_present, tags)
-                        s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
-                        s_first_hits = set(Flatten(s_blasts.values()))
-                        if bool(set(s_cluster).intersection(q_first_hits)):
-                            if not intersect:
-                                intersect = set(s_cluster).intersection(q_first_hits)
-                            elif len(intersect) < len(set(s_cluster).intersection(q_first_hits)):
-                                intersect = set(s_cluster).intersection(q_first_hits)
-                            if len(intersect) == len(q_first_hits):
-                                print q_cluster_id, s_cluster_id, intersect
-                                print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new core cluster."
-                                ignore = ignore + [q_cluster_id, s_cluster_id]
-                                print ""
-                                break
-                            else:
-                                print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new accessory cluster."
-                                print ""
+                        if bool(set(acc[s_cluster_id]).intersection(q_first_hits)):
+                            s_cluster = acc[s_cluster_id]
+                            s_present = [gene.split("|")[0] for gene in s_cluster if gene]
+                            s_missing = filter(lambda tag: tag not in s_present, tags)
+                            s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
+                            s_first_hits = set(Flatten(s_blasts.values()))
+                            if Reciprocal(q_cluster, q_first_hits, s_cluster, s_first_hits):
+                                if not merger:
+                                    merger = [x or y for x, y in zip(q_cluster, s_cluster)]
+                                elif len(merger) < total:
+                                    intersect = set(s_cluster).intersection(q_first_hits)
+                                if len(intersect) == len(q_first_hits):
+                                    print q_cluster_id, s_cluster_id, intersect
+                                    print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new core cluster."
+                                    ignore = ignore + [q_cluster_id, s_cluster_id]
+                                    n[q_cluster_id] = new
+                                    del acc[q_cluster_id], acc[s_cluster_id]
+                                    print len(n.keys()), len(acc.keys())
+                                    break
+                                else:
+                                    print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new accessory cluster."
+                                    print ""
                     if not intersect:
                         print str(q_cluster_id) + " doesn't have a potential subject cluster in the accessory genome."
                         ignore.append(q_cluster_id)
@@ -82,7 +85,7 @@ def FillGaps(blast, matchtable, seqs, tags):
                     ignore.append(q_cluster_id)
                     print ""
             else:
-                print str(q_cluster_id) + " has no hits outside of its own strain."
+                print str(q_cluster_id) + " cannot be combined with another subject cluster."
                 ignore.append(q_cluster_id)
                 print ""
 
