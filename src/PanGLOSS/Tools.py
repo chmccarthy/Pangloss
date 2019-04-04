@@ -295,6 +295,17 @@ def ParseMatchtable(matchtable):
     return core, acc
 
 
+def UnparseMatchtable(components):
+    """
+    """
+    with open("panoct/refined_matchtable.txt", "w") as outfile:
+        for comp in components:
+            for cluster in comp:
+                members = [gene if gene != "None" else "----------" for gene in comp[cluster]]
+                outfile.write("\t".join(members))
+                outfile.write("\n")
+
+
 def StringMUSCLE(seqs):
     """
     Runs a MUSCLE alignment given a valid set of translated nucleotides as stdin, returns

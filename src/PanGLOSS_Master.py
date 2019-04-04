@@ -236,9 +236,8 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
-        pass
-    #    logging.info("Master: Running gap filling method.")
-    #    PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
+        logging.info("Master: Running gap filling method.")
+        PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
 
     # Move all output from PanOCT into dedicated subfolder, and extract syntenic clusters to their own subfolder.
     #PanOCT.PanOCTOutputHandler()
@@ -280,11 +279,14 @@ def PAMLHandler():
 def KaryoploteRHandler():
     """
     Generates chromosomal plots of core and accessory gene models for each genome in a dataset, similar to
-    the Ruby program PhenoGram but with less overhead.
+    the Ruby program PhenoGram but with way less overhead.
     """
     # Make lengths and karyotypes files (don't think these can be passed as objects to R without a lot of effort).
     Karyotype.GenerateContigLengths("genomes")
-    Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
+    if ap.gaps:
+        Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/refined_matchtable.txt")
+    else:
+        Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
 
     # Pass required files to KaryPloteR and run R script.
     Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
@@ -323,12 +325,14 @@ def CmdLineParser():
     ap.add_argument("--fillgaps", action="store_true", help="Attempt to fill potential gaps in syntenic clusters.")
 
     # Add arguments for annotation and GO-enrichment analysis.
-    ap.add_argument("--ips", action="store_true", help="Perform InterProScan analysis of gene model sets.")
+    ap.add_argument("--ips", action="store_true", help="Perform InterProScan analysis of gene model sets. NOTE:"
+                                                       " Do not enable this option on non-Linux operating systems,"
+                                                       " InterProScan is not supported on these systems.")
     ap.add_argument("--go", action="store_true", help="Perform GO-slim enrichment analysis using GOATools.")
 
     # Add argument for selection analysis using yn00.
     ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
-                                                        "families using yn00 (must have MUSCLE installed).")
+                                                        "families using yn00.")
     # Add argument to produce karyotype plots.
     ap.add_argument("--karyo", action="store_true", help="Generate karyotype plots for all genomes in a "
                                                          "database based on PanOCT results.")
@@ -432,7 +436,12 @@ def main():
 
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
-        pass
+        if sys.platform != "linux":
+            print "InterProScan is not supported on non-Linux operating systems. Cannot run InterProScan analysis."
+            print "See https://github.com/ebi-pf-team/interproscan/wiki for more information."
+            sys.exit(0)
+        else:
+            pass
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:

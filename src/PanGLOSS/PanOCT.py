@@ -6,7 +6,7 @@ import sys
 import subprocess as sp
 from Bio import SeqIO, SearchIO
 from glob import glob
-from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal
+from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal, UnparseMatchtable
 
 
 def RunPanOCT(fasta_db, attributes, blast, tags, **kwargs):
@@ -36,7 +36,7 @@ def FillGaps(blast, matchtable, seqs, tags):
 
     # Get total number of strains in dataset by taking the length of any accessory cluster list (including Nones).
     total = len(acc[acc.keys()[0]])
-    n = {}
+    new_mergers = {}
 
     # Loop over every accessory cluster.
     og_acc = acc.keys()
@@ -53,6 +53,7 @@ def FillGaps(blast, matchtable, seqs, tags):
             if None not in q_first_hits:
                 if len(q_first_hits) == len(q_missing):
                     for s_cluster_id in current_acc:
+                        intersect = []
                         if bool(set(acc[s_cluster_id]).intersection(q_first_hits)):
                             s_cluster = acc[s_cluster_id]
                             s_present = [gene.split("|")[0] for gene in s_cluster if gene]
@@ -65,12 +66,10 @@ def FillGaps(blast, matchtable, seqs, tags):
                                 elif len(merger) < total:
                                     intersect = set(s_cluster).intersection(q_first_hits)
                                 if len(intersect) == len(q_first_hits):
-                                    print q_cluster_id, s_cluster_id, intersect
                                     print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new core cluster."
                                     ignore = ignore + [q_cluster_id, s_cluster_id]
-                                    n[q_cluster_id] = new
+                                    new_mergers[q_cluster_id] = merger
                                     del acc[q_cluster_id], acc[s_cluster_id]
-                                    print len(n.keys()), len(acc.keys())
                                     break
                                 else:
                                     print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new accessory cluster."
@@ -88,6 +87,10 @@ def FillGaps(blast, matchtable, seqs, tags):
                 ignore.append(q_cluster_id)
                 print ""
 
+    # Write new matchtable to file.
+    for comp in [core, acc, new_mergers]:
+        for cluster in comp:
+            print "\t".join([str(a) for a in comp[cluster]])
 
 def PanOCTOutputHandler():
     """
