@@ -62,20 +62,24 @@ def GeneratePopulations(annos, matchtable):
 
 def GenerateSlimData(assocs, go_obo, slim_obo):
     """
-
+    Runs map_to_slim.py from GOATools to generate GO-slimmed association file.
     """
     sp.call(["map_to_slim.py", "--association_file={0}".format(assocs), go_obo, slim_obo],
             stdout=open("go/pangenome_slim_temp.txt", "w"))
-    with open("pangenome_slim.txt", "w") as slim:
-        for line in open("pangenome_slim_temp.txt").readlines():
+    with open("go/pangenome_slim.txt", "w") as slim:
+        for line in open("go/pangenome_slim_temp.txt").readlines():
             if "|" in line:
                 slim.write(line)
 
-def CoreEnrichment():
+def CoreEnrichment(go_obo, core_pop, full_pop, slimmed_assoc):
     """
+    """
+    sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, core_pop,
+             full_pop, slimmed_assoc, "--outfile=core_enrichment.tsv"])
+
+def AccessoryEnrichment(go_obo, acc_pop, full_pop, slimmed_assoc):
     """
 
-
-def AccessoryEnrichment():
     """
-    """
+    sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, acc_pop,
+             full_pop, slimmed_assoc, "--outfile=noncore_enrichment.tsv"])

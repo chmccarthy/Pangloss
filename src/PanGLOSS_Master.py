@@ -260,7 +260,11 @@ def GOHandler():
     GO.GeneratePopulations(annos, "matchtable.txt")
 
     # Run map_to_slim.py from GOATools.
+    GO.GenerateSlimData("go/associations.txt", "go.obo", "goslim_generic.obo")
 
+    # Run enrichment analysis of core and accessory genomes against full pangenome dataset.
+    GO.CoreEnrichment("go.obo", "go/core_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
+    GO.AccessoryEnrichment("go.obo", "go/acc_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
 
 
 def PAMLHandler():
