@@ -276,14 +276,14 @@ def PAMLHandler():
     PAML.RunYn00(seqs)
 
 
-def KaryoploteRHandler():
+def KaryoploteRHandler(refined=False):
     """
     Generates chromosomal plots of core and accessory gene models for each genome in a dataset, similar to
     the Ruby program PhenoGram but with way less overhead.
     """
     # Make lengths and karyotypes files (don't think these can be passed as objects to R without a lot of effort).
     Karyotype.GenerateContigLengths("genomes")
-    if ap.gaps:
+    if refined:
         Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/refined_matchtable.txt")
     else:
         Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
@@ -422,7 +422,7 @@ def main():
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
     # Run PanOCT on full dataset.
-    panoct_default_args = []
+    panoct_default_args =
     panoct_extra_args = []
     for arg in cp.items("PanOCT_settings"):
         if arg[1]:
@@ -432,7 +432,8 @@ def main():
     if panoct_extra_args:
         pass
     else:
-        PanOCTHandler(*panoct_default_args)
+        pass
+        #PanOCTHandler(*panoct_default_args)
 
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
@@ -445,7 +446,7 @@ def main():
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:
-        GOHandler()
+        #GOHandler()
         pass
 
     # If enabled, run selection analysis using yn00.
@@ -456,9 +457,10 @@ def main():
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
         logging.info("Master: Generating karyotype plots for all genomes in dataset.")
-        KaryoploteRHandler()
+        KaryoploteRHandler(ap.fillgaps)
 
 
 if __name__ == "__main__":
     main()
 
+ []
