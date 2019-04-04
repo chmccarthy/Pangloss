@@ -35,6 +35,11 @@ To-do:
 
 
 Recent changes:
+    v0.6.0 (March-April 2019)
+    -
+    -
+
+
     v0.5.0 (February 2019)
     - Made fixes in PanGuess.
     - Added karyotype plotting of PanOCT clusters for all genomes using KaryoploteR (see Karyotype.py and .R files).
@@ -71,12 +76,11 @@ Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 
 import logging
 import sys
-
 from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
-from PanGLOSS import BLASTAll, PAML, PanGuess, PanOCT, QualityCheck, Karyotype
+from PanGLOSS import BLASTAll, GO, PAML, PanGuess, PanOCT, QualityCheck, Karyotype
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -197,6 +201,7 @@ def QualityCheckHandler(tags, queries, cores=None):
         queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
     """
     # Build BLAST DB, run QC searches against DB and filter out any dubious gene calls.
+    logging.info("Master: Running QualityCheckHandler.")
     QualityCheck.BuildMakeBLASTDBs(tags, cores)
     blasts = QualityCheck.QCBLAST(queries, tags, cores)
     QualityCheck.RemoveDubiousCalls(blasts, tags)
@@ -213,8 +218,9 @@ def BLASTAllHandler(tags, evalue=0.0001, cores=None):
     """
     Runs all-vs.-all BLASTp search of gene model dataset as required for PanOCT.
     """
-    # Concatenate all protein sequence datasets together, BLAST them against themselves, pool all farmed results
-    # together and write output (in tabular format) to file.
+    # Concatenate all protein sequence datasets together, BLAST them against themselves,
+    # pool all farmed results together and write output (in tabular format) to file.
+    logging.info("Master: Running BLASTAllHandler.")
     BLASTAll.ConcatenateDatasets(tags)
     blasts = BLASTAll.BLASTAll(evalue, cores)
     BLASTAll.MergeBLASTsAndWrite(blasts)
@@ -225,29 +231,36 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     Runs PanOCT and does some post-run cleanup and sequence extraction.
     """
     # Run PanOCT with provided files (and optional additional arguments.
+    logging.info("Master: Running PanOCTHandler.")
     #PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
-        PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
+        pass
+    #    logging.info("Master: Running gap filling method.")
+    #    PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
 
     # Move all output from PanOCT into dedicated subfolder, and extract syntenic clusters to their own subfolder.
     #PanOCT.PanOCTOutputHandler()
     #PanOCT.GenerateClusterFASTAs()
 
 
-def IPSHandler():
-    """
-    Run InterProScan on all gene models in a dataset, if IPS is installed.
-    """
-    pass
-
-
-def GOAToolsHandler():
+def GOHandler():
     """
     Run GO-slim enrichment analysis on pangenome datasets using GOATools.
     """
-    pass
+    # Make GO folder, unless one already exists.
+    GO.MakeWorkingDirs()
+
+    # Generate dictionary for IPS annotation data.
+    annos = GO.GenerateAnnoDict("yarr_test.tsv")
+
+    # Generate GO associations and populations files.
+    GO.GenerateAssociations(annos)
+    GO.GeneratePopulations(annos, "matchtable.txt")
+
+    # Run map_to_slim.py from GOATools.
+
 
 
 def PAMLHandler():
@@ -307,7 +320,7 @@ def CmdLineParser():
 
     # Add arguments for annotation and GO-enrichment analysis.
     ap.add_argument("--ips", action="store_true", help="Perform InterProScan analysis of gene model sets.")
-    ap.add_argument("--goatools", action="store_true", help="Perform GO-slim enrichment analysis using GOATools.")
+    ap.add_argument("--go", action="store_true", help="Perform GO-slim enrichment analysis using GOATools.")
 
     # Add argument for selection analysis using yn00.
     ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
@@ -315,6 +328,7 @@ def CmdLineParser():
     # Add argument to produce karyotype plots.
     ap.add_argument("--karyo", action="store_true", help="Generate karyotype plots for all genomes in a "
                                                          "database based on PanOCT results.")
+
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
 
@@ -414,12 +428,11 @@ def main():
 
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
-        #IPSHandler()
         pass
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
-    if ap.goatools:
-        #GOAToolsHandler()
+    if ap.go:
+        GOHandler()
         pass
 
     # If enabled, run selection analysis using yn00.

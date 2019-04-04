@@ -13,9 +13,6 @@ from __future__ import division
 import cStringIO
 import logging
 import multiprocessing as mp
-import os
-import shutil
-
 from Bio import SeqIO, SearchIO
 from csv import reader
 from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine

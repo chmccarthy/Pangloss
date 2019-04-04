@@ -7,7 +7,6 @@ import os
 import shutil
 import subprocess as sp
 import sys
-
 from Bio import SeqIO
 from csv import reader
 from glob import glob

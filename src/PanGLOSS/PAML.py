@@ -4,7 +4,6 @@ PAML: Module for handling yn00 selection analysis (and maybe CodeML in the futur
 """
 
 import cStringIO
-
 from Bio import AlignIO, SeqIO
 from Bio.Phylo.PAML import yn00
 from Tools import StringMUSCLE, Untranslate

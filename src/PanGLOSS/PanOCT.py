@@ -4,7 +4,6 @@ import os
 import shutil
 import sys
 import subprocess as sp
-
 from Bio import SeqIO, SearchIO
 from glob import glob
 from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal

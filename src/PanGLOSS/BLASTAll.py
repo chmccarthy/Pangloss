@@ -6,12 +6,8 @@ BLASTAll: Module for handling parallelized all-vs.-all BLASTp searches, if enabl
 import cStringIO
 import logging
 import multiprocessing as mp
-import os
-import shutil
 import subprocess as sp
-
 from Bio import SeqIO, SearchIO
-
 from Tools import StringBLAST
 
 
@@ -64,6 +60,7 @@ def BLASTAll(evalue=0.0001, cores=None):
     logging.info("BLASTAll: All-vs.-all BLAST finished.")
     return results
 
+
 def MergeBLASTsAndWrite(results):
     """
     Merge all individual BLASTp searches together and write to file in tabular format (without comments this time).
@@ -72,10 +69,10 @@ def MergeBLASTsAndWrite(results):
     together (see join line).
     """
     # Filter last two lines of each BLASTp result and join remaining lines together, making one big SearchIO object.
-    logging.info("BLASTAll:Merging all-vs.-all results together and parsing into tabular format.")
+    logging.info("BLASTAll: Merging all-vs.-all results together and parsing into tabular format.")
     merged = "\n".join((["\n".join(result.split("\n")[:-2]) for result in results]))
     parsed = SearchIO.parse(cStringIO.StringIO(merged), "blast-tab", comments=True)
 
     # Write merged BLASTp results to file for PanOCT.
-    logging.info("BLASTAll:Writing BLASTp results to file panoct.blast.")
+    logging.info("BLASTAll: Writing BLASTp results to file panoct.blast.")
     SearchIO.write(parsed, "panoct.blast", "blast-tab")

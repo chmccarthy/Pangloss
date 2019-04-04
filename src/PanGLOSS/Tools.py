@@ -9,7 +9,6 @@ from __future__ import division
 
 import cStringIO
 import subprocess as sp
-
 from Bio import SeqIO, SeqRecord
 from csv import reader
 from ExonerateGene import ExonerateGene
@@ -272,7 +271,6 @@ def StringBLAST(query):
     cmd = ['blastp', '-db', 'allprot.db', '-evalue', '0.0001', '-outfmt', '7', '-query', "-"]
     process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE)
     output = process.communicate(query)
-    print "{0} searched".format(query.split("\n")[0])
     if not "# 0 hits found" in output[0]:  # Empty results don't contain this line!
         return output[0]
     else:

@@ -45,7 +45,6 @@ import shutil
 import subprocess as sp
 import re
 import tarfile
-
 from csv import reader
 from glob import glob
 from Bio import SeqIO
