@@ -286,10 +286,10 @@ def KaryoploteRHandler(refined=False):
     if refined:
         Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/refined_matchtable.txt")
     else:
-        Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/matchtable.txt")
+        Karyotype.GenerateKaryotypeFiles("allatt.db", "matchtable.txt")
 
     # Pass required files to KaryPloteR and run R script.
-    Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
+    #Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
 
 
 ### Parser functions. ###
@@ -422,7 +422,7 @@ def main():
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
     # Run PanOCT on full dataset.
-    panoct_default_args =
+    panoct_default_args = []
     panoct_extra_args = []
     for arg in cp.items("PanOCT_settings"):
         if arg[1]:
@@ -462,5 +462,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
- []

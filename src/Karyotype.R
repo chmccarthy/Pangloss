@@ -24,7 +24,7 @@ for (tag in tags)
   genes = karyotypes[karyotypes$V5 == tag, ]
   contigs = lengths[lengths$V4 == tag, ]
   
-  names(genes) <- c("chr", "start", "end", "component", "tag", "orthologs")
+  names(genes) <- c("chr", "start", "end", "component", "tag")#, "orthologs")
   names(contigs) <- c("chr", "start", "end", "tag")
   contigs = within(contigs, rm("tag"))
   genes = within(genes, rm("tag"))
