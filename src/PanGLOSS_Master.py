@@ -80,7 +80,7 @@ from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
-from PanGLOSS import BLASTAll, GO, PAML, PanGuess, PanOCT, QualityCheck, Karyotype
+from PanGLOSS import BLASTAll, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -289,7 +289,21 @@ def KaryoploteRHandler(refined=False):
         Karyotype.GenerateKaryotypeFiles("allatt.db", "matchtable.txt")
 
     # Pass required files to KaryPloteR and run R script.
-    #Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
+    Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
+
+
+def SizeVizHandler(refined=False):
+    """
+    """
+    # If refined pangenome dataset has been made, use that as the basis for the bar chart and Chao estimates.
+    if refined:
+        Size.GenerateSizeNumbers("panoct/refined_matchtable.txt")
+    else:
+        Size.GenerateSizeNumbers("matchtable.txt")
+
+    # Pass required files to BarChart.R and run script.
+    Size.GenerateBarChart("cluster_sizes.txt")
+
 
 
 ### Parser functions. ###
@@ -333,9 +347,19 @@ def CmdLineParser():
     # Add argument for selection analysis using yn00.
     ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
                                                         "families using yn00.")
+
     # Add argument to produce karyotype plots.
     ap.add_argument("--karyo", action="store_true", help="Generate karyotype plots for all genomes in a "
                                                          "database based on PanOCT results.")
+
+    # Add argument to produce bar charts with ortholog cluster sizes and Chao (1987) estimates of true pangenome size.
+    ap.add_argument("--bar", action="store_true", help="Generate bar plot of ortholog cluster sizes in dataset "
+                                                       "and estimate true pangenome size using Chao (1987) lower "
+                                                       "bound method (see Bar.R for explanation).")
+
+    # Add argument to produce all R plots.
+    ap.add_argument("--plots", action="store_true", help="Generate all downstream plots (karyotype, cluster size, "
+                                                         "ring chart, UpSet, &c).")
 
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
@@ -373,7 +397,7 @@ def main():
     cp.read("config.txt")
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
-    if any([ap.pred, ap.pred_only]):
+    if ap.pred or ap.pred_only:
         panguess_args = []
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
@@ -454,10 +478,19 @@ def main():
     #    logging.info("Master: Performing selection analysis using yn00.")
     #    PAMLHandler()
 
+    if ap.plots:
+        ap.karyo = True
+        ap.bars = True
+
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
         logging.info("Master: Generating karyotype plots for all genomes in dataset.")
         KaryoploteRHandler(ap.fillgaps)
+
+    # If enabled, generate bar charts and Chao estimat
+    if ap.bar:
+        logging.info("Master: Making ortholog cluster size plot.")
+        SizeVizHandler(ap.fillgaps)
 
 
 if __name__ == "__main__":

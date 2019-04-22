@@ -10,6 +10,7 @@ from __future__ import division
 import cStringIO
 import subprocess as sp
 from Bio import SeqIO, SeqRecord
+from collections import Counter
 from csv import reader
 from ExonerateGene import ExonerateGene
 from difflib import SequenceMatcher
@@ -365,3 +366,13 @@ def Reciprocal(q_cluster, q_first_hits, s_cluster, s_first_hits):
     if all([q_value, s_value]):
         reciprocal = True
     return reciprocal
+
+
+def ClusterSizes(component):
+    """
+    Return counts of cluster sizes within a component.
+    """
+    clusters = component.values()
+    counts = [len(filter(lambda x: x is not None, cluster)) for cluster in clusters]
+    sizes = Counter(counts)
+    return sizes
