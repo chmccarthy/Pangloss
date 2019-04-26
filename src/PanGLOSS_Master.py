@@ -348,6 +348,8 @@ def CmdLineParser():
     ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
                                                         "families using yn00.")
 
+
+
     # Add argument to produce karyotype plots.
     ap.add_argument("--karyo", action="store_true", help="Generate karyotype plots for all genomes in a "
                                                          "database based on PanOCT results.")
@@ -487,7 +489,7 @@ def main():
         logging.info("Master: Generating karyotype plots for all genomes in dataset.")
         KaryoploteRHandler(ap.fillgaps)
 
-    # If enabled, generate bar charts and Chao estimat
+    # If enabled, generate bar charts and Chao estimate.
     if ap.bar:
         logging.info("Master: Making ortholog cluster size plot.")
         SizeVizHandler(ap.fillgaps)
