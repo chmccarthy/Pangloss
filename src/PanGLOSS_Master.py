@@ -511,6 +511,7 @@ def main():
         logging.info("Master: Generating ortholog cluster size plot.")
         SizeVizHandler(ap.fillgaps)
 
+    # If enabled, generate UpSet plot of accessory genome.
     if ap.upset:
         logging.info("Master: Generating UpSet accessory genome distribution plot.")
         UpSetRHandler(ap.fillgaps)

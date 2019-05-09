@@ -604,13 +604,13 @@ def cluster_clean(panoct_clusters, fasta_handle, split_by=4, min_id_cutoff=30, s
 
 
 
-    ring_plot = ["Rscript", "{0}/PlotRingChart.R".format(dirname), str(core_proteome), str(softcore_proteome), str(noncore_proteome), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
+    ring_plot = ["Rscript", "{0}/RingChart.R".format(dirname), str(core_proteome), str(softcore_proteome), str(noncore_proteome), ",".join(size for size in sizes_arg), ",".join(count for count in counts_arg)]
     try:
         sp.check_call(ring_plot)
         mainlogfile.write("Creating ring chart in R...\n")
     except sp.CalledProcessError as r_exec:
         if r_exec.returncode != 0:
-            mainlogfile.write("Unable to run R script PlotRingChart.R, attempted command below:\n")
+            mainlogfile.write("Unable to run R script RingChart.R, attempted command below:\n")
             mainlogfile.write(" ".join(ring_plot) + "\n")
 
     upset_plot = ["Rscript", "PlotUsingUpSet.R", "softcore_pam.txt", "softcore_upset.eps"]
