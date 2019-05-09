@@ -80,7 +80,7 @@ from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
-from PanGLOSS import BLASTAll, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size
+from PanGLOSS import BLASTAll, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -294,6 +294,9 @@ def KaryoploteRHandler(refined=False):
 
 def SizeVizHandler(refined=False):
     """
+    Generates bar chart plot of syntenic ortholog cluster sizes in a pangenome dataset, counts observed number
+    of clusters (i.e. observed pangenome size, N) and uses that to estimate the predicted number of
+    syntenic clusters by the Chao lower bound estimate method (Eng or N-hat).
     """
     # If refined pangenome dataset has been made, use that as the basis for the bar chart and Chao estimates.
     if refined:
@@ -302,8 +305,18 @@ def SizeVizHandler(refined=False):
         Size.GenerateSizeNumbers("matchtable.txt")
 
     # Pass required files to BarChart.R and run script.
-    Size.GenerateBarChart("cluster_sizes.txt")
+    Size.GenerateBarChart("./cluster_sizes.txt")
 
+
+def UpSetRHandler(refined=False):
+    """
+    Generates UpSetR plot for the distribution of syntenic orthologs within a pangenome dataset, similar to a Venn
+    or Euler diagram but capable of >7 input sets.
+    """
+    if refined:
+        UpSet.UpSetR("./panoct_tags.txt", "./refined_matchtable.txt")
+    else:
+        UpSet.UpSetR("./panoct_tags.txt", "./matchtable.txt")
 
 
 ### Parser functions. ###
@@ -358,6 +371,9 @@ def CmdLineParser():
     ap.add_argument("--bar", action="store_true", help="Generate bar plot of ortholog cluster sizes in dataset "
                                                        "and estimate true pangenome size using Chao (1987) lower "
                                                        "bound method (see Bar.R for explanation).")
+
+    ap.add_argument("--upset", action="store_true", help="Generate UpSet plot of distribution of syntenic orthologs "
+                                                         "within accessory genome of a pangenome dataset.")
 
     # Add argument to produce all R plots.
     ap.add_argument("--plots", action="store_true", help="Generate all downstream plots (karyotype, cluster size, "
@@ -417,7 +433,6 @@ def main():
             sys.exit(0)
     else:
         logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
-
 
     # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
     if ap.qc:
@@ -480,19 +495,25 @@ def main():
     #    logging.info("Master: Performing selection analysis using yn00.")
     #    PAMLHandler()
 
+    # If enabled, enable all plot arguments.
     if ap.plots:
         ap.karyo = True
-        ap.bars = True
+        ap.bar = True
+        ap.upset = True
 
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
         logging.info("Master: Generating karyotype plots for all genomes in dataset.")
         KaryoploteRHandler(ap.fillgaps)
 
-    # If enabled, generate bar charts and Chao estimate.
+    # If enabled, generate bar charts and Chao estimate of pangenome size.
     if ap.bar:
-        logging.info("Master: Making ortholog cluster size plot.")
+        logging.info("Master: Generating ortholog cluster size plot.")
         SizeVizHandler(ap.fillgaps)
+
+    if ap.upset:
+        logging.info("Master: Generating UpSet accessory genome distribution plot.")
+        UpSetRHandler(ap.fillgaps)
 
 
 if __name__ == "__main__":

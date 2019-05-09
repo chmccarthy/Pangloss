@@ -1,0 +1,14 @@
+"""
+Simple module for running UpSet analysis of accessory genomes using UpSetR.
+"""
+import os
+import sys
+import subprocess as sp
+
+
+def UpSetR(tags, matchtable):
+    """
+    Parse matchtable and generate UpSetR plot of distribution of accessory orthologs within pangenome.
+    """
+    upsetpath = os.path.dirname(os.path.realpath(sys.argv[0])) + "/UpSet.R"
+    sp.call(["Rscript", upsetpath, matchtable, tags])

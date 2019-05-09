@@ -33,7 +33,7 @@ def GenerateContigLengths(genomes):
 
 def GenerateKaryotypeFiles(attributes, matchtable):
     """
-    Parse concatenated attributes file and PanOCT matchtable, and
+    Parse concatenated attributes file and PanOCT matchtable, and generate the input needed for Karyotype.R.
     """
     attread = reader(open(attributes), delimiter="\t")
     core, acc = ParseMatchtable(matchtable)
@@ -61,10 +61,7 @@ def GenerateKaryotypeFiles(attributes, matchtable):
 
 def KaryoPloteR(tags, karyotypes, lengths):
     """
-    :param tags:
-    :param karyotypes:
-    :param lengths:
-    :return:
+    Run Karyoplot.R for all strains in a dataset and write the plots to the karyplots folder.
     """
     karyopath = os.path.dirname(os.path.realpath(sys.argv[0])) + "/Karyotype.R"
     sp.call(["Rscript", karyopath, tags, karyotypes, lengths])
@@ -78,6 +75,7 @@ def KaryoPloteR(tags, karyotypes, lengths):
             raise
 
     for f in glob("*.eps"):
-        shutil.move(f, "karyoplots")
+        shutil.copy(f, "karyoplots")
+        os.remove(f)
 
 
