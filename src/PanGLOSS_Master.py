@@ -24,21 +24,28 @@ Dependencies (version tested) (* = required):
         - KaryoploteR (>1.8.5)
 
 To-do:
-    - BUSCO assessment of gene set completedness.
-    - Annotation of pan-genomes using InterProScan.
-    - Assess ancestry of pan-genome complements using BLASTp.
+    - Find some way to incorporate arguments exon_cov and td_potential into PanGuess.
+    - Add in BUSCO assessment of gene set completedness.
+    - Add in Annotation of pan-genomes using InterProScan.
     - Improve logging.
-    - Improve config file.
+    - Seriously improve config file!
         - Add check for dependencies based on paths in file.
         - Add in section for PanOCT parameters.
         - Add in section for yn00 parameters.
 
 
 Recent changes:
-    v0.6.0 (March-April 2019)
-    -
-    -
-
+    v0.6.0 (May 2019)
+    - Added in command flag for disabling PanOCT (mostly for debugging purposes).
+    - Added method for refining pangenome construction based on BLAST+ data used by PanOCT.
+    - Added in bar chart plotting of pangenome cluster sizes using ggplot and a function for estimating true
+      pangenome size using Chao's lower bound estimation method.
+    - Added in ring chart plotting of pangenome component sizes using ggplot2 and ggrepel (see Size.py and RingChart.R
+      files).
+    - Added in UpSet plotting of distribution of syntenic orthologs within accessory genome using UpSetR (see UpSet.py
+      and .R files).
+    - Slight change to what goes into karyotype input file, now includes gene names. Done this with a view to a making
+      a form of gene order/synteny chart in a future version.
 
     v0.5.0 (February 2019)
     - Made fixes in PanGuess.
@@ -102,8 +109,6 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
 
     Arguments activated by command line flags:
         skip         = Skip Exonerate gene model predictions.
-
-    Find some way to incorporate exon_cov and td_potential into final product!
     """
     # Generate list of genomes from user-provided genome list file.
     logging.info("Master: Parsing genome list.")
@@ -209,14 +214,22 @@ def QualityCheckHandler(tags, queries, cores=None):
 
 def BUSCOHandler():
     """
-    Run BUSCO on all gene sets in a pan-genome dataset. Returns a text file detailing completedness
+    Run BUSCO on all gene sets in a pangenome dataset. Returns a text file detailing completedness of each
+    gene model set in pangenome dataset.
     """
     pass
 
 
 def BLASTAllHandler(tags, evalue=0.0001, cores=None):
     """
-    Runs all-vs.-all BLASTp search of gene model dataset as required for PanOCT.
+    Runs all-vs.-all BLASTp search of gene model dataset as required for PanOCT. BLASTp searches "parallelized"
+    via subprocessing and cStringIO magic. Can be skipped from command-line, and in general it might be better
+    for the user to run all-vs.-all BLASTp searches on some kind of HPC server if possible.
+
+    Arguments:
+        tags   = List of strains in analysis (easy access to all files associated with a strain).
+        evalue = E-value cutoff for BLASTp searches (default is 10^-4).
+        cores  = Number of BLASTp searches to run simulatenously (default will be available cores - 1).
     """
     # Concatenate all protein sequence datasets together, BLAST them against themselves,
     # pool all farmed results together and write output (in tabular format) to file.
@@ -228,11 +241,15 @@ def BLASTAllHandler(tags, evalue=0.0001, cores=None):
 
 def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     """
-    Runs PanOCT and does some post-run cleanup and sequence extraction.
+    Runs PanOCT, refines initial construction if enabled and does some post-run cleanup and sequence extraction.
+
+    Arguments:
+        gene_sets   = List of strains in analysis (easy access to all files associated with a strain).
+        queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
     """
     # Run PanOCT with provided files (and optional additional arguments.
     logging.info("Master: Running PanOCTHandler.")
-    #PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
@@ -240,11 +257,11 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
 
     # Move all output from PanOCT into dedicated subfolder, and extract syntenic clusters to their own subfolder.
-    #PanOCT.PanOCTOutputHandler()
-    #PanOCT.GenerateClusterFASTAs()
+    PanOCT.PanOCTOutputHandler()
+    PanOCT.GenerateClusterFASTAs()
 
 
-def GOHandler():
+def GOHandler(refined=False):
     """
     Run GO-slim enrichment analysis on pangenome datasets using GOATools.
     """
@@ -256,7 +273,10 @@ def GOHandler():
 
     # Generate GO associations and populations files.
     GO.GenerateAssociations(annos)
-    GO.GeneratePopulations(annos, "matchtable.txt")
+    if refined:
+        GO.GeneratePopulations(annos, "refined_matchtable.txt")
+    else:
+        GO.GeneratePopulations(annos, "matchtable.txt")
 
     # Run map_to_slim.py from GOATools.
     GO.GenerateSlimData("go/associations.txt", "go.obo", "goslim_generic.obo")
@@ -284,9 +304,9 @@ def KaryoploteRHandler(refined=False):
     # Make lengths and karyotypes files (don't think these can be passed as objects to R without a lot of effort).
     Karyotype.GenerateContigLengths("genomes")
     if refined:
-        Karyotype.GenerateKaryotypeFiles("allatt.db", "panoct/refined_matchtable.txt")
+        Karyotype.GenerateKaryotypeFiles("./allatt.db", "./panoct/refined_matchtable.txt")
     else:
-        Karyotype.GenerateKaryotypeFiles("allatt.db", "matchtable.txt")
+        Karyotype.GenerateKaryotypeFiles("./allatt.db", "./panoct/matchtable.txt")
 
     # Pass required files to KaryPloteR and run R script.
     Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
@@ -296,13 +316,17 @@ def SizeVizHandler(refined=False):
     """
     Generates bar chart plot of syntenic ortholog cluster sizes in a pangenome dataset, counts observed number
     of clusters (i.e. observed pangenome size, N) and uses that to estimate the predicted number of
-    syntenic clusters by the Chao lower bound estimate method (Eng or N-hat).
+    syntenic clusters by the Chao lower bound estimate method (Eng or N-hat). Also generates ring chart
+    for pangenome size.
     """
     # If refined pangenome dataset has been made, use that as the basis for the bar chart and Chao estimates.
+    # Also generate ring charts at this point too.
     if refined:
-        Size.GenerateSizeNumbers("panoct/refined_matchtable.txt")
+        Size.GenerateRingChart("./panoct/refined_matchtable.txt")
+        Size.GenerateSizeNumbers("./panoct/refined_matchtable.txt")
     else:
-        Size.GenerateSizeNumbers("matchtable.txt")
+        Size.GenerateRingChart("./panoct/matchtable.txt")
+        Size.GenerateSizeNumbers("./panoct/matchtable.txt")
 
     # Pass required files to BarChart.R and run script.
     Size.GenerateBarChart("./cluster_sizes.txt")
@@ -316,7 +340,7 @@ def UpSetRHandler(refined=False):
     if refined:
         UpSet.UpSetR("./panoct_tags.txt", "./refined_matchtable.txt")
     else:
-        UpSet.UpSetR("./panoct_tags.txt", "./matchtable.txt")
+        UpSet.UpSetR("./panoct_tags.txt", "./panoct/matchtable.txt")
 
 
 ### Parser functions. ###
@@ -341,12 +365,15 @@ def CmdLineParser():
     # Add argument to skip Exonerate steps during gene model prediction.
     ap.add_argument("--no_exonerate", action="store_true", help="Skip gene model prediction via Exonerate.")
 
-    # Add argument for skipping all-vs.-all BLASTp step (usually faster to generate data elsewhere).
-    ap.add_argument("--no_blast", action="store_true", help="Skip all-vs.-all BLASTp step for PanOCT.")
-
     # Add arguments for optional quality control analyses.
     ap.add_argument("--qc", action="store_true", help="Perform quality check on predicted gene model sets.")
     ap.add_argument("--busco", action="store_true", help="Perform BUSCO analysis on predicted gene model sets.")
+
+    # Add argument for skipping all-vs.-all BLASTp step (usually faster to generate data elsewhere).
+    ap.add_argument("--no_blast", action="store_true", help="Skip all-vs.-all BLASTp step for PanOCT.")
+
+    # Add argument for skipping PanOCT analysis (mostly for debugging purposes).
+    ap.add_argument("--no_panoct", action="store_true", help="Skip PanOCT analysis.")
 
     # Add argument for gap filling in PanOCT-dervied pangenome.
     ap.add_argument("--fillgaps", action="store_true", help="Attempt to fill potential gaps in syntenic clusters.")
@@ -361,23 +388,23 @@ def CmdLineParser():
     ap.add_argument("--yn00", action="store_true", help="Perform selection analysis on core and accessory gene "
                                                         "families using yn00.")
 
-
+    # Add argument to produce all R plots.
+    ap.add_argument("--plots", action="store_true", help="Generate all downstream plots (karyotype, cluster size, "
+                                                         "ring chart, UpSet, &c).")
 
     # Add argument to produce karyotype plots.
     ap.add_argument("--karyo", action="store_true", help="Generate karyotype plots for all genomes in a "
                                                          "database based on PanOCT results.")
 
-    # Add argument to produce bar charts with ortholog cluster sizes and Chao (1987) estimates of true pangenome size.
-    ap.add_argument("--bar", action="store_true", help="Generate bar plot of ortholog cluster sizes in dataset "
-                                                       "and estimate true pangenome size using Chao (1987) lower "
-                                                       "bound method (see Bar.R for explanation).")
+    # Add argument to produce ring chart of pangenome component size and bar charts with
+    # ortholog cluster sizes and Chao (1987) estimates of true pangenome size.
+    ap.add_argument("--size", action="store_true", help="Generate ring and bar charts of pangenome complement, "
+                                                        "observed and predicted sizes.")
 
+    # Add argument to produce UpSet plot of distribution of syntenic orthologs within accessory genome.
     ap.add_argument("--upset", action="store_true", help="Generate UpSet plot of distribution of syntenic orthologs "
                                                          "within accessory genome of a pangenome dataset.")
 
-    # Add argument to produce all R plots.
-    ap.add_argument("--plots", action="store_true", help="Generate all downstream plots (karyotype, cluster size, "
-                                                         "ring chart, UpSet, &c).")
 
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
@@ -462,19 +489,22 @@ def main():
     else:
         logging.info("Master: Skipping all-vs.-all BLASTp searches (--no_blast enabled).")
 
-    # Run PanOCT on full dataset.
-    panoct_default_args = []
-    panoct_extra_args = []
-    for arg in cp.items("PanOCT_settings"):
-        if arg[1]:
-            panoct_default_args.append(arg[1])
-    if ap.fillgaps:
-        panoct_default_args.append(True)
-    if panoct_extra_args:
-        pass
+    # Run PanOCT on full dataset, unless --no_panoct is enabled.
+    if not ap.no_panoct:
+        logging.info("Master: Performing PanOCT analysis of dataset.")
+        panoct_default_args = []
+        panoct_extra_args = []
+        for arg in cp.items("PanOCT_settings"):
+            if arg[1]:
+                panoct_default_args.append(arg[1])
+        if ap.fillgaps:
+            panoct_default_args.append(True)
+        if panoct_extra_args:
+            pass
+        else:
+            PanOCTHandler(*panoct_default_args)
     else:
-        pass
-        #PanOCTHandler(*panoct_default_args)
+        logging.info("Master: Skipping PanOCT analysis (--no_panoct enabled).")
 
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
@@ -487,18 +517,18 @@ def main():
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:
-        #GOHandler()
+        GOHandler(ap.fillgaps)
         pass
 
     # If enabled, run selection analysis using yn00.
-    #if ap.yn00:
-    #    logging.info("Master: Performing selection analysis using yn00.")
-    #    PAMLHandler()
+    if ap.yn00:
+        logging.info("Master: Performing selection analysis using yn00.")
+        PAMLHandler()
 
     # If enabled, enable all plot arguments.
     if ap.plots:
         ap.karyo = True
-        ap.bar = True
+        ap.size = True
         ap.upset = True
 
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
@@ -507,8 +537,8 @@ def main():
         KaryoploteRHandler(ap.fillgaps)
 
     # If enabled, generate bar charts and Chao estimate of pangenome size.
-    if ap.bar:
-        logging.info("Master: Generating ortholog cluster size plot.")
+    if ap.size:
+        logging.info("Master: Generating size plots.")
         SizeVizHandler(ap.fillgaps)
 
     # If enabled, generate UpSet plot of accessory genome.

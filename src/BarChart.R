@@ -4,7 +4,6 @@ if (!require(ggplot2))
   install.packages("ggplot2")
 }
 
-
 ## Function for Chao lower bound estimate of pangenome size based on a similar function in micropan.
 chao <- function(df)
 {
@@ -22,7 +21,6 @@ chao <- function(df)
   return(chao)
 }
 
-
 ## Function for potenital Bohning lower bound estimate of pangenome size if I can figure out how to implement it?
 bohning <- function(df)
 {
@@ -39,7 +37,6 @@ bohning <- function(df)
   }
   return(bohning)
 }
-
 
 ## Import and settings statements.
 library(ggplot2)

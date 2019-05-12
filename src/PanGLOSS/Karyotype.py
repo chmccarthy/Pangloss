@@ -38,12 +38,11 @@ def GenerateKaryotypeFiles(attributes, matchtable):
     attread = reader(open(attributes), delimiter="\t")
     core, acc = ParseMatchtable(matchtable)
     karyotype = []
-    core_len = len(core[core.keys()[0]])
 
     for row in attread:
-        karyo = [row[0], row[2], row[3]]
+        karyo = [row[0], row[1], row[2], row[3]]
         if row[1] in Flatten(core.values()):
-            karyo = karyo + ["core", row[5]]#, str(core_len)]
+            karyo = karyo + ["core", row[5]]
         else:
             karyo = karyo + ["acc", row[5]]
             #for key in acc:
