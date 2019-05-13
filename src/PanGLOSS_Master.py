@@ -87,7 +87,7 @@ from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from glob import glob
-from PanGLOSS import BLASTAll, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
+from PanGLOSS import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
 
 
 def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
@@ -212,11 +212,12 @@ def QualityCheckHandler(tags, queries, cores=None):
     QualityCheck.RemoveDubiousCalls(blasts, tags)
 
 
-def BUSCOHandler():
+def BUSCOHandler(tags):
     """
     Run BUSCO on all gene sets in a pangenome dataset. Returns a text file detailing completedness of each
     gene model set in pangenome dataset.
     """
+    BUSCO.RunBUSCO(tags)
     pass
 
 
@@ -261,6 +262,10 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     PanOCT.GenerateClusterFASTAs()
 
 
+def IPSHandler():
+    pass
+
+
 def GOHandler(refined=False):
     """
     Run GO-slim enrichment analysis on pangenome datasets using GOATools.
@@ -274,9 +279,9 @@ def GOHandler(refined=False):
     # Generate GO associations and populations files.
     GO.GenerateAssociations(annos)
     if refined:
-        GO.GeneratePopulations(annos, "refined_matchtable.txt")
+        GO.GeneratePopulations(annos, "./panoct/refined_matchtable.txt")
     else:
-        GO.GeneratePopulations(annos, "matchtable.txt")
+        GO.GeneratePopulations(annos, "./panoct/matchtable.txt")
 
     # Run map_to_slim.py from GOATools.
     GO.GenerateSlimData("go/associations.txt", "go.obo", "goslim_generic.obo")
@@ -338,7 +343,7 @@ def UpSetRHandler(refined=False):
     or Euler diagram but capable of >7 input sets.
     """
     if refined:
-        UpSet.UpSetR("./panoct_tags.txt", "./refined_matchtable.txt")
+        UpSet.UpSetR("./panoct_tags.txt", "./panoct/refined_matchtable.txt")
     else:
         UpSet.UpSetR("./panoct_tags.txt", "./panoct/matchtable.txt")
 

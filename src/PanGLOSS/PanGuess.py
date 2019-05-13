@@ -440,6 +440,16 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
     prot_models = []
     nucl_models = []
 
+    # Try to make a directory for protein sets.
+    sdir = "{0}/sets".format(workdir)
+    try:
+        os.makedirs(sdir)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            logging.info("PanGuess: Protein sets folder already exists, using it instead.")
+            raise
+
+
     # Loop over attributes, extract gene from given source based on parent method.
     for gene in attributes:
         if gene[4].startswith("TransDecoder"):
@@ -469,15 +479,15 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
             nucl_models.append(nucl_seq)
 
     # Write protein sequences to file.
-    with open("{0}.faa".format(tag), "w") as outpro:
+    with open("{0}/{1}.faa".format(sdir, tag), "w") as outpro:
         SeqIO.write(prot_models, outpro, "fasta")
 
     # Write nucleotide sequences to file.
-    with open("{0}.nucl".format(tag), "w") as outnuc:
+    with open("{0}/{1}.nucl".format(sdir, tag), "w") as outnuc:
         SeqIO.write(nucl_models, outnuc, "fasta")
 
     # Write attributes to file.
-    with open("{0}.attributes".format(tag), "w") as outatt:
+    with open("{0}/{1}.attributes".format(sdir, tag), "w") as outatt:
         for line in attributes:
             outatt.write("\t".join(str(el) for el in line) + "\n")
 
