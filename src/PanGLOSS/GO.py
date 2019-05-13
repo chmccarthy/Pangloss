@@ -5,19 +5,16 @@
 import os
 import subprocess as sp
 from csv import reader
-from Tools import Flatten, ParseMatchtable
+
+from Tools import Flatten, ParseMatchtable, TryMkDirs
+
 
 def MakeWorkingDirs():
     """
     Tries to make work directory if not already present.
     """
     tdir = "go"
-    try:
-        os.makedirs(tdir)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("GO: Program output directory already exists, using it instead.")
-            raise
+    TryMkDirs(tdir)
 
 
 def GenerateAnnoDict(ips):

@@ -2,8 +2,8 @@
 Simple module for running UpSet analysis of accessory genomes using UpSetR.
 """
 import os
-import sys
 import subprocess as sp
+import sys
 
 
 def UpSetR(tags, matchtable):

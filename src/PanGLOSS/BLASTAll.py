@@ -7,7 +7,9 @@ import cStringIO
 import logging
 import multiprocessing as mp
 import subprocess as sp
+
 from Bio import SeqIO, SearchIO
+
 from Tools import StringBLAST
 
 

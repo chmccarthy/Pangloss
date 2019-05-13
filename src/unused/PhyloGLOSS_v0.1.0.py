@@ -1,9 +1,10 @@
 
-from Bio import SeqIO
-from csv import reader
 import multiprocessing as mp
-import subprocess as sp
 import os
+import subprocess as sp
+from csv import reader
+
+from Bio import SeqIO
 
 
 def subprocess_MUSCLE(cmd):

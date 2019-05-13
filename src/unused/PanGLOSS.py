@@ -77,8 +77,8 @@ from glob import glob
 
 from Bio import SearchIO, SeqIO
 from PanGLOSS.Tools import flatten, grouper, seq_ratio
-from PanGLOSS.Tools import merge_clusters
 from PanGLOSS.Tools import subject_top_hit, query_top_hit, query_hit_dict, subject_hit_dict
+
 
 ##### Here is the function to handle individual BLASTp searches in parallel_BLAST. #####
 def subprocess_BLAST(cmd):

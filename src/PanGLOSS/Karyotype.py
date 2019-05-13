@@ -7,10 +7,13 @@ import os
 import shutil
 import subprocess as sp
 import sys
-from Bio import SeqIO
 from csv import reader
 from glob import glob
-from Tools import Flatten, ParseMatchtable
+
+from Bio import SeqIO
+
+from Tools import Flatten, ParseMatchtable, TryMkDirs
+
 
 def GenerateContigLengths(genomes):
     """
@@ -66,15 +69,13 @@ def KaryoPloteR(tags, karyotypes, lengths):
     sp.call(["Rscript", karyopath, tags, karyotypes, lengths])
 
     # Don't rewrite work directory if already there.
-    try:
-        os.makedirs("karyoplots")
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("Karyotype: Plot directory already exists, using it instead.")
-            raise
+    kdir = "./karyoplots"
+    TryMkDirs(kdir)
 
-    for f in glob("*.eps"):
-        shutil.copy(f, "karyoplots")
-        os.remove(f)
+    genomes = [line.strip("\n") for line in open(genomelist)]
+
+    for tag in genomes:
+        shutil.copy("{0}.eps".format(tag), kdir)
+        os.remove("{0}.eps".format(tag))
 
 

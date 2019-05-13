@@ -25,7 +25,6 @@ Dependencies (version tested) (* = required):
 
 To-do:
     - Find some way to incorporate arguments exon_cov and td_potential into PanGuess.
-    - Add in BUSCO assessment of gene set completedness.
     - Add in Annotation of pan-genomes using InterProScan.
     - Improve logging.
     - Seriously improve config file!
@@ -35,6 +34,11 @@ To-do:
 
 
 Recent changes:
+    v0.7.0 (May 2019)
+    - Added BUSCO assessment of gene model completedness.
+
+
+
     v0.6.0 (May 2019)
     - Added in command flag for disabling PanOCT (mostly for debugging purposes).
     - Added method for refining pangenome construction based on BLAST+ data used by PanOCT.
@@ -46,6 +50,7 @@ Recent changes:
       and .R files).
     - Slight change to what goes into karyotype input file, now includes gene names. Done this with a view to a making
       a form of gene order/synteny chart in a future version.
+    - Changed how subdirectories are created everywhere.
 
     v0.5.0 (February 2019)
     - Made fixes in PanGuess.
@@ -83,10 +88,11 @@ Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 
 import logging
 import sys
-from argparse import ArgumentParser
 from ConfigParser import SafeConfigParser
+from argparse import ArgumentParser
 from datetime import datetime
 from glob import glob
+
 from PanGLOSS import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
 
 
@@ -212,12 +218,12 @@ def QualityCheckHandler(tags, queries, cores=None):
     QualityCheck.RemoveDubiousCalls(blasts, tags)
 
 
-def BUSCOHandler(tags):
+def BUSCOHandler(buscopath, lineagepath, tags):
     """
     Run BUSCO on all gene sets in a pangenome dataset. Returns a text file detailing completedness of each
     gene model set in pangenome dataset.
     """
-    BUSCO.RunBUSCO(tags)
+    BUSCO.RunBUSCO(buscopath, lineagepath, tags)
     pass
 
 
@@ -444,7 +450,7 @@ def main():
 
     # Read config file.
     logging.info("Master: Read config file.")
-    cp.read("config.txt")
+    cp.read(ap.CONFIG_FILE)
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
@@ -480,6 +486,17 @@ def main():
 
     # If enabled, run BUSCO completedness analysis of all gene model sets.
     if ap.busco:
+        logging.info("Master: Performing BUSCO analysis of gene model sets.")
+        busco_args = []
+        for arg in cp.items("Optional_dependencies"):
+            if arg[0] == "busco_path":
+                busco_args.append(arg[1])
+            if arg[0] == "busco_lineage_path":
+                busco_args.append(arg[1])
+        for arg in cp.items("PanOCT_settings"):
+            if arg[0] == "genomes_list":
+                busco_args.append(arg[1])
+        BUSCOHandler(*busco_args)
         pass
 
     # Run all-vs.-all BLASTp, unless --no_blast is enabled (i.e., user provides own blast file).

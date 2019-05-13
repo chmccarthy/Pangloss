@@ -2,11 +2,13 @@
 import logging
 import os
 import shutil
-import sys
 import subprocess as sp
-from Bio import SeqIO, SearchIO
+import sys
 from glob import glob
-from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal, UnparseMatchtable
+
+from Bio import SeqIO, SearchIO
+
+from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal, TryMkDirs
 
 
 def RunPanOCT(fasta_db, attributes, blast, tags, **kwargs):
@@ -102,12 +104,7 @@ def PanOCTOutputHandler():
                                        "missing_blast_results.txt", "parameters.txt", "report.txt"]
 
     tdir = "panoct"
-    try:
-        os.makedirs(tdir)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanOCT: Program output directory already exists, using it instead.")
-            raise
+    TryMkDirs(tdir)
 
     for f in to_move:
         if os.path.isdir(f):
@@ -126,20 +123,15 @@ def GenerateClusterFASTAs():
     """
     Extract gene model clusters from full database and write out nucleotide and protein sequence families to file.
     """
-    nt_index = SeqIO.index("allnucl.db", "fasta")
-    aa_index = SeqIO.index("allprot.db", "fasta")
-    fdir = "panoct/clusters"
-    matchtable = "panoct/matchtable.txt"
-    try:
-        os.makedirs(fdir)
-        os.makedirs("{0}/core/faa".format(fdir))
-        os.makedirs("{0}/core/fna".format(fdir))
-        os.makedirs("{0}/acc/faa".format(fdir))
-        os.makedirs("{0}/acc/fna".format(fdir))
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanOCT: Cluster directory already exists, using it instead.")
-            raise
+    nt_index = SeqIO.index("./allnucl.db", "fasta")
+    aa_index = SeqIO.index("./allprot.db", "fasta")
+    fdir = "./panoct/clusters"
+    matchtable = "./panoct/matchtable.txt"
+    TryMkDirs(fdir)
+    TryMkDirs("{0}/core/faa".format(fdir))
+    TryMkDirs("{0}/core/fna".format(fdir))
+    TryMkDirs("{0}/acc/faa".format(fdir))
+    TryMkDirs("{0}/acc/fna".format(fdir))
 
     core, acc = ParseMatchtable(matchtable)
 

@@ -8,13 +8,16 @@ Functions imported explictly via "from PanGLOSS.Tools import <name>".
 from __future__ import division
 
 import cStringIO
+import os
 import subprocess as sp
-from Bio import SeqIO, SeqRecord
 from collections import Counter
 from csv import reader
-from ExonerateGene import ExonerateGene
 from difflib import SequenceMatcher
 from itertools import chain, izip_longest, tee
+
+from Bio import SeqIO, SeqRecord
+
+from ExonerateGene import ExonerateGene
 
 
 def grouper(iterable, n):
@@ -185,6 +188,18 @@ def gene_overlap(left_gene, right_gene, query_coords, threshold=0):
     elif int(right_gene[1]) <= (query_coords[1] + threshold) <= int(right_gene[2]):
         overlap = True
     return overlap
+
+
+def TryMkDirs(path):
+    """
+    Tries to make directory at specified path.
+    """
+    try:
+        os.makedirs(path)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            logging.info("TryMkDirs: {0} directory already exists, using it instead.".format(path))
+            raise
 
 
 def Pairwise(iterable):

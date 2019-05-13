@@ -41,16 +41,18 @@ from __future__ import division
 import logging
 import multiprocessing as mp
 import os
+import re
 import shutil
 import subprocess as sp
-import re
 import tarfile
 from csv import reader
 from glob import glob
+
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Tools import ExonerateCmdLine, LocationOverlap, Pairwise #get_gene_lengths
+
+from Tools import ExonerateCmdLine, LocationOverlap, Pairwise, TryMkDirs  # get_gene_lengths
 
 
 def LengthOverlap(gene, ref_lengths):
@@ -71,12 +73,7 @@ def MakeWorkingDir(workdir):
     Tries to make work directory if not already present.
     """
     # Don't rewrite work directory if already there.
-    try:
-        os.makedirs(workdir)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanGuess: Working directory already exists, using it instead.")
-            raise
+    TryMkDirs(workdir)
 
 
 def BuildRefSet(workdir, ref):
@@ -87,12 +84,7 @@ def BuildRefSet(workdir, ref):
     """
     # Make folder for reference proteins, if not already present.
     ref_folder = "{0}/ref".format(workdir)
-    try:
-        os.makedirs(ref_folder)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanGuess: Reference directory already exists, using it instead.")
-            raise
+    TryMkDirs(ref_folder)
 
     # Split user-provided reference set into individual proteins (have to do this).
     ref_db = SeqIO.index(ref, "fasta")
@@ -265,12 +257,7 @@ def MoveGeneMarkFiles(workdir, genome):
 
     # Attempt to make GeneMark-ES temporary file folder if not extant.
     gmes = "{0}/gmes/{1}/".format(workdir, genome)
-    try:
-        os.makedirs(gmes)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanGuess: GeneMark-ES temporary folder already exists, using it instead.")
-            raise
+    TryMkDirs(gmes)
 
     # Move all files and folders to new folder.
     logging.info("PanGuess: Moving/Removing GeneMark-ES temporary files and folders.")
@@ -327,12 +314,7 @@ def RunTransDecoder(ncr, workdir, genome, td_len):
     """
     # Try to make a directory for TransDecoder. Might as well do it now.
     tdir = "{0}/td/{1}/".format(workdir, genome)
-    try:
-        os.makedirs(tdir)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanGuess: TransDecoder temporary folder already exists, using it instead.")
-            raise
+    TryMkDirs(tdir)
 
     # Write NCRs to FASTA file
     with open("{0}/NCR.fna".format(tdir), "w") as outfile:
@@ -442,12 +424,7 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
 
     # Try to make a directory for protein sets.
     sdir = "{0}/sets".format(workdir)
-    try:
-        os.makedirs(sdir)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            logging.info("PanGuess: Protein sets folder already exists, using it instead.")
-            raise
+    TryMkDirs(sdir)
 
 
     # Loop over attributes, extract gene from given source based on parent method.
@@ -494,7 +471,7 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
 
 def TarballGenePredictionDirs(workdir, genome):
     """
-    Compress temporary GeneMark-ES and Transdecoder folders into tar.gz files.
+    Compress temporary GeneMark-ES and Transdecoder folders into tar.gz files. VERY slow.
     """
     # Tarball genome's GeneMark-ES folder, remove uncompressed copy.
     with tarfile.open("{0}/gmes/{1}.tar.gz".format(workdir, genome), "w:gz") as genemark_tar:
