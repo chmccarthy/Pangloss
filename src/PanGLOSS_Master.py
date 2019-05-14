@@ -25,7 +25,6 @@ Dependencies (version tested) (* = required):
 
 To-do:
     - Find some way to incorporate arguments exon_cov and td_potential into PanGuess.
-    - Add in Annotation of pan-genomes using InterProScan.
     - Improve logging.
     - Seriously improve config file!
         - Add check for dependencies based on paths in file.
@@ -36,7 +35,7 @@ To-do:
 Recent changes:
     v0.7.0 (May 2019)
     - Added BUSCO assessment of gene model completedness.
-
+    - Added option for running InterProScan analysis of dataset within PanGLOSS.
 
 
     v0.6.0 (May 2019)
@@ -268,8 +267,11 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     PanOCT.GenerateClusterFASTAs()
 
 
-def IPSHandler():
-    pass
+def IPSHandler(cores=None):
+    """
+    Run InterProScan annotation of pangenome dataset. Note, this only works on Linux and won't run otherwise.
+    """
+    GO.RunInterProScan("allprot.db", cores)
 
 
 def GOHandler(refined=False):
@@ -280,7 +282,7 @@ def GOHandler(refined=False):
     GO.MakeWorkingDirs()
 
     # Generate dictionary for IPS annotation data.
-    annos = GO.GenerateAnnoDict("yarr_test.tsv")
+    annos = GO.GenerateAnnoDict("ips.output.tsv")
 
     # Generate GO associations and populations files.
     GO.GenerateAssociations(annos)
@@ -307,7 +309,7 @@ def PAMLHandler():
     PAML.RunYn00(seqs)
 
 
-def KaryoploteRHandler(refined=False):
+def KaryoploteRHandler(refined=False, order=False):
     """
     Generates chromosomal plots of core and accessory gene models for each genome in a dataset, similar to
     the Ruby program PhenoGram but with way less overhead.
@@ -321,6 +323,12 @@ def KaryoploteRHandler(refined=False):
 
     # Pass required files to KaryPloteR and run R script.
     Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
+
+    if order:
+        if refined:
+            Karyotype.GeneOrder("./kartest.txt", "./panoct/refined_matchtable.txt")
+        else:
+            Karyotype.GeneOrder("./kartest.txt", "./panoct/matchtable.txt")
 
 
 def SizeVizHandler(refined=False):
@@ -416,6 +424,8 @@ def CmdLineParser():
     ap.add_argument("--upset", action="store_true", help="Generate UpSet plot of distribution of syntenic orthologs "
                                                          "within accessory genome of a pangenome dataset.")
 
+    ap.add_argument("--order", action="store_true", help="Generate circos plot of cluster order within pangenome "
+                                                         "dataset (implies --karyo).")
 
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
@@ -533,9 +543,9 @@ def main():
         if sys.platform != "linux":
             print "InterProScan is not supported on non-Linux operating systems. Cannot run InterProScan analysis."
             print "See https://github.com/ebi-pf-team/interproscan/wiki for more information."
-            sys.exit(0)
-        else:
             pass
+        else:
+            IPSHandler()
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:
@@ -552,6 +562,7 @@ def main():
         ap.karyo = True
         ap.size = True
         ap.upset = True
+        ap.order = True
 
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
@@ -567,6 +578,9 @@ def main():
     if ap.upset:
         logging.info("Master: Generating UpSet accessory genome distribution plot.")
         UpSetRHandler(ap.fillgaps)
+
+    if ap.order:
+        KaryoploteRHandler(ap.fillgaps, ap.order)
 
 
 if __name__ == "__main__":

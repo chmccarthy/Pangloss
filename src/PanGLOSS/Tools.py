@@ -10,7 +10,7 @@ from __future__ import division
 import cStringIO
 import os
 import subprocess as sp
-from collections import Counter
+from collections import Counter, OrderedDict as od
 from csv import reader
 from difflib import SequenceMatcher
 from itertools import chain, izip_longest, tee
@@ -320,6 +320,19 @@ def UnparseMatchtable(components):
                 members = [gene if gene != "None" else "----------" for gene in comp[cluster]]
                 outfile.write("\t".join(members))
                 outfile.write("\n")
+
+
+def ParseKaryotypes(karyotypes):
+    """
+    """
+    karyoreader = reader(open(karyotypes), delimiter="\t")
+    karyodict = od()
+
+    for row in karyoreader:
+        karyodict[row[1]] = [row[0], row[2], row[3]]
+
+    return karyodict
+
 
 
 def StringMUSCLE(seqs):
