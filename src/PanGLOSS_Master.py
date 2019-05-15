@@ -310,6 +310,10 @@ def PAMLHandler():
         nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
         PAML.RunYn00(nucl_alignment)
 
+    PAML.SummarizeYn00()
+
+
+
 
 def KaryoploteRHandler(refined=False, order=False):
     """

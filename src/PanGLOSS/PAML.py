@@ -66,4 +66,15 @@ def RunYn00(alignment):
     yn.run(ctl_file=None, command="yn00", parse=True)
 
 
+def SummarizeYn00():
+    """
+    Summarize yn00 results for core and accessory genomes.
+    """
+    results = []
+    clusters = glob("./panoct/clusters/core/fna/Core*.fna.aln.yn00") + glob("./panoct/clusters/acc/fna/Acc*.fna.aln.yn00")
+    for cluster in clusters:
+        yn = yn00.read(cluster)
+        print yn.items()
+
+
 
