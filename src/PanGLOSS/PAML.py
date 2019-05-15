@@ -32,28 +32,35 @@ def MUSCLEAlign(seqs):
     return AlignIO.parse(cStringIO.StringIO(output), "fasta")
 
 
-def PutGaps(seqs, alignment):
+def PutGaps(alignment, cluster):
     """
-    Given amino acid alignment,
+    Given amino acid alignment, generate a matching nucleotide alignment which respects codons. Note: the alignment
+    file that this function outputs contains sequence IDs without location data, as yn00 limits sequence IDs to 30
+    characters in length in its output files and more importantly Biopython's yn00 output parser has problems
+    parsing sequence IDs that contains dots (which will be fixed in 1.40) and/or sequence IDs that contains dots
+    and are >30 characters in length.
     """
-    nucl = SeqIO.index(seqs, "fasta")
+    nucl = SeqIO.index(cluster, "fasta")
     nucl_aln = ""
     for aln in alignment:
         for seq in aln._records:
             nseq = nucl[seq.id].seq
             aseq = seq.seq
             unseq = Untranslate(aseq, nseq)
-            unseq.id = seq.id
+            unseq.id = seq.id.split("|")[0]
             nucl_aln += (">{0}\n{1}\n".format(unseq.id, unseq.seq))
 
-    with open("{0}.aln".format(seqs), "w") as out:
-        for seq in nucl_aln:
-            out.write(seq)
+    fas_aln = AlignIO.read(cStringIO.StringIO(nucl_aln), "fasta")
+    AlignIO.write(fas_aln, "{0}.aln".format(cluster), "phylip-sequential")
 
-    return seqs
+    return "{0}.aln".format(cluster)
 
 
 def RunYn00(alignment):
+    """
+    Run yn00 on untranslated alignment with default parameters, output to file and then parse file for
+    the results of Yang and Nielsen (2000) analysis.
+    """
     yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
     yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
     yn.run(ctl_file=None, command="yn00", parse=True)
