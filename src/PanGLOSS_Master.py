@@ -25,18 +25,18 @@ Dependencies (version tested) (* = required):
 
 To-do:
     - Find some way to incorporate arguments exon_cov and td_potential into PanGuess.
+    - Generate some sort of gene order diagram if possible.
     - Improve logging.
     - Seriously improve config file!
         - Add check for dependencies based on paths in file.
         - Add in section for PanOCT parameters.
         - Add in section for yn00 parameters.
 
-
 Recent changes:
     v0.7.0 (May 2019)
     - Added BUSCO assessment of gene model completedness.
     - Added option for running InterProScan analysis of dataset within PanGLOSS.
-
+    - Fully implemented yn00 selection analysis and summary generation for full datasets.
 
     v0.6.0 (May 2019)
     - Added in command flag for disabling PanOCT (mostly for debugging purposes).
@@ -48,7 +48,7 @@ Recent changes:
     - Added in UpSet plotting of distribution of syntenic orthologs within accessory genome using UpSetR (see UpSet.py
       and .R files).
     - Slight change to what goes into karyotype input file, now includes gene names. Done this with a view to a making
-      a form of gene order/synteny chart in a future version.
+      a form of gene order/synteny chart in a possible future version.
     - Changed how subdirectories are created everywhere.
 
     v0.5.0 (February 2019)
@@ -313,8 +313,6 @@ def PAMLHandler():
     PAML.SummarizeYn00()
 
 
-
-
 def KaryoploteRHandler(refined=False, order=False):
     """
     Generates chromosomal plots of core and accessory gene models for each genome in a dataset, similar to
@@ -430,8 +428,8 @@ def CmdLineParser():
     ap.add_argument("--upset", action="store_true", help="Generate UpSet plot of distribution of syntenic orthologs "
                                                          "within accessory genome of a pangenome dataset.")
 
-    ap.add_argument("--order", action="store_true", help="Generate circos plot of cluster order within pangenome "
-                                                         "dataset (implies --karyo).")
+    #ap.add_argument("--order", action="store_true", help="Generate circos plot of cluster order within pangenome "
+    #                                                     "dataset (implies --karyo).")
 
     # Add mandatory positional argument for path to config file.
     ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
@@ -568,7 +566,7 @@ def main():
         ap.karyo = True
         ap.size = True
         ap.upset = True
-        ap.order = True
+        #ap.order = True
 
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
@@ -585,8 +583,8 @@ def main():
         logging.info("Master: Generating UpSet accessory genome distribution plot.")
         UpSetRHandler(ap.fillgaps)
 
-    if ap.order:
-        KaryoploteRHandler(ap.fillgaps, ap.order)
+    #if ap.order:
+        #KaryoploteRHandler(ap.fillgaps, ap.order)
 
 
 if __name__ == "__main__":

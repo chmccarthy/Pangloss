@@ -59,30 +59,43 @@ def PutGaps(alignment, cluster):
 
 def RunYn00(alignment):
     """
-    Run yn00 on untranslated alignment with default parameters, output to file and then parse file for
-    the results of Yang and Nielsen (2000) analysis.
+    Run yn00 on untranslated alignment with default parameters and output to file.
     """
     yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
     yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
-    yn.run(ctl_file=None, command="yn00", parse=True)
+    yn.run(ctl_file=None, command="yn00")
 
 
 def SummarizeYn00():
     """
-    Summarize yn00 results for core and accessory genomes.
+    Summarize yn00 results for core and accessory gene clusters and write to file.
     """
     results = {}
     clusters = glob("./panoct/clusters/core/fna/Core*.fna.aln.yn00") + glob("./panoct/clusters/acc/fna/Acc*.fna.aln.yn00")
     for cluster in clusters:
         cl_number = cluster.split("_")[1].split(".")[0]
-        results[cl_number] = {"Component": "", "Kappa": 0, "Alignments with omega > 1":}
+        cl_comp = cluster.split("_")[0].split("/")[-1]
+        results[cl_number] = {"Component": cl_comp, "Size": None, "Kappa": None, "Omega > 1": None}
         yn = yn00.read(cluster)
-        kappa = 0
-        for gene in yn:
-            for alignment in yn[gene]:
-                pairwise_result = yn[gene][alignment][yn00]
+        results[cl_number]["Size"] = len(yn)
+        if len(yn) == 1:
+            pass
+        else:
+            with_omega = 0
+            for gene in yn:
+                for subject in yn[gene]:
+                    pair = yn[gene][subject]["YN00"]
+                    if not results[cl_number]["Kappa"]:
+                        results[cl_number]["Kappa"] = pair["kappa"]
+                    if all([pair["dS"] == -0.0, pair["omega"] == 99.0]):
+                        pass
+                    elif pair["omega"] > 1.0:
+                        with_omega = with_omega + 1
+            results[cl_number]["Omega > 1"] = with_omega / 2
 
-        print yn.items()
-
-
-
+    with open("./panoct/clusters/yn00_summary.txt", "w") as output:
+        output.write("Cluster\tComponent\tSize\tKappa\tOmega > 1\n")
+        for cluster in results:
+            output.write("{0}\t{1}\t{2}\t{3}\t{4}\n".format(str(cluster), results[cluster]["Component"],
+                                                            results[cluster]["Size"], results[cluster]["Kappa"],
+                                                            results[cluster]["Omega > 1"]))

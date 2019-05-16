@@ -82,11 +82,13 @@ def GenerateSlimData(assocs, go_obo, slim_obo):
             if "|" in line:
                 slim.write(line)
 
+
 def CoreEnrichment(go_obo, core_pop, full_pop, slimmed_assoc):
     """
     """
     sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, core_pop,
              full_pop, slimmed_assoc, "--outfile=core_enrichment.tsv"])
+
 
 def AccessoryEnrichment(go_obo, acc_pop, full_pop, slimmed_assoc):
     """

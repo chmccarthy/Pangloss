@@ -94,6 +94,7 @@ def FillGaps(blast, matchtable, seqs, tags):
         for cluster in comp:
             print "\t".join([str(a) for a in comp[cluster]])
 
+
 def PanOCTOutputHandler():
     """
     Move expected PanOCT output (might differ from what user actually specifies) to dedicated
