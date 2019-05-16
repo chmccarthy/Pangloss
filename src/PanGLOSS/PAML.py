@@ -7,6 +7,7 @@ import cStringIO
 
 from Bio import AlignIO, SeqIO
 from Bio.Phylo.PAML import yn00
+from glob import glob
 
 from Tools import StringMUSCLE, Untranslate
 
@@ -70,10 +71,17 @@ def SummarizeYn00():
     """
     Summarize yn00 results for core and accessory genomes.
     """
-    results = []
+    results = {}
     clusters = glob("./panoct/clusters/core/fna/Core*.fna.aln.yn00") + glob("./panoct/clusters/acc/fna/Acc*.fna.aln.yn00")
     for cluster in clusters:
+        cl_number = cluster.split("_")[1].split(".")[0]
+        results[cl_number] = {"Component": "", "Kappa": 0, "Alignments with omega > 1":}
         yn = yn00.read(cluster)
+        kappa = 0
+        for gene in yn:
+            for alignment in yn[gene]:
+                pairwise_result = yn[gene][alignment][yn00]
+
         print yn.items()
 
 

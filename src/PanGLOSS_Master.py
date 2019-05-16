@@ -304,11 +304,11 @@ def PAMLHandler():
     Run Yn00 on core and accessory gene model clusters.
     """
     clusters = glob("./panoct/clusters/core/fna/Core*.fna") + glob("./panoct/clusters/acc/fna/Acc*.fna")
-    for cluster in clusters:
-        trans_seqs = PAML.TranslateCDS(cluster)
-        prot_alignment = PAML.MUSCLEAlign(trans_seqs)
-        nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
-        PAML.RunYn00(nucl_alignment)
+    #for cluster in clusters:
+    #    trans_seqs = PAML.TranslateCDS(cluster)
+    #    prot_alignment = PAML.MUSCLEAlign(trans_seqs)
+    #    nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
+    #    PAML.RunYn00(nucl_alignment)
 
     PAML.SummarizeYn00()
 
