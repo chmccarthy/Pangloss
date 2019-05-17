@@ -3,12 +3,17 @@
 PanGuess: Gene prediction for PanGLOSS.
 
 PanGuess is a gene prediction pipeline used to generate protein and genomic
-location data for pangenomic analysis of eukaryotes using PanGLOSS. PanGuess
-is a component of PanGLOSS and can be used in conjuction with PanGLOSS to determine
+location data for pangenomic analysis of eukaryotes using Pangloss. PanGuess
+is a component of Pangloss and can be used in conjuction with Pangloss to determine
 pangenomic structure of species of interest based on microsynteny using only genomic data
 and a reference protein set.
 
 Recent changes:
+    v0.6.0 (May 2019)
+    - Added in paths for Exonerate, GeneMark-ES and TransDecoder from config file.
+    - Changed the way get_sequence_from_GTF.pl is called.
+    - Moved cores check out of PanGuess and into PanGuessHandler in master script.
+
     v0.5.0 (February 2019)
     - Changed way that contig ID is extracted in TransDecoderGTFToAttributes from a row.split method
       to a regex match to account for contig IDs that contain underscores.
@@ -26,7 +31,7 @@ Recent changes:
     
     v0.2.0 (March 2018)
     - Defined ExonerateGene as class, moved some functions to Tools module.
-    - Better integrated codebase with PanGLOSS.
+    - Better integrated codebase with Pangloss.
     - Removed other old functions.
 
     v0.1.0 (Winter 2017)
@@ -44,6 +49,7 @@ import os
 import re
 import shutil
 import subprocess as sp
+import sys
 import tarfile
 from csv import reader
 from glob import glob
@@ -94,7 +100,7 @@ def BuildRefSet(workdir, ref):
     ref_db.close()
 
 
-def BuildExonerateCmds(workdir, genome):
+def BuildExonerateCmds(workdir, ex_path, genome):
     """
     Generate list of exonerate commands to run through multiprocessing.
     """
@@ -104,22 +110,18 @@ def BuildExonerateCmds(workdir, genome):
     # Generate and return commands.
     logging.info("PanGuess: Building set of Exonerate commands.")
     for prot in glob("{0}/ref/*.faa".format(workdir)):
-        exon_cmds.append(["exonerate", "--model", "protein2genome",
+        exon_cmds.append([ex_path, "--model", "protein2genome",
                           "-t", genome, "-q", prot, "--bestn", "1"])
     return exon_cmds
 
 
-def RunExonerate(cmds, len_dict=None, cores=None):
+def RunExonerate(cmds, cores):
     """
     Farm list of exonerate commands to CPU threads using multiprocessing.
     
     Returns an unordered list of ExonerateGene instances. Default number of
     threads = (number of cores on computer - 1).
     """
-    # If user doesn't specify cores in command line, just leave them with one free.
-    if not cores:
-        cores = str(mp.cpu_count() - 1)
-
     # Farm out Exonerate processes, wait for all to finish and merge together.
     logging.info("PanGuess: Running Exonerate searches on {0} threads".format(cores))
     farm = mp.Pool(processes=int(cores))
@@ -127,12 +129,8 @@ def RunExonerate(cmds, len_dict=None, cores=None):
     farm.close()
     farm.join()
 
-    # Check overlap of predicted gene models against their query homolog.
-    if len_dict:
-        #return [gene for gene in genes if check_overlap(gene, len_dict)]
-        pass
-    else:
-        return [gene for gene in genes if gene]
+    # Return predicted genes (ignore empty results).
+    return [gene for gene in genes if gene]
 
 
 def GetExonerateAttributes(exonerate_genes, tag):
@@ -155,23 +153,22 @@ def GetExonerateAttributes(exonerate_genes, tag):
     return exonerate_attributes
 
 
-def RunGeneMark(genome, gm_branch, cores=None):
+def RunGeneMark(genome, gm_path, gm_branch, cores):
     """
     Run GeneMark-ES on given genome, with optional arguments for fungal-specific
     prediction models and number of cores.
     """
-    # If user doesn't specify cores in command line, just leave them with one free.
-    if not cores:
-        cores = str(mp.cpu_count() - 1)
+    # Get path for GTF extraction script.
+    gtf_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "get_sequence_from_GTF.pl"
 
     # Run GeneMark-ES and extract data.
     if gm_branch:
         logging.info("PanGuess: Running GeneMark-ES on {0} threads with branching model.".format(cores))
-        sp.call(["gmes_petap.pl", "--ES", "--fungus", "--cores", cores, "--sequence", genome])
+        sp.call([gm_path, "--ES", "--fungus", "--cores", cores, "--sequence", genome])
     else:
         logging.info("PanGuess: Running GeneMark-ES on {0} threads.".format(cores))
-        sp.call(["gmes_petap.pl", "--ES", "--cores", cores, "--sequence", genome])
-    sp.call(["get_sequence_from_GTF.pl", "genemark.gtf", genome])
+        sp.call([gm_path, "--ES", "--cores", cores, "--sequence", genome])
+    sp.call([gtf_path, "genemark.gtf", genome])
 
     # Return CSV object to convert into attribute data.
     return reader(open("genemark.gtf"), delimiter="\t")
@@ -308,7 +305,7 @@ def ExtractNCR(attributes, genome):
     return ncr
 
 
-def RunTransDecoder(ncr, workdir, genome, td_len):
+def RunTransDecoder(ncr, tp_path, tl_path, workdir, genome, td_len):
     """
     Run the two TransDecoder commands via the command line.
     """
@@ -322,8 +319,8 @@ def RunTransDecoder(ncr, workdir, genome, td_len):
             outfile.write(line)
 
     # Run both TransDecoder processes sequentially.
-    sp.call(["TransDecoder.LongOrfs", "-t", "{0}/NCR.fna".format(tdir), "-m", "{0}".format(td_len)])
-    sp.call(["TransDecoder.Predict", "-t", "{0}/NCR.fna".format(tdir), "--single_best_only"])
+    sp.call([tl_path, "-t", "{0}/NCR.fna".format(tdir), "-m", "{0}".format(td_len)])
+    sp.call([tp_path, "-t", "{0}/NCR.fna".format(tdir), "--single_best_only"])
 
     # Return the TransDecoder directory for MoveTransDecoderFiles.
     return tdir

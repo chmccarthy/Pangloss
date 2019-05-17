@@ -34,9 +34,11 @@ To-do:
 
 Recent changes:
     v0.7.0 (May 2019)
-    - Added BUSCO assessment of gene model completedness.
+    - Added BUSCO assessment of gene model set completedness.
     - Added option for running InterProScan analysis of dataset within PanGLOSS.
     - Fully implemented yn00 selection analysis and summary generation for full datasets.
+    - Moved cores check out of modules and into master script.
+    - Fully incorporated paths from config file into script.
 
     v0.6.0 (May 2019)
     - Added in command flag for disabling PanOCT (mostly for debugging purposes).
@@ -86,6 +88,7 @@ Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 """
 
 import logging
+import os
 import sys
 from ConfigParser import SafeConfigParser
 from argparse import ArgumentParser
@@ -95,7 +98,8 @@ from glob import glob
 from PanGLOSS import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
 
 
-def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, td_len, cores=None, skip=False):
+def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_len, ex_path,
+                    gm_path, tp_path, tl_path, cores=None, skip=False):
     """
     Runs PanGuess from master script.
     
@@ -107,14 +111,22 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
                        exonerate_sequence_coverage (int).
         gm_branch    = Option for fungal-specific branch-site prediction model for
                        GeneMark-ES given by genemark_fungal_model (0 or 1).
-        td_potential = Cutoff for TransDecoder coding potenial score given by
-                       trans_coding_potential (int).
         td_len       = Amino acid sequence length cutoff for TransDecoder given by
                        trans_aa_length (int).
+
+    Paths taken from config file:
+        ex_path      = Exonerate path.
+        gm_path      = GeneMark-ES path.
+        tp_path      = TransDecoder.Predict path.
+        tl_path      = TransDecoder.LongOrfs path.
 
     Arguments activated by command line flags:
         skip         = Skip Exonerate gene model predictions.
     """
+    # If user doesn't specify cores in command line, just leave them with one free.
+    if not cores:
+        cores = str(mp.cpu_count() - 1)
+
     # Generate list of genomes from user-provided genome list file.
     logging.info("Master: Parsing genome list.")
     genomes = [line.strip("\n") for line in open(genomelist)]
@@ -136,7 +148,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
 
         if not skip:
             # Run prediction using Exonerate.
-            cmds = PanGuess.BuildExonerateCmds(workdir, genome)
+            cmds = PanGuess.BuildExonerateCmds(workdir, ex_path, genome)
             exonerate_genes = PanGuess.RunExonerate(cmds, cores)
         
             # Order gene models predicted via Exonerate by Contig ID: Location.
@@ -152,7 +164,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Run prediction using GeneMark-ES.
         logging.info("Master: Running gene model prediction for {0} using GeneMark-ES.".format(genome))
-        genemark_gtf = PanGuess.RunGeneMark(genome, gm_branch, cores)
+        genemark_gtf = PanGuess.RunGeneMark(genome, gm_path, gm_branch, cores)
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
         logging.info("Master: Converting GeneMark GTF data to attribute data.")
@@ -177,7 +189,7 @@ def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_potenial, 
         
         # Run TransDecoder on NCRs.
         logging.info("Master: Running TransDecoder on non-coding regions of {0}.".format(genome))
-        tdir = PanGuess.RunTransDecoder(noncoding, workdir, genome, td_len)
+        tdir = PanGuess.RunTransDecoder(noncoding, tp_path, tl_path, workdir, genome, td_len)
         
         # Move TransDecoder files.
         logging.info("Master: Tidying up TransDecoder temporary files.")
@@ -462,9 +474,28 @@ def main():
     ap = CmdLineParser()
     cp = ConfigFileParser()
 
-    # Read config file.
+    # Read config file (either the default or what's supplied at the command-line).
     logging.info("Master: Read config file.")
+    if not ap.CONFIG_FILE:
+        ap.CONFIG_FILE = os.path.dirname(os.path.realpath(sys.argv[0])) + "/config.ini"
     cp.read(ap.CONFIG_FILE)
+
+    # Get paths for required and optional dependencies.
+    for arg in cp.items("Required_dependencies"):
+        if arg[0] == "exonerate_path":
+            ex_path = arg[1]
+        if arg[0] == "genemark_path":
+            gm_path = arg[1]
+        if arg[0] == "transdecoder_predict_path":
+            tp_path = arg[1]
+        if arg[0] == "transdecoder_longorfs_path":
+            tl_path = arg[1]
+        if arg[0] == "blast_path":
+            bp_path = arg[1]
+        if arg[0] == "makeblastdb_path":
+            mk_path = arg[1]
+        if arg[0] == "panoct_path":
+            po_path = arg[1]
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
@@ -472,6 +503,7 @@ def main():
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
             panguess_args.append(arg[1])
+        panguess_args.append(ex_path, gm_path, tp_path, tl_path)
         if ap.no_exonerate:
             panguess_args.append(True)
         PanGuessHandler(*panguess_args)
