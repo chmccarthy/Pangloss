@@ -1,7 +1,11 @@
 """
+Karyotype.py: a module for generating karyotype plots for Pangloss.
 
+Karyotype will generate files relating to contig/chromosome sizes for each input genome and associating each
+gene model location in a dataset with its pangenomic component. These files are used as input for the script
+Karyotype.R, which generates a corresponding karyoplot for each input genome using the Bioconductor package
+KaryoploteR.
 """
-
 
 import os
 import shutil

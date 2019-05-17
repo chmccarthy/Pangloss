@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-PanGuess: Gene prediction for PanGLOSS.
+PanGuess: gene prediction for PanGLOSS.
 
 PanGuess is a gene prediction pipeline used to generate protein and genomic
 location data for pangenomic analysis of eukaryotes using Pangloss. PanGuess
 is a component of Pangloss and can be used in conjuction with Pangloss to determine
 pangenomic structure of species of interest based on microsynteny using only genomic data
 and a reference protein set.
+
+PanGuess can also be run without downstream PanOCT or other analyses by running the master script with
+the flag --pred_only.
 
 Recent changes:
     v0.6.0 (May 2019)
