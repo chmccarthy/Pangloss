@@ -159,7 +159,7 @@ def RunGeneMark(genome, gm_path, gm_branch, cores):
     prediction models and number of cores.
     """
     # Get path for GTF extraction script.
-    gtf_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "get_sequence_from_GTF.pl"
+    gtf_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "/get_sequence_from_GTF.pl"
 
     # Run GeneMark-ES and extract data.
     if gm_branch:
