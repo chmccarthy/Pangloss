@@ -38,7 +38,7 @@ Recent changes:
     - Added option for running InterProScan analysis of dataset within PanGLOSS.
     - Fully implemented yn00 selection analysis and summary generation for full datasets.
     - Moved cores check out of modules and into master script.
-    - Fully incorporated paths from config file into script.
+    - Fully incorporated paths from config file into script and set default config file.
 
     v0.6.0 (May 2019)
     - Added in command flag for disabling PanOCT (mostly for debugging purposes).
@@ -98,32 +98,31 @@ from glob import glob
 from PanGLOSS import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
 
 
-def PanGuessHandler(genomelist, workdir, ref, exon_cov, gm_branch, td_len, ex_path,
-                    gm_path, tp_path, tl_path, cores=None, skip=False):
+def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
+                    genomelist, workdir, ref, gm_branch, td_len, cores=None, skip=False):
     """
     Runs PanGuess from master script.
-    
-    Arguments taken from Gene_model_prediction section of config file as follows:
-        genomelist   = List of strain genomes specified by genomes_list.
-        workdir      = Working directory for prediction given by prediction_dir.
-        ref          = FASTA file of reference protein set given by reference_proteins.
-        exon_cov     = Exonerate sequence coverage cutoff given by
-                       exonerate_sequence_coverage (int).
-        gm_branch    = Option for fungal-specific branch-site prediction model for
-                       GeneMark-ES given by genemark_fungal_model (0 or 1).
-        td_len       = Amino acid sequence length cutoff for TransDecoder given by
-                       trans_aa_length (int).
 
     Paths taken from config file:
         ex_path      = Exonerate path.
         gm_path      = GeneMark-ES path.
         tp_path      = TransDecoder.Predict path.
         tl_path      = TransDecoder.LongOrfs path.
+    
+    Arguments taken from Gene_model_prediction section of config file as follows:
+        genomelist   = List of strain genomes specified by genomes_list.
+        workdir      = Working directory for prediction given by prediction_dir.
+        ref          = FASTA file of reference protein set given by reference_proteins.
+        gm_branch    = Option for fungal-specific branch-site prediction model for
+                       GeneMark-ES given by genemark_fungal_model (0 or 1).
+        td_len       = Amino acid sequence length cutoff for TransDecoder given by
+                       trans_aa_length (int).
+        cores        = Number of threads to run predictions on.
 
     Arguments activated by command line flags:
         skip         = Skip Exonerate gene model predictions.
     """
-    # If user doesn't specify cores in command line, just leave them with one free.
+    # If user doesn't specify cores in config file, just leave them with one free.
     if not cores:
         cores = str(mp.cpu_count() - 1)
 
@@ -443,8 +442,9 @@ def CmdLineParser():
     #ap.add_argument("--order", action="store_true", help="Generate circos plot of cluster order within pangenome "
     #                                                     "dataset (implies --karyo).")
 
-    # Add mandatory positional argument for path to config file.
-    ap.add_argument("CONFIG_FILE", help="Path to PanGLOSS configuration file.")
+    # Add mandatory positional argument for path to config file (default will be the .ini file in /src).
+    ap.add_argument("CONFIG_FILE", action="store", nargs="?", help="Path to PanGLOSS configuration file.",
+                    default=os.path.dirname(os.path.realpath(sys.argv[0])) + "/config.ini")
 
     # Parse and return args.
     args = ap.parse_args()
@@ -499,13 +499,13 @@ def main():
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
-        panguess_args = []
+        panguess_args = [ex_path, gm_path, tp_path, tl_path]
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):
             panguess_args.append(arg[1])
-        panguess_args.append(ex_path, gm_path, tp_path, tl_path)
         if ap.no_exonerate:
             panguess_args.append(True)
+        print panguess_args
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
 
