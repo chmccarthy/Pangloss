@@ -250,7 +250,6 @@ def LocationOverlap(call, next_call):
     elif (int(call[2]) <= int(next_call[3]) <= int(call[3])):
         overlap = True
     elif (int(next_call[2]) - int(call[3]) <= 20):
-        print call[3], next_call[2]
         overlap = True
     
     if overlap:
@@ -284,7 +283,7 @@ def StringBLAST(query):
     a pipeable string. We run BLASTp with an output format set to tabular with comments to
     enable a check for empty results (see if line).
     """
-    cmd = ['blastp', '-db', 'allprot.db', '-evalue', '0.0001', '-outfmt', '7', '-query', "-"]
+    cmd = ['blastp', '-db', './gm_pred/sets/allprot.db', '-evalue', '0.0001', '-outfmt', '7', '-query', "-"]
     process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE)
     output = process.communicate(query)
     if not "# 0 hits found" in output[0]:  # Empty results don't contain this line!

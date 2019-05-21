@@ -10,14 +10,19 @@ from Bio import SeqIO, SearchIO
 
 from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal, TryMkDirs
 
-
-def RunPanOCT(fasta_db, attributes, blast, tags, **kwargs):
+def RunPanOCT(fasta_db, attributes, blast, genome_list, **kwargs):
     """
     Run PanOCT analysis of gene model dataset. By default, PanGLOSS runs PanOCT with the default parameters
     without specifiying anything.
     """
     panoct_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "/panoct.pl"
-    cmd = [panoct_path, "-t", blast, "-f", tags, "-g", attributes, "-P", fasta_db]
+
+    tag_list = [i.strip("\n").split(".")[0].split("/")[1] for i in open(genome_list).readlines()]
+    print tag_list
+    with open("./panoct_tags.txt", "w") as tag_file:
+        tag_file.write("\n".join([str(tag) for tag in tag_list]))
+
+    cmd = [panoct_path, "-t", blast, "-f", "./panoct_tags.txt", "-g", attributes, "-P", fasta_db]
     if kwargs:
         pass
     else:
@@ -90,9 +95,12 @@ def FillGaps(blast, matchtable, seqs, tags):
                 print ""
 
     # Write new matchtable to file.
-    for comp in [core, acc, new_mergers]:
-        for cluster in comp:
-            print "\t".join([str(a) for a in comp[cluster]])
+    with open("panoct/refined_matchtable.txt", "w") as out:
+        for comp in [core, acc, new_mergers]:
+            for cluster in comp:
+                line = ["----------" if not a else str(a) for a in comp[cluster]]
+                print line
+                out.write("\t".join(line) + "\n")
 
 
 def PanOCTOutputHandler():
@@ -124,8 +132,8 @@ def GenerateClusterFASTAs():
     """
     Extract gene model clusters from full database and write out nucleotide and protein sequence families to file.
     """
-    nt_index = SeqIO.index("./allnucl.db", "fasta")
-    aa_index = SeqIO.index("./allprot.db", "fasta")
+    nt_index = SeqIO.index("./gm_pred/sets/allnucl.db", "fasta")
+    aa_index = SeqIO.index("./gm_pred/sets/allprot.db", "fasta")
     fdir = "./panoct/clusters"
     matchtable = "./panoct/matchtable.txt"
     TryMkDirs(fdir)

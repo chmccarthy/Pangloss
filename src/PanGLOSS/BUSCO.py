@@ -5,7 +5,7 @@ import subprocess as sp
 from Tools import TryMkDirs
 
 
-def RunBUSCO(buscopath, lineagepath, tags):
+def RunBUSCO(buscopath, lineagepath, gene_sets):
     """
     Runs BUSCO analysis on every protein set and writes output files to BUSCO folder.
     """
@@ -14,11 +14,9 @@ def RunBUSCO(buscopath, lineagepath, tags):
     # Don't rewrite work directory if already there.
     TryMkDirs(bdir)
 
-    genomes = [line.strip("\n") for line in open(tags)]
-
-    for genome in genomes:
-        pset = "./sets/" + genome + ".faa"
-        cmd = ["python", buscopath, "-i", pset,  "-l", lineagepath, "-o", "{0}.busco".format(genome),"-m", "prot"]
+    for set in gene_sets:
+        wd = set.split("/")[-1]
+        cmd = ["python", buscopath, "-i", set,  "-l", lineagepath, "-o", "{0}.busco".format(wd), "-m", "prot"]
+        print "Running BUSCO"
         sp.call(cmd)
-
-        shutil.move("run_{0}.busco".format(genome), bdir)
+        shutil.move("run_{0}.busco".format(wd), bdir)

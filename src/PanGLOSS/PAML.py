@@ -4,6 +4,7 @@ PAML: Module for handling yn00 selection analysis (and maybe CodeML in the futur
 """
 
 import cStringIO
+import os
 
 from Bio import AlignIO, SeqIO
 from Bio.Phylo.PAML import yn00
@@ -99,3 +100,9 @@ def SummarizeYn00():
             output.write("{0}\t{1}\t{2}\t{3}\t{4}\n".format(str(cluster), results[cluster]["Component"],
                                                             results[cluster]["Size"], results[cluster]["Kappa"],
                                                             results[cluster]["Omega > 1"]))
+
+    to_remove = ["rub", "rst1", "rst", "yn00.ctl", "2YN.dS", "2YN.dN", "2YN.t"]
+    for f in to_remove:
+        if os.path.isfile(f):
+            os.remove(f)
+

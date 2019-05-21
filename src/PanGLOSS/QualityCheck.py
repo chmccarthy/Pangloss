@@ -13,11 +13,13 @@ from __future__ import division
 import cStringIO
 import logging
 import multiprocessing as mp
+import os
+import shutil
 from csv import reader
 
 from Bio import SeqIO, SearchIO
 
-from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine
+from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine, TryMkDirs
 
 
 def BuildMakeBLASTDBs(gene_sets, cores=None):
@@ -34,7 +36,7 @@ def BuildMakeBLASTDBs(gene_sets, cores=None):
 
     # Generate commands for every strain.
     for strain in gene_sets:
-        cmd = ["makeblastdb", "-in", "{0}.faa".format(strain), "-dbtype", "prot"]
+        cmd = ["makeblastdb", "-in", strain, "-dbtype", "prot", "-out", "{0}.db".format(strain)]
         make_cmds.append(cmd)
 
     # Run simultaneous makeblastdb commands.
@@ -45,7 +47,7 @@ def BuildMakeBLASTDBs(gene_sets, cores=None):
     logging.info("QualityCheck: QCBLAST databases constructed.")
 
 
-def QCBLAST(queries, tags, cores=None):
+def QCBLAST(queries, sets, cores=None):
     """
     BLASTs user-provided proteins against strains datasets and returns a list of parsed SearchIO objects. We parse the
     results of the BLAST(s) as SearchIO objects in the return statement rather than within QCBLASTCmdLine (see Tools.py)
@@ -60,9 +62,8 @@ def QCBLAST(queries, tags, cores=None):
     blast_cmds = []
 
     # Generate commands for every strain.
-    for strain in tags:
-        cmd = ["blastp", "-query", queries, "-db", "{0}.faa".format(strain), "-outfmt", "5", "-evalue", "0.0001",
-               "-num_alignments", "1"]
+    for strain in sets:
+        cmd = ["blastp", "-query", queries, "-db", "{0}.db".format(strain), "-outfmt", "5", "-evalue", "0.0001"]
         blast_cmds.append(cmd)
 
     # Run simultaneous BLASTp commands.
@@ -77,7 +78,7 @@ def QCBLAST(queries, tags, cores=None):
     return [SearchIO.parse(cStringIO.StringIO(blast), "blast-xml") for blast in blasts]
 
 
-def RemoveDubiousCalls(results, tags):
+def RemoveDubiousCalls(results, sets):
     """
 
 
@@ -99,30 +100,41 @@ def RemoveDubiousCalls(results, tags):
                                  " dubious call.".format(query.hits[0].id, query.id))
 
     # Remove flagged calls from nucleotide and protein sets, and genomic attributes file.
-    for strain in tags:
-        tr_strain = filter(lambda x: x.split("|")[0] == strain, to_remove)
+    for path in sets:
+        genome = path.split("/")[-1]
+        tag = genome.split(".")[0]
+        tr_strain = filter(lambda x: x.split("|")[0] == tag, to_remove)
         if tr_strain:
-            current_prot = list(SeqIO.parse(open("{0}.faa".format(strain)), "fasta"))
-            current_nucl = list(SeqIO.parse(open("{0}.nucl".format(strain)), "fasta"))
-            current_att = list(reader(open("{0}.attributes".format(strain)), delimiter="\t"))
+            aa_path = "./gm_pred/sets/{0}.faa".format(tag)
+            nt_path = "./gm_pred/sets/{0}.nucl".format(tag)
+            at_path = "./gm_pred/sets/{0}.attributes".format(tag)
+            current_prot = list(SeqIO.parse(open(aa_path), "fasta"))
+            current_nucl = list(SeqIO.parse(open(nt_path), "fasta"))
+            current_att = list(reader(open(at_path), delimiter="\t"))
+            to_move = [aa_path, nt_path, at_path]
+            TryMkDirs("./gm_pred/sets/old/")
 
             new_prot = filter(lambda x: x.id not in tr_strain, current_prot)
             new_nucl = filter(lambda x: x.id not in tr_strain, current_nucl)
             new_att = filter(lambda x: x[1] not in tr_strain, current_att)
 
             logging.info("QualityCheck: Removed {0} dubious calls from {1},"
-                         " writing remaining calls to new files.".format(len(tr_strain), strain))
+                         " writing remaining calls to new files.".format(len(tr_strain), genome))
+
+            logging.info("QualityCheck: Moving old calls.")
+            for f in to_move:
+                shutil.copy(f, "./gm_pred/sets/old/")
 
             # Write protein sequences to file.
-            with open("{0}.faa_new".format(strain), "w") as outpro:
+            with open(aa_path, "w") as outpro:
                 SeqIO.write(new_prot, outpro, "fasta")
 
             # Write nucleotide sequences to file.
-            with open("{0}.nucl_new".format(strain), "w") as outnuc:
+            with open(nt_path, "w") as outnuc:
                 SeqIO.write(new_nucl, outnuc, "fasta")
 
             # Write attributes to file.
-            with open("{0}.attributes_new".format(strain), "w") as outatt:
+            with open(at_path, "w") as outatt:
                 for line in new_att:
                     outatt.write("\t".join(str(el) for el in line) + "\n")
 

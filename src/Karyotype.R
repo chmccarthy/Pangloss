@@ -5,7 +5,7 @@ if (!require(karyoploteR))
   {
     install.packages("BiocManager")
   }
-  BiocManager::install("karyoploteR", version = "3.8")
+  BiocManager::install("karyoploteR", version = "3.9")
 }
 
 ## Import and settings statements (we set individual karyotype plots within the loop).

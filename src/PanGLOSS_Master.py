@@ -212,7 +212,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         logging.info("Master: Finished gene model predction for {0}.".format(genome))
 
 
-def QualityCheckHandler(tags, queries, cores=None):
+def QualityCheckHandler(sets, queries, cores=None):
     """
     Search a user-provided set of genes of dubious-quality (i.e. pseudogenes, transposable elements or
     transposons &c.) against predicted gene model sets and filter out sufficiently similar genes in the latter.
@@ -223,9 +223,9 @@ def QualityCheckHandler(tags, queries, cores=None):
     """
     # Build BLAST DB, run QC searches against DB and filter out any dubious gene calls.
     logging.info("Master: Running QualityCheckHandler.")
-    QualityCheck.BuildMakeBLASTDBs(tags, cores)
-    blasts = QualityCheck.QCBLAST(queries, tags, cores)
-    QualityCheck.RemoveDubiousCalls(blasts, tags)
+    QualityCheck.BuildMakeBLASTDBs(sets, cores)
+    blasts = QualityCheck.QCBLAST(queries, sets, cores)
+    QualityCheck.RemoveDubiousCalls(blasts, sets)
 
 
 def BUSCOHandler(buscopath, lineagepath, tags):
@@ -237,7 +237,7 @@ def BUSCOHandler(buscopath, lineagepath, tags):
     pass
 
 
-def BLASTAllHandler(tags, evalue=0.0001, cores=None):
+def BLASTAllHandler(tags, cores=None):
     """
     Runs all-vs.-all BLASTp search of gene model dataset as required for PanOCT. BLASTp searches "parallelized"
     via subprocessing and cStringIO magic. Can be skipped from command-line, and in general it might be better
@@ -252,7 +252,7 @@ def BLASTAllHandler(tags, evalue=0.0001, cores=None):
     # pool all farmed results together and write output (in tabular format) to file.
     logging.info("Master: Running BLASTAllHandler.")
     BLASTAll.ConcatenateDatasets(tags)
-    blasts = BLASTAll.BLASTAll(evalue, cores)
+    blasts = BLASTAll.BLASTAll(cores)
     BLASTAll.MergeBLASTsAndWrite(blasts)
 
 
@@ -315,11 +315,11 @@ def PAMLHandler():
     Run Yn00 on core and accessory gene model clusters.
     """
     clusters = glob("./panoct/clusters/core/fna/Core*.fna") + glob("./panoct/clusters/acc/fna/Acc*.fna")
-    #for cluster in clusters:
-    #    trans_seqs = PAML.TranslateCDS(cluster)
-    #    prot_alignment = PAML.MUSCLEAlign(trans_seqs)
-    #    nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
-    #    PAML.RunYn00(nucl_alignment)
+    for cluster in clusters:
+        trans_seqs = PAML.TranslateCDS(cluster)
+        prot_alignment = PAML.MUSCLEAlign(trans_seqs)
+        nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
+        PAML.RunYn00(nucl_alignment)
 
     PAML.SummarizeYn00()
 
@@ -330,11 +330,11 @@ def KaryoploteRHandler(refined=False, order=False):
     the Ruby program PhenoGram but with way less overhead.
     """
     # Make lengths and karyotypes files (don't think these can be passed as objects to R without a lot of effort).
-    Karyotype.GenerateContigLengths("genomes")
+    Karyotype.GenerateContigLengths("./genomes")
     if refined:
-        Karyotype.GenerateKaryotypeFiles("./allatt.db", "./panoct/refined_matchtable.txt")
+        Karyotype.GenerateKaryotypeFiles("./gm_pred/sets/allatt.db", "./panoct/refined_matchtable.txt")
     else:
-        Karyotype.GenerateKaryotypeFiles("./allatt.db", "./panoct/matchtable.txt")
+        Karyotype.GenerateKaryotypeFiles("./gm_pred/sets/allatt.db", "./panoct/matchtable.txt")
 
     # Pass required files to KaryPloteR and run R script.
     Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
@@ -480,8 +480,8 @@ def main():
         ap.CONFIG_FILE = os.path.dirname(os.path.realpath(sys.argv[0])) + "/config.ini"
     cp.read(ap.CONFIG_FILE)
 
-    # Get paths for required and optional dependencies.
-    for arg in cp.items("Required_dependencies"):
+    # Get paths for prediction dependencies.
+    for arg in cp.items("Gene_prediction_dependencies"):
         if arg[0] == "exonerate_path":
             ex_path = arg[1]
         if arg[0] == "genemark_path":
@@ -490,12 +490,20 @@ def main():
             tp_path = arg[1]
         if arg[0] == "transdecoder_longorfs_path":
             tl_path = arg[1]
-        if arg[0] == "blast_path":
-            bp_path = arg[1]
-        if arg[0] == "makeblastdb_path":
-            mk_path = arg[1]
-        if arg[0] == "panoct_path":
-            po_path = arg[1]
+
+    # Get paths for QC dependencies.
+    for arg in cp.items("Quality_control_dependencies"):
+        if arg[0] == "busco_path":
+            bu_path = arg[1]
+        if arg[0] == "busco_lineage_path":
+            bl_path = arg[1]
+
+    # Get paths for downstream analysis dependencies.
+    for arg in cp.items("Analysis_dependencies"):
+        if arg[0] == "yn00_path":
+            yn_path = arg[1]
+        if arg[1] == "ips_path":
+            ip_path = arg[1]
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
@@ -505,7 +513,6 @@ def main():
             panguess_args.append(arg[1])
         if ap.no_exonerate:
             panguess_args.append(True)
-        print panguess_args
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
 
@@ -521,8 +528,8 @@ def main():
     # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
     if ap.qc:
         logging.info("Master: Performing gene model QC using QualityCheck.")
-        qc_args = [[i.split(".")[0] for i in glob("*.faa")]]
-        for arg in cp.items("Quality_check"):
+        qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
+        for arg in cp.items("Quality_control"):
             if arg[1]:
                 qc_args.append(arg[1])
         QualityCheckHandler(*qc_args)
@@ -533,15 +540,8 @@ def main():
     # If enabled, run BUSCO completedness analysis of all gene model sets.
     if ap.busco:
         logging.info("Master: Performing BUSCO analysis of gene model sets.")
-        busco_args = []
-        for arg in cp.items("Optional_dependencies"):
-            if arg[0] == "busco_path":
-                busco_args.append(arg[1])
-            if arg[0] == "busco_lineage_path":
-                busco_args.append(arg[1])
-        for arg in cp.items("PanOCT_settings"):
-            if arg[0] == "genomes_list":
-                busco_args.append(arg[1])
+        busco_args = [bu_path, bl_path]
+        busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
         BUSCOHandler(*busco_args)
         pass
 

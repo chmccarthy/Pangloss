@@ -25,7 +25,7 @@ def GenerateContigLengths(genomes):
     """
     lengths = []
     for genome in glob("{0}/*.fna".format(genomes)):
-        tag = genome.split("/")[1].split(".")[0]
+        tag = genome.split("/")[2].split(".")[0]
         gen = []
         for seq in SeqIO.parse(genome, "fasta"):
             gen.append([seq.id, "1", str(len(seq.seq)), tag])
@@ -76,11 +76,9 @@ def KaryoPloteR(tags, karyotypes, lengths):
     kdir = "./karyoplots"
     TryMkDirs(kdir)
 
-    genomes = [line.strip("\n") for line in open(genomelist)]
-
-    for tag in genomes:
-        shutil.copy("{0}.eps".format(tag), kdir)
-        os.remove("{0}.eps".format(tag))
+    for tag in open(tags).readlines():
+        shutil.copy("{0}.eps".format(tag.strip("\n")), kdir)
+        os.remove("{0}.eps".format(tag.strip("\n")))
 
 
 #def GeneOrder(karyotypes, matchtable):

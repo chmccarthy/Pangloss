@@ -19,25 +19,26 @@ def ConcatenateDatasets(genomes):
     """
     # Generate cat commands for the three full datasets we have.
     tags = [line.strip("\n").split(".")[0].split("/")[1] for line in open(genomes)]
-    nucl_cmd = ["cat"] + ["./sets/" + tag + ".nucl" for tag in tags]
-    prot_cmd = ["cat"] + ["./sets/" + tag + ".faa" for tag in tags]
-    att_cmd = ["cat"] + ["./sets/" + tag + ".attributes" for tag in tags]
+    print tags
+    nucl_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".nucl" for tag in tags]
+    prot_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".faa" for tag in tags]
+    att_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".attributes" for tag in tags]
 
     # Run commands.
     logging.info("BLASTAll: Concatenating sequence databases and attributes files.")
-    with open("./sets/allnucl.db", "w") as f:
+    with open("./gm_pred/sets/allnucl.db", "w") as f:
         sp.call(nucl_cmd, stdout=f)
-    with open("./sets/allprot.db", "w") as f:
+    with open("./gm_pred/sets/allprot.db", "w") as f:
         sp.call(prot_cmd, stdout=f)
-    with open("./sets/allatt.db", "w") as f:
+    with open("./gm_pred/sets/allatt.db", "w") as f:
         sp.call(att_cmd, stdout=f)
 
     # Run makeblastdb for gene model set.
     logging.info("BLASTAll: Running makeblastdb command for protein sequence database.")
-    sp.call(["makeblastdb", "-in", "./sets/allprot.db", "-dbtype", "prot"])
+    sp.call(["makeblastdb", "-in", "./gm_pred/sets/allprot.db", "-dbtype", "prot"])
 
 
-def BLASTAll(evalue=0.0001, cores=None):
+def BLASTAll(cores=None):
     """
     Load all query files into memory as strings and BLAST them against all other gene models
     using mp.Pool and the StringBLAST function with n number of cores.
@@ -48,7 +49,7 @@ def BLASTAll(evalue=0.0001, cores=None):
 
     # Extract FASTA header/sequence strings from database to memory.
     queries = []
-    for seq in SeqIO.parse(open("./sets/allprot.db"), "fasta"):
+    for seq in SeqIO.parse(open("./gm_pred/sets/allprot.db"), "fasta"):
         queries.append(">{0}\n{1}".format(seq.id, seq.seq))
 
     # Run individual StringBLAST tasks simultaneously.
