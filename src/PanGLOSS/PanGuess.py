@@ -13,6 +13,7 @@ the flag --pred_only.
 
 Recent changes:
     v0.6.0 (May 2019)
+    - Changed cutoff in Exonerate gene model prediction from sequence cutoff to potential alignment score cutoff.
     - Added in paths for Exonerate, GeneMark-ES and TransDecoder from config file.
     - Changed the way get_sequence_from_GTF.pl is called.
     - Moved cores check out of PanGuess and into PanGuessHandler in master script.
@@ -114,7 +115,7 @@ def BuildExonerateCmds(workdir, ex_path, genome):
     logging.info("PanGuess: Building set of Exonerate commands.")
     for prot in glob("{0}/ref/*.faa".format(workdir)):
         exon_cmds.append([ex_path, "--model", "protein2genome",
-                          "-t", genome, "-q", prot, "--bestn", "1"])
+                          "-t", genome, "-q", prot, "--percent", "49",  "--bestn", "1"])
     return exon_cmds
 
 

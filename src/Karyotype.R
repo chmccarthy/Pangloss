@@ -1,12 +1,12 @@
 ## Install BiocManager and karyploteR if not already available.
-if (!require(karyoploteR))
-{
-  if (!require(BiocManager))
-  {
-    install.packages("BiocManager")
-  }
-  BiocManager::install("karyoploteR", version = "3.9")
-}
+#if (!require(karyoploteR))
+#{
+#  if (!require(BiocManager))
+#  {
+#    install.packages("BiocManager")
+#  }
+#  BiocManager::install("karyoploteR", version = "3.9")
+#}
 
 ## Import and settings statements (we set individual karyotype plots within the loop).
 library(karyoploteR)
@@ -31,7 +31,7 @@ for (tag in tags)
   contigs = lengths[lengths$V4 == tag, ]
 
   ## Extract relevant data from strain dataframes into new dataframes.
-  names(genes) <- c("chr", "name", "start", "end", "component", "tag")#, "orthologs")
+  names(genes) <- c("chr", "name", "start", "end", "component", "tag")
   names(contigs) <- c("chr", "start", "end", "tag")
   contigs = within(contigs, rm("tag"))
   genes = within(genes, rm("tag", "name"))
@@ -49,5 +49,5 @@ for (tag in tags)
   kpPlotRegions(kp, data = custom.cytobands[custom.cytobands$component == "core"], avoid.overlapping = TRUE, data.panel = "ideogram", col = "darkgreen")
   kpPlotRegions(kp, data = custom.cytobands[custom.cytobands$component == "acc"], avoid.overlapping = TRUE, data.panel = "ideogram", col = "red")
   dev.off()
-  }
+}
 

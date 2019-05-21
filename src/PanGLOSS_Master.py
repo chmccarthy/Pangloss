@@ -1,39 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-PanGLOSS: A pipeline for pan-genome analysis of microbial eukaryotes.
+Pangloss: A pipeline for pan-genome analysis of microbial eukaryotes.
 
-Dependencies (version tested) (* = required):
-    - Python (2.7.10)           (*)
-        - BioPython (1.73)      (*)
-    - Perl                      (*)
-        - YAML                  (for GeneMark-ES)
-        - Logger::Simple        (for GeneMark-ES)
-        - Parallel::Manager     (for GeneMark-ES)
-    - GeneMark-ES (4.30)        (*)
-    - TransDecoder (5.0.2)      (*)
-    - PanOCT (3.23)             (*)
-    - Exonerate (2.2)
-    - BLAST+ (2.7.1)
-    - BUSCO (3.1.0)
-    - PAML (4.8a)
-    - MUSCLE (3.8.31)
-    - InterProScan (5.33-72.0)  (Linux only)
-    - GOATools
-    - R (>3.5.2)
-        - Bioconductor (>3.8)
-        - KaryoploteR (>1.8.5)
+Written by Charley McCarthy, Genome Evolution Lab, Department of Biology,
+Maynooth University between 2017-2019 (Charley.McCarthy@nuim.ie).
+
+See Pangloss/README.md for more information.
 
 To-do:
-    - Find some way to incorporate arguments exon_cov and td_potential into PanGuess.
     - Generate some sort of gene order diagram if possible.
+    - Generate a karyoplot with genes coloured by number of orthologs if possible?
+    - Try and implement Bohning method of pangenome size if possible?
     - Improve logging.
     - Seriously improve config file!
-        - Add check for dependencies based on paths in file.
-        - Add in section for PanOCT parameters.
-        - Add in section for yn00 parameters.
+    - Test IPS pipeline fully.
 
 Recent changes:
     v0.7.0 (May 2019)
+    - Changed --fillgaps to --refine to reflect output matchtable.
+    - Changed running order of QC/BUSCO to run in both --pred and --pred_only modes.
+    - Added percentage score threshold of ≥50% to Exonerate gene model prediction in place of sequence coverage.
     - Added BUSCO assessment of gene model set completedness.
     - Added option for running InterProScan analysis of dataset within PanGLOSS.
     - Fully implemented yn00 selection analysis and summary generation for full datasets.
@@ -82,9 +68,6 @@ Recent changes:
     - Added config file and command line parsers.
     - Rewrote PanGuess as module, and changed how it's handled from master script.
     - Created master script based on old pangenome pipelines from 2017-18.
-
-Written by Charley McCarthy, Genome Evolution Lab, Department of Biology,
-Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 """
 
 import logging
@@ -310,7 +293,7 @@ def GOHandler(refined=False):
     GO.AccessoryEnrichment("go.obo", "go/acc_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
 
 
-def PAMLHandler():
+def PAMLHandler(yn_path):
     """
     Run Yn00 on core and accessory gene model clusters.
     """
@@ -319,7 +302,7 @@ def PAMLHandler():
         trans_seqs = PAML.TranslateCDS(cluster)
         prot_alignment = PAML.MUSCLEAlign(trans_seqs)
         nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
-        PAML.RunYn00(nucl_alignment)
+        PAML.RunYn00(yn_path, nucl_alignment)
 
     PAML.SummarizeYn00()
 
@@ -410,7 +393,7 @@ def CmdLineParser():
     ap.add_argument("--no_panoct", action="store_true", help="Skip PanOCT analysis.")
 
     # Add argument for gap filling in PanOCT-dervied pangenome.
-    ap.add_argument("--fillgaps", action="store_true", help="Attempt to fill potential gaps in syntenic clusters.")
+    ap.add_argument("--refine", action="store_true", help="Attempt to fill potential gaps in syntenic clusters.")
 
     # Add arguments for annotation and GO-enrichment analysis.
     ap.add_argument("--ips", action="store_true", help="Perform InterProScan analysis of gene model sets. NOTE:"
@@ -516,6 +499,25 @@ def main():
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
 
+        # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
+        if ap.qc:
+            logging.info("Master: Performing gene model QC using QualityCheck.")
+            qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
+            for arg in cp.items("Quality_control"):
+                if arg[1]:
+                    qc_args.append(arg[1])
+            QualityCheckHandler(*qc_args)
+            logging.info("Master: QC analysis finished.")
+        else:
+            logging.info("Master: Skipped gene model QC (--qc not enabled).")
+
+        # If enabled, run BUSCO completedness analysis of all gene model sets.
+        if ap.busco:
+            logging.info("Master: Performing BUSCO analysis of gene model sets.")
+            busco_args = [bu_path, bl_path]
+            busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
+            BUSCOHandler(*busco_args)
+
         # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
         if ap.pred_only:
             logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
@@ -525,25 +527,6 @@ def main():
     else:
         logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
 
-    # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
-    if ap.qc:
-        logging.info("Master: Performing gene model QC using QualityCheck.")
-        qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
-        for arg in cp.items("Quality_control"):
-            if arg[1]:
-                qc_args.append(arg[1])
-        QualityCheckHandler(*qc_args)
-        logging.info("Master: QC analysis finished.")
-    else:
-        logging.info("Master: Skipped gene model QC (--qc not enabled).")
-
-    # If enabled, run BUSCO completedness analysis of all gene model sets.
-    if ap.busco:
-        logging.info("Master: Performing BUSCO analysis of gene model sets.")
-        busco_args = [bu_path, bl_path]
-        busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
-        BUSCOHandler(*busco_args)
-        pass
 
     # Run all-vs.-all BLASTp, unless --no_blast is enabled (i.e., user provides own blast file).
     if not ap.no_blast:
@@ -591,7 +574,7 @@ def main():
     # If enabled, run selection analysis using yn00.
     if ap.yn00:
         logging.info("Master: Performing selection analysis using yn00.")
-        PAMLHandler()
+        PAMLHandler(yn_path)
 
     # If enabled, enable all plot arguments.
     if ap.plots:

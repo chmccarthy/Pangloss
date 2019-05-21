@@ -58,7 +58,7 @@ def PutGaps(alignment, cluster):
     return "{0}.aln".format(cluster)
 
 
-def RunYn00(alignment):
+def RunYn00(yn_path, alignment):
     """
     Run yn00 on untranslated alignment with default parameters and output to file.
     """

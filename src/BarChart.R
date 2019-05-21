@@ -1,8 +1,8 @@
 ## Install ggplot2 if not already available.
-if (!require(ggplot2))
-{
-  install.packages("ggplot2")
-}
+#if (!require(ggplot2))
+#{
+#  install.packages("ggplot2")
+#}
 
 ## Function for Chao lower bound estimate of pangenome size based on a similar function in micropan.
 chao <- function(df)

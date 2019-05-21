@@ -1,8 +1,8 @@
 ## Install UpSetR if not already available.
-if (!require(UpSetR))
-{
-  install.packages("UpSetR")
-}
+#if (!require(UpSetR))
+#{
+#  install.packages("UpSetR")
+#}
 
 ## Import and settings statements.
 library(UpSetR)

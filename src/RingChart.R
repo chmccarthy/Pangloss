@@ -1,13 +1,13 @@
 ## Install ggplot2 and ggrepel if not already available.
-if (!require(ggplot2))
-{
-  install.packages("ggplot2")
-}
-
-if (!require(ggrepel))
-{
-  install.packages("ggrepel")
-}
+#if (!require(ggplot2))
+#{
+#  install.packages("ggplot2")
+#}
+#
+#if (!require(ggrepel))
+#{
+#  install.packages("ggrepel")
+#}
 
 ## Import and settings statements.
 library(ggplot2)
