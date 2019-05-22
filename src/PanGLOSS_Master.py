@@ -8,9 +8,6 @@ Maynooth University between 2017-2019 (Charley.McCarthy@nuim.ie).
 See Pangloss/README.md for more information.
 
 To-do:
-    - Generate some sort of gene order diagram if possible.
-    - Generate a karyoplot with genes coloured by number of orthologs if possible?
-    - Try and implement Bohning method of pangenome size if possible?
     - Improve logging.
     - Seriously improve config file!
     - Test IPS pipeline fully.
@@ -18,7 +15,6 @@ To-do:
 Recent changes:
     v0.7.0 (May 2019)
     - Changed --fillgaps to --refine to reflect output matchtable.
-    - Changed running order of QC/BUSCO to run in both --pred and --pred_only modes.
     - Added percentage score threshold of ≥50% to Exonerate gene model prediction in place of sequence coverage.
     - Added BUSCO assessment of gene model set completedness.
     - Added option for running InterProScan analysis of dataset within PanGLOSS.
@@ -307,7 +303,7 @@ def PAMLHandler(yn_path):
     PAML.SummarizeYn00()
 
 
-def KaryoploteRHandler(refined=False, order=False):
+def KaryoploteRHandler(refined=False):
     """
     Generates chromosomal plots of core and accessory gene models for each genome in a dataset, similar to
     the Ruby program PhenoGram but with way less overhead.
@@ -499,25 +495,6 @@ def main():
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
 
-        # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
-        if ap.qc:
-            logging.info("Master: Performing gene model QC using QualityCheck.")
-            qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
-            for arg in cp.items("Quality_control"):
-                if arg[1]:
-                    qc_args.append(arg[1])
-            QualityCheckHandler(*qc_args)
-            logging.info("Master: QC analysis finished.")
-        else:
-            logging.info("Master: Skipped gene model QC (--qc not enabled).")
-
-        # If enabled, run BUSCO completedness analysis of all gene model sets.
-        if ap.busco:
-            logging.info("Master: Performing BUSCO analysis of gene model sets.")
-            busco_args = [bu_path, bl_path]
-            busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
-            BUSCOHandler(*busco_args)
-
         # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
         if ap.pred_only:
             logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
@@ -526,6 +503,27 @@ def main():
             sys.exit(0)
     else:
         logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
+
+
+    # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
+    if ap.qc:
+        logging.info("Master: Performing gene model QC using QualityCheck.")
+        qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
+        for arg in cp.items("Quality_control"):
+            if arg[1]:
+                qc_args.append(arg[1])
+        QualityCheckHandler(*qc_args)
+        logging.info("Master: QC analysis finished.")
+    else:
+        logging.info("Master: Skipped gene model QC (--qc not enabled).")
+
+    # If enabled, run BUSCO completedness analysis of all gene model sets.
+    if ap.busco:
+        logging.info("Master: Performing BUSCO analysis of gene model sets.")
+        busco_args = [bu_path, bl_path]
+        busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
+        BUSCOHandler(*busco_args)
+
 
 
     # Run all-vs.-all BLASTp, unless --no_blast is enabled (i.e., user provides own blast file).
@@ -581,7 +579,6 @@ def main():
         ap.karyo = True
         ap.size = True
         ap.upset = True
-        #ap.order = True
 
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
@@ -597,9 +594,6 @@ def main():
     if ap.upset:
         logging.info("Master: Generating UpSet accessory genome distribution plot.")
         UpSetRHandler(ap.fillgaps)
-
-    #if ap.order:
-        #KaryoploteRHandler(ap.fillgaps, ap.order)
 
 
 if __name__ == "__main__":

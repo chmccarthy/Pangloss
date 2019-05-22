@@ -79,24 +79,3 @@ def KaryoPloteR(tags, karyotypes, lengths):
     for tag in open(tags).readlines():
         shutil.copy("{0}.eps".format(tag.strip("\n")), kdir)
         os.remove("{0}.eps".format(tag.strip("\n")))
-
-
-#def GeneOrder(karyotypes, matchtable):
-#    """
-#
-#    :return:
-#    """
-#
-#    core, acc = ParseMatchtable(matchtable)
-#    core.update(acc)
-#    pan = core
-#    karyos = ParseKaryotypes(karyotypes)
-#
-#    with open("dict.txt", "w") as out:
-#        for key in karyos:
-#            for cluster in pan:
-#                if key in pan[cluster]:
-#                    karyos[key].append(cluster)
-#                    out.write(key + "\t" + "\t".join(str(a) for a in karyos[key]) + "\n")
-#
-#    print "Yes"

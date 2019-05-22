@@ -4,7 +4,8 @@
 #  install.packages("ggplot2")
 #}
 
-## Function for Chao lower bound estimate of pangenome size based on a similar function in micropan.
+## Function for Chao lower bound estimate of pangenome size.
+## Adapted from micropan's chao function by Snipen & Liland (see https://rdrr.io/cran/micropan/src/R/powerlaw.R).
 chao <- function(df)
 {
   y <- sum(df$Count)
@@ -19,23 +20,6 @@ chao <- function(df)
     chao <- round(y + y1^2 / (2*y2))
   }
   return(chao)
-}
-
-## Function for potenital Bohning lower bound estimate of pangenome size if I can figure out how to implement it?
-bohning <- function(df)
-{
-  y <- sum(df$count)
-  y2 <- df$count[2]
-  y3 <- df$count[3]
-  if (y3 == 0)
-  {
-    stop()
-  }
-  else
-  {
-    bohning <- round(y + y1^3 / (y2^2))
-  }
-  return(bohning)
 }
 
 ## Import and settings statements.
