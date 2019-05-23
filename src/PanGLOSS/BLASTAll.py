@@ -73,7 +73,7 @@ def MergeBLASTsAndWrite(results):
     """
     # Filter last two lines of each BLASTp result and join remaining lines together, making one big SearchIO object.
     logging.info("BLASTAll: Merging all-vs.-all results together and parsing into tabular format.")
-    merged = "\n".join((["\n".join(result.split("\n")[:-2]) for result in results]))
+    merged = "\n".join((["\n".join(result.split("\n")[:-2]) for result in results if result]))
     parsed = SearchIO.parse(cStringIO.StringIO(merged), "blast-tab", comments=True)
 
     # Write merged BLASTp results to file for PanOCT.
