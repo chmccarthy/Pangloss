@@ -333,13 +333,12 @@ def ParseKaryotypes(karyotypes):
     return karyodict
 
 
-
-def StringMUSCLE(seqs):
+def StringMUSCLE(ml_path, seqs):
     """
     Runs a MUSCLE alignment given a valid set of translated nucleotides as stdin, returns
     the alignment to stdout which is then processed within memory.
     """
-    cmd = ["muscle", "-quiet"]
+    cmd = [ml_path, "-quiet"]
     process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
     SeqIO.write(seqs, process.stdin, "fasta")
     process.stdin.close()

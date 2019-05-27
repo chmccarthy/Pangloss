@@ -245,16 +245,16 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     """
     # Run PanOCT with provided files (and optional additional arguments.
     logging.info("Master: Running PanOCTHandler.")
-    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    #PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    #PanOCT.PanOCTOutputHandler()
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
         logging.info("Master: Running gap filling method.")
-        PanOCT.FillGaps(blast, "matchtable.txt", fasta_db, tags)
-
-    # Move all output from PanOCT into dedicated subfolder, and extract syntenic clusters to their own subfolder.
-    PanOCT.PanOCTOutputHandler()
-    PanOCT.GenerateClusterFASTAs()
+        PanOCT.FillGaps(blast, "./panoct/matchtable.txt", fasta_db, tags)
+        PanOCT.GenerateClusterFASTAs("./panoct/refined_matchtable.txt")
+    else:
+        PanOCT.GenerateClusterFASTAs("./panoct/matchtable.txt")
 
 
 def IPSHandler(cores=None):
@@ -289,14 +289,14 @@ def GOHandler(refined=False):
     GO.AccessoryEnrichment("go.obo", "go/acc_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
 
 
-def PAMLHandler(yn_path):
+def PAMLHandler(ml_path, yn_path):
     """
     Run Yn00 on core and accessory gene model clusters.
     """
     clusters = glob("./panoct/clusters/core/fna/Core*.fna") + glob("./panoct/clusters/acc/fna/Acc*.fna")
     for cluster in clusters:
         trans_seqs = PAML.TranslateCDS(cluster)
-        prot_alignment = PAML.MUSCLEAlign(trans_seqs)
+        prot_alignment = PAML.MUSCLEAlign(ml_path, trans_seqs)
         nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
         PAML.RunYn00(yn_path, nucl_alignment)
 
@@ -317,12 +317,6 @@ def KaryoploteRHandler(refined=False):
 
     # Pass required files to KaryPloteR and run R script.
     Karyotype.KaryoPloteR("./panoct_tags.txt", "./karyotypes.txt", "./genomes/lengths.txt")
-
-    if order:
-        if refined:
-            Karyotype.GeneOrder("./kartest.txt", "./panoct/refined_matchtable.txt")
-        else:
-            Karyotype.GeneOrder("./kartest.txt", "./panoct/matchtable.txt")
 
 
 def SizeVizHandler(refined=False):
@@ -479,6 +473,8 @@ def main():
 
     # Get paths for downstream analysis dependencies.
     for arg in cp.items("Analysis_dependencies"):
+        if arg[0] == "muscle_path":
+            ml_path = arg[1]
         if arg[0] == "yn00_path":
             yn_path = arg[1]
         if arg[1] == "ips_path":
@@ -495,6 +491,25 @@ def main():
         PanGuessHandler(*panguess_args)
         logging.info("Master: Gene prediction finished.")
 
+        # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
+        if ap.qc:
+            logging.info("Master: Performing gene model QC using QualityCheck.")
+            qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
+            for arg in cp.items("Quality_control"):
+                if arg[1]:
+                    qc_args.append(arg[1])
+            QualityCheckHandler(*qc_args)
+            logging.info("Master: QC analysis finished.")
+        else:
+            logging.info("Master: Skipped gene model QC (--qc not enabled).")
+
+        # If enabled, run BUSCO completedness analysis of all gene model sets.
+        if ap.busco:
+            logging.info("Master: Performing BUSCO analysis of gene model sets.")
+            busco_args = [bu_path, bl_path]
+            busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
+            BUSCOHandler(*busco_args)
+
         # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
         if ap.pred_only:
             logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
@@ -503,28 +518,6 @@ def main():
             sys.exit(0)
     else:
         logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
-
-
-    # If enabled, check gene sets against user-provided sets of dubious genes, or transposable elements, &c.
-    if ap.qc:
-        logging.info("Master: Performing gene model QC using QualityCheck.")
-        qc_args = [[i for i in glob("./gm_pred/sets/*.faa")]]
-        for arg in cp.items("Quality_control"):
-            if arg[1]:
-                qc_args.append(arg[1])
-        QualityCheckHandler(*qc_args)
-        logging.info("Master: QC analysis finished.")
-    else:
-        logging.info("Master: Skipped gene model QC (--qc not enabled).")
-
-    # If enabled, run BUSCO completedness analysis of all gene model sets.
-    if ap.busco:
-        logging.info("Master: Performing BUSCO analysis of gene model sets.")
-        busco_args = [bu_path, bl_path]
-        busco_args = busco_args + [[i for i in glob("./gm_pred/sets/*.faa")]]
-        BUSCOHandler(*busco_args)
-
-
 
     # Run all-vs.-all BLASTp, unless --no_blast is enabled (i.e., user provides own blast file).
     if not ap.no_blast:
@@ -546,7 +539,7 @@ def main():
         for arg in cp.items("PanOCT_settings"):
             if arg[1]:
                 panoct_default_args.append(arg[1])
-        if ap.fillgaps:
+        if ap.refine:
             panoct_default_args.append(True)
         if panoct_extra_args:
             pass
@@ -566,13 +559,13 @@ def main():
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:
-        GOHandler(ap.fillgaps)
+        GOHandler(ap.refine)
         pass
 
     # If enabled, run selection analysis using yn00.
     if ap.yn00:
         logging.info("Master: Performing selection analysis using yn00.")
-        PAMLHandler(yn_path)
+        PAMLHandler(ml_path, yn_path)
 
     # If enabled, enable all plot arguments.
     if ap.plots:
@@ -583,17 +576,17 @@ def main():
     # If enabled, generate karyotype plots for all strain genomes in pangenome dataset.
     if ap.karyo:
         logging.info("Master: Generating karyotype plots for all genomes in dataset.")
-        KaryoploteRHandler(ap.fillgaps)
+        KaryoploteRHandler(ap.refine)
 
     # If enabled, generate bar charts and Chao estimate of pangenome size.
     if ap.size:
         logging.info("Master: Generating size plots.")
-        SizeVizHandler(ap.fillgaps)
+        SizeVizHandler(ap.refine)
 
     # If enabled, generate UpSet plot of accessory genome.
     if ap.upset:
         logging.info("Master: Generating UpSet accessory genome distribution plot.")
-        UpSetRHandler(ap.fillgaps)
+        UpSetRHandler(ap.refine)
 
 
 if __name__ == "__main__":

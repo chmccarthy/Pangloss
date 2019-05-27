@@ -26,11 +26,11 @@ def TranslateCDS(seqs):
     return tn
 
 
-def MUSCLEAlign(seqs):
+def MUSCLEAlign(ml_path, seqs):
     """
     Align translated nucleotides in StringMUSCLE, return parsed alignment.
     """
-    output = StringMUSCLE(seqs)
+    output = StringMUSCLE(ml_path, seqs)
     return AlignIO.parse(cStringIO.StringIO(output), "fasta")
 
 
@@ -64,7 +64,7 @@ def RunYn00(yn_path, alignment):
     """
     yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
     yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
-    yn.run(ctl_file=None, command="yn00")
+    yn.run(ctl_file=None, command=yn_path)
 
 
 def SummarizeYn00():

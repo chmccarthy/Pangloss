@@ -23,6 +23,9 @@ if (length(args)==2) {
   accessory <- as.numeric(args[2])
 }
 
+core <- 6039
+accessory <- 980
+
 ## Load numbers into dataframe and convert them into radial numbers.
 ring = data.frame(count=c(accessory, core), category=c("Accessory", "Core"))
 ring$fraction = ring$count / sum(ring$count)
@@ -39,13 +42,15 @@ p1 = ggplot(ring, aes(fill=category, ymax=ymax, ymin=ymin, xmax=4, xmin=3)) +
      geom_rect(stat="identity", color='black') +
      coord_polar(theta="y") +
      xlim(c(0, 5)) +
-     theme(panel.grid=element_blank()) +
-     theme(axis.text=element_blank()) +
-     theme(axis.ticks=element_blank()) +
      annotate("text", x = 0, y = 0, label = size_label) +
      labs(title="") +
      geom_label_repel(aes(label=paste(category, "\n",round(fraction*100, digits = 2),"%"), x=4 ,y=(ymin+ymax)/2), nudge_x = 2, arrow = arrow(angle = 0, length = unit(0.01, 'npc')), inherit.aes = FALSE, show.legend = FALSE, direction="both", max.iter = 3e3, ylim=c(6,8)) +
-     guides(fill=guide_legend(override.aes=list(colour=NA)))
+     guides(fill=guide_legend(reverse = TRUE, override.aes=list(colour=NA))) +
+     scale_fill_manual(values = c("red", "darkgreen")) +
+     theme_void() +
+     theme(legend.position="top", legend.title = element_text(face="bold")) +
+     labs(fill = "Component")
+
 
 ## Write ring chart to file and close.
 p1

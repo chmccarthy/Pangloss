@@ -48,15 +48,23 @@ def GenerateKaryotypeFiles(attributes, matchtable):
 
     for row in attread:
         karyo = [row[0], row[1], row[2], row[3]]
-        if row[1] in Flatten(core.values()):
-            karyo = karyo + ["core", row[5]]
+        core_gms = Flatten(core.values())
+        acc_gms = Flatten(acc.values())
+        total = len(core.values()[0])
+        if row[1] in core_gms:
+            number = core_gms.index(row[1]) / total
+            cluster = core.values()[number]
+            ortho = len(filter(lambda x: x is not None, cluster))
+            karyo = karyo + ["core", row[5], str(ortho)]
+            karyotype.append(karyo)
+        elif row[1] in acc_gms:
+            number = acc_gms.index(row[1]) / total
+            cluster = acc.values()[number]
+            ortho = len(filter(lambda x: x is not None, cluster))
+            karyo = karyo + ["acc", row[5], str(ortho)]
+            karyotype.append(karyo)
         else:
-            karyo = karyo + ["acc", row[5]]
-            #for key in acc:
-            #    if row[1] in acc[key]:
-            #        clus_len = len([gene for gene in acc[key] if gene])
-            #        karyo.append(str(clus_len))
-        karyotype.append(karyo)
+            pass
 
     with open("karyotypes.txt", "w") as out:
         for karyo in karyotype:
@@ -77,5 +85,7 @@ def KaryoPloteR(tags, karyotypes, lengths):
     TryMkDirs(kdir)
 
     for tag in open(tags).readlines():
-        shutil.copy("{0}.eps".format(tag.strip("\n")), kdir)
-        os.remove("{0}.eps".format(tag.strip("\n")))
+        shutil.copy("{0}_components.eps".format(tag.strip("\n")), kdir)
+        shutil.copy("{0}_orthologs.eps".format(tag.strip("\n")), kdir)
+        os.remove("{0}_components.eps".format(tag.strip("\n")))
+        os.remove("{0}_orthologs.eps".format(tag.strip("\n")))

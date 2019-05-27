@@ -95,7 +95,7 @@ def FillGaps(blast, matchtable, seqs, tags):
                 print ""
 
     # Write new matchtable to file.
-    with open("panoct/refined_matchtable.txt", "w") as out:
+    with open("refined_matchtable.txt", "w") as out:
         for comp in [core, acc, new_mergers]:
             for cluster in comp:
                 line = ["----------" if not a else str(a) for a in comp[cluster]]
@@ -109,7 +109,7 @@ def PanOCTOutputHandler():
     PanOCT output directory.
     """
     to_move = glob("*pairwise*") + glob("*cluster*") + glob("*paralog*") \
-              + glob("matchtable*") + ["centroids.fasta", "fragments_fusions.txt", "id.txt",
+              + glob("*matchtable*") + ["centroids.fasta", "fragments_fusions.txt", "id.txt",
                                        "missing_blast_results.txt", "parameters.txt", "report.txt"]
 
     tdir = "panoct"
@@ -128,7 +128,7 @@ def PanOCTOutputHandler():
                 os.remove(f)
 
 
-def GenerateClusterFASTAs():
+def GenerateClusterFASTAs(matchtable):
     """
     Extract gene model clusters from full database and write out nucleotide and protein sequence families to file.
     """

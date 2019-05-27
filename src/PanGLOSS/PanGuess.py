@@ -115,7 +115,7 @@ def BuildExonerateCmds(workdir, ex_path, genome):
     logging.info("PanGuess: Building set of Exonerate commands.")
     for prot in glob("{0}/ref/*.faa".format(workdir)):
         exon_cmds.append([ex_path, "--model", "protein2genome",
-                          "-t", genome, "-q", prot, "--percent", "49",  "--bestn", "1"])
+                          "-t", genome, "-q", prot, "--percent", "90",  "--bestn", "1"])
     return exon_cmds
 
 

@@ -49,6 +49,7 @@ p <-ggplot(data = df, aes(x = Size, y = Count, fill = scale)) +
   geom_bar(stat = "identity") + scale_fill_gradient(low = "#FF8888",high = "#98FB98") +
   annotate("text", x = length(df$Count) / 4, y = Inf, label = chao_label, 
            hjust = 0, vjust = 2.5) +
+  geom_text(aes(label = as.character(Count)), vjust=-0.5) +
   scale_x_continuous(breaks = df$Size)
 
 ## Write bar chart plot to file and close.
