@@ -49,51 +49,26 @@ def FillGaps(blast, matchtable, seqs, tags):
     og_acc = acc.keys()
     ignore = []
     for q_cluster_id in og_acc:
+        ignore = []
         current_acc = [key for key in acc.keys() if key not in ignore]
         if q_cluster_id in current_acc:
             q_cluster = acc[q_cluster_id]
-            q_present = [gene.split("|")[0] for gene in q_cluster if gene]
-            q_missing = filter(lambda tag: tag not in q_present, tags)
+            q_pos = [pos for pos, gene in enumerate(q_cluster) if gene]
+            q_present = set([tags[pos] for pos in q_pos])
+            q_missing = set(filter(lambda tag: tag not in q_present, tags))
             q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
-            q_first_hits = set(Flatten(q_blasts.values()))
-            merger = []
-            if None not in q_first_hits:
-                if len(q_first_hits) == len(q_missing):
-                    intersect = []
-                    for s_cluster_id in current_acc:
-                        s_cluster = acc[s_cluster_id]
-                        s_members = set([gene for gene in s_cluster if gene])
-                        if bool(s_members.intersection(q_first_hits)):
-                            s_present = [gene.split("|")[0] for gene in s_members]
-                            s_missing = filter(lambda tag: tag not in s_present, tags)
-                            s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
-                            s_first_hits = set(Flatten(s_blasts.values()))
-                            if Reciprocal(q_cluster, q_first_hits, s_cluster, s_first_hits):
-                                if not merger:
-                                    merger = [x or y for x, y in zip(q_cluster, s_cluster)]
-                                elif len(merger) < total:
-                                    intersect = set(s_cluster).intersection(q_first_hits)
-                                if len(intersect) == len(q_first_hits):
-                                    print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new core cluster."
-                                    ignore = ignore + [q_cluster_id, s_cluster_id]
-                                    new_mergers[q_cluster_id] = merger
-                                    del acc[q_cluster_id], acc[s_cluster_id]
-                                    break
-                                else:
-                                    print str(q_cluster_id) + str(s_cluster_id) + " can be merged into a new accessory cluster."
-                                    print ""
-                    if not intersect:
-                        print str(q_cluster_id) + " doesn't have a potential subject cluster in the accessory genome."
-                        ignore.append(q_cluster_id)
-                        print ""
-                else:
-                    print str(q_cluster_id) + " doesn't have a possible subject cluster, inconsistent first hits."
-                    ignore.append(q_cluster_id)
-                    print ""
-            else:
-                print str(q_cluster_id) + " cannot be combined with another subject cluster."
-                ignore.append(q_cluster_id)
-                print ""
+            q_first_hits = set(filter(lambda x: x is not None, Flatten(q_blasts.values())))
+            filtered_acc = [key for key in current_acc if not any(acc[key][pos] for pos in q_pos)]
+            for s_cluster_id in filtered_acc:
+                s_cluster = acc[s_cluster_id]
+                s_members = [gene for gene in s_cluster if gene]
+                s_present = set([gene.split("|")[0] for gene in s_members if gene])
+                s_missing = set(filter(lambda tag: tag not in s_present, tags))
+                s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
+                s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
+                if len(s_first_hits) == len(q_present):
+                    if sorted(q_cluster)
+                    print "yes!"
 
     # Write new matchtable to file.
     with open("refined_matchtable.txt", "w") as out:
