@@ -256,13 +256,13 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         ConcatenateDatasets("genomes/genomes.txt")
     elif not os.path.isfile(attributes):
         ConcatenateDatasets("genomes/genomes.txt")
-    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
-    PanOCT.PanOCTOutputHandler()
+#    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+#    PanOCT.PanOCTOutputHandler()
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
         logging.info("Master: Running gap filling method.")
-        PanOCT.FillGaps(blast, "./panoct/matchtable.txt", fasta_db, tags)
+        PanOCT.FillGaps(blast, "./panoct/matchtable.txt", fasta_db, "panoct_tags.txt")
         PanOCT.GenerateClusterFASTAs("./panoct/refined_matchtable.txt")
     else:
         PanOCT.GenerateClusterFASTAs("./panoct/matchtable.txt")
@@ -272,7 +272,7 @@ def IPSHandler(cores=None):
     """
     Run InterProScan annotation of pangenome dataset. Note, this only works on Linux and won't run otherwise.
     """
-    GO.RunInterProScan("allprot.db", cores)
+    GO.RunInterProScan("/gm_pred/sets/allprot.db", cores)
 
 
 def GOHandler(refined=False):

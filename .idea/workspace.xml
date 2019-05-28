@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Karyotype.R" beforeDir="false" afterPath="$PROJECT_DIR$/src/Karyotype.R" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/Tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/RingChart.R" beforeDir="false" afterPath="$PROJECT_DIR$/src/RingChart.R" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,7 +16,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS.coverage" NAME="PanGLOSS Coverage Results" MODIFIED="1522675848851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS_Master.coverage" NAME="PanGLOSS_Master Coverage Results" MODIFIED="1558947436371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/Genes_Paper" />
+    <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS_Master.coverage" NAME="PanGLOSS_Master Coverage Results" MODIFIED="1559035598406" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Abisporus_PANGENOME" />
     <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS__1_.coverage" NAME="PanGLOSS (1) Coverage Results" MODIFIED="1548460530840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="FavoritesManager">
@@ -28,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-191">
-              <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+            <state relative-caret-position="425">
+              <caret line="276" lean-forward="true" selection-start-line="276" selection-end-line="276" />
               <folding>
                 <element signature="e#3464#3478#0" expanded="true" />
               </folding>
@@ -94,11 +90,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-912">
-              <caret line="58" column="23" lean-forward="true" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
+            <state relative-caret-position="282">
+              <caret line="69" column="74" lean-forward="true" selection-start-line="69" selection-start-column="74" selection-end-line="69" selection-end-column="74" />
               <folding>
                 <element signature="e#24#38#0" expanded="true" />
               </folding>
@@ -204,15 +200,15 @@
         <option value="$PROJECT_DIR$/src/PanGLOSS/PAML.py" />
         <option value="$PROJECT_DIR$/src/config.ini" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Karyotype.py" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -329,13 +325,13 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="/usr/bin/python" />
-      <option name="WORKING_DIRECTORY" value="$USER_HOME$/Desktop/Genes_Paper" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Abisporus_PANGENOME" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
-      <option name="PARAMETERS" value="--no_pred --no_blast --refine --plots $PROJECT_DIR$/src/config.ini" />
+      <option name="PARAMETERS" value="--no_pred --no_blast --refine $PROJECT_DIR$/src/config.ini" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -389,12 +385,12 @@
       <workItem from="1557428331472" duration="11028000" />
       <workItem from="1557738747141" duration="16023000" />
       <workItem from="1557929711407" duration="18966000" />
-      <workItem from="1558641202599" duration="16456000" />
+      <workItem from="1558641202599" duration="18540000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="268106000" />
+    <option name="totallyTimeSpent" value="270190000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -409,7 +405,7 @@
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.18454936" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.88834953" weight="0.18454936" />
       <window_info id="Structure" order="1" weight="0.2274678" />
       <window_info id="Favorites" order="2" sideWeight="0.11165048" side_tool="true" weight="0.17811158" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -436,6 +432,34 @@
       <window_info anchor="right" id="R Packages" order="6" weight="0.3297568" />
       <window_info anchor="right" id="Database" order="7" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.18454936" />
+      <window_info id="Structure" order="1" weight="0.2274678" />
+      <window_info id="Favorites" order="2" sideWeight="0.11165048" side_tool="true" weight="0.17811158" />
+      <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="1" />
+      <window_info anchor="bottom" id="Message" order="2" />
+      <window_info anchor="bottom" id="Find" order="3" sideWeight="0.49928468" weight="0.3299363" />
+      <window_info anchor="bottom" id="Run" order="4" sideWeight="0.7467811" weight="0.21146497" />
+      <window_info active="true" anchor="bottom" id="Debug" order="5" sideWeight="0.90772533" visible="true" weight="0.41528663" />
+      <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="8" sideWeight="0.49928468" weight="0.3284974" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4985694" weight="0.32866243" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007153" side_tool="true" weight="0.32866243" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49928468" weight="0.32866243" />
+      <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49928468" weight="0.32866243" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.3299363" />
+      <window_info active="true" anchor="bottom" id="Inspection Results" order="14" visible="true" weight="0.32953367" />
+      <window_info anchor="right" id="SciView" order="0" weight="0.3297568" />
+      <window_info anchor="right" id="Commander" order="1" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" visible="true" weight="0.24964234" />
+      <window_info anchor="right" id="Data View" order="4" />
+      <window_info anchor="right" id="R Graphics" order="5" />
+      <window_info anchor="right" id="R Packages" order="6" weight="0.3297568" />
+      <window_info anchor="right" id="Database" order="7" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -445,8 +469,98 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>52</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>53</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>57</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>58</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
           <line>59</line>
-          <option name="timeStamp" value="16" />
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>92</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>88</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>84</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>81</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>75</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>66</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>67</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>68</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py</url>
+          <line>60</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -459,11 +573,11 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="q_cluster" language="Python" />
+        <watch expression="q_cluster" />
+        <watch expression="q_present" />
+        <watch expression="q_missing" />
+        <watch expression="q_blasts" />
         <watch expression="q_first_hits" />
-        <watch expression="s_cluster" />
-        <watch expression="s_first_hits" />
-        <watch expression="ignore" />
       </configuration>
     </watches-manager>
   </component>
@@ -704,22 +818,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-912">
-          <caret line="58" column="23" lean-forward="true" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
+        <state relative-caret-position="425">
+          <caret line="276" lean-forward="true" selection-start-line="276" selection-end-line="276" />
           <folding>
-            <element signature="e#24#38#0" expanded="true" />
+            <element signature="e#3464#3478#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-191">
-          <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+        <state relative-caret-position="282">
+          <caret line="69" column="74" lean-forward="true" selection-start-line="69" selection-start-column="74" selection-end-line="69" selection-end-column="74" />
           <folding>
-            <element signature="e#3464#3478#0" expanded="true" />
+            <element signature="e#24#38#0" expanded="true" />
           </folding>
         </state>
       </provider>

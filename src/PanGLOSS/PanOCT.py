@@ -59,11 +59,12 @@ def FillGaps(blast, matchtable, seqs, tags):
             merger = []
             if None not in q_first_hits:
                 if len(q_first_hits) == len(q_missing):
+                    intersect = []
                     for s_cluster_id in current_acc:
-                        intersect = []
-                        if bool(set(acc[s_cluster_id]).intersection(q_first_hits)):
-                            s_cluster = acc[s_cluster_id]
-                            s_present = [gene.split("|")[0] for gene in s_cluster if gene]
+                        s_cluster = acc[s_cluster_id]
+                        s_members = set([gene for gene in s_cluster if gene])
+                        if bool(s_members.intersection(q_first_hits)):
+                            s_present = [gene.split("|")[0] for gene in s_members]
                             s_missing = filter(lambda tag: tag not in s_present, tags)
                             s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
                             s_first_hits = set(Flatten(s_blasts.values()))
