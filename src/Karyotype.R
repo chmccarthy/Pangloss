@@ -79,7 +79,7 @@ for (tag in tags)
   {
     kpPlotRegions(kp, data = custom.orthobands[custom.orthobands$orthologs == set], avoid.overlapping = TRUE, data.panel = "ideogram", col = colscale[set], layer.margin = 0.15)
   }
-  subplot(color.bar(colscale, 1, 7, nticks=7, title="Syntenic orthologs"), 0.9, 0.9)
+  subplot(color.bar(colscale, 1, length(tags), nticks=length(tags), title="Syntenic orthologs"), 0.9, 0.9)
   dev.off()
 }
 

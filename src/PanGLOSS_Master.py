@@ -13,9 +13,13 @@ To-do:
     - Test IPS pipeline fully.
 
 Recent changes:
+    v0.8.0 (May 2019)
+    - Rejigged when exactly amino acid, nucleotide and attribute datasets are concatenated.
+    - Loads of changes to R scripts.
+
     v0.7.0 (May 2019)
     - Changed --fillgaps to --refine to reflect output matchtable.
-    - Added percentage score threshold of ≥50% to Exonerate gene model prediction in place of sequence coverage.
+    - Added percentage score threshold of ≥90% to Exonerate gene model prediction in place of sequence coverage.
     - Added BUSCO assessment of gene model set completedness.
     - Added option for running InterProScan analysis of dataset within PanGLOSS.
     - Fully implemented yn00 selection analysis and summary generation for full datasets.
@@ -75,6 +79,7 @@ from datetime import datetime
 from glob import glob
 
 from PanGLOSS import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
+from PanGLOSS.Tools import ConcatenateDatasets
 
 
 def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
@@ -190,6 +195,8 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         PanGuess.TarballGenePredictionDirs(workdir, genome)
         logging.info("Master: Finished gene model predction for {0}.".format(genome))
 
+    ConcatenateDatasets(genomelist)
+
 
 def QualityCheckHandler(sets, queries, cores=None):
     """
@@ -230,7 +237,7 @@ def BLASTAllHandler(tags, cores=None):
     # Concatenate all protein sequence datasets together, BLAST them against themselves,
     # pool all farmed results together and write output (in tabular format) to file.
     logging.info("Master: Running BLASTAllHandler.")
-    BLASTAll.ConcatenateDatasets(tags)
+    ConcatenateDatasets(tags)
     blasts = BLASTAll.BLASTAll(cores)
     BLASTAll.MergeBLASTsAndWrite(blasts)
 
@@ -245,8 +252,12 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     """
     # Run PanOCT with provided files (and optional additional arguments.
     logging.info("Master: Running PanOCTHandler.")
-    #PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
-    #PanOCT.PanOCTOutputHandler()
+    if not os.path.isfile(fasta_db):
+        ConcatenateDatasets("genomes/genomes.txt")
+    elif not os.path.isfile(attributes):
+        ConcatenateDatasets("genomes/genomes.txt")
+    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    PanOCT.PanOCTOutputHandler()
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:

@@ -259,6 +259,27 @@ def LocationOverlap(call, next_call):
             return call
 
 
+def ConcatenateDatasets(genomes):
+    """
+    Concatenate all datasets and construct BLASTp database for gene model set.
+    """
+    # Generate cat commands for the three full datasets we have.
+    tags = [line.strip("\n").split(".")[0].split("/")[1] for line in open(genomes)]
+    print tags
+    nucl_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".nucl" for tag in tags]
+    prot_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".faa" for tag in tags]
+    att_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".attributes" for tag in tags]
+
+    # Run commands.
+    logging.info("BLASTAll: Concatenating sequence databases and attributes files.")
+    with open("./gm_pred/sets/allnucl.db", "w") as f:
+        sp.call(nucl_cmd, stdout=f)
+    with open("./gm_pred/sets/allprot.db", "w") as f:
+        sp.call(prot_cmd, stdout=f)
+    with open("./gm_pred/sets/allatt.db", "w") as f:
+        sp.call(att_cmd, stdout=f)
+
+
 def MakeBLASTDBCmdLine(cmd):
     """
     Generalized function for running makeBLASTDB. Nothing fancy.

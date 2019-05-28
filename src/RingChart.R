@@ -23,9 +23,6 @@ if (length(args)==2) {
   accessory <- as.numeric(args[2])
 }
 
-core <- 6039
-accessory <- 980
-
 ## Load numbers into dataframe and convert them into radial numbers.
 ring = data.frame(count=c(accessory, core), category=c("Accessory", "Core"))
 ring$fraction = ring$count / sum(ring$count)
