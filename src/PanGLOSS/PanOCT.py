@@ -8,7 +8,7 @@ from glob import glob
 
 from Bio import SeqIO, SearchIO
 
-from Tools import Flatten, ParseMatchtable, QueryClusterFirstHits, Reciprocal, TryMkDirs
+from Tools import ClusterMerge, Flatten, MultipleInsert, ParseMatchtable, QueryClusterFirstHits, Reciprocal, TryMkDirs
 
 def RunPanOCT(fasta_db, attributes, blast, genome_list, **kwargs):
     """
@@ -43,36 +43,50 @@ def FillGaps(blast, matchtable, seqs, tags):
 
     # Get total number of strains in dataset by taking the length of any accessory cluster list (including Nones).
     total = len(acc[acc.keys()[0]])
-    new_mergers = {}
+    new_clusters = {}
 
     # Loop over every accessory cluster.
     og_acc = acc.keys()
     ignore = []
     for q_cluster_id in og_acc:
-        ignore = []
-        current_acc = [key for key in acc.keys() if key not in ignore]
-        if q_cluster_id in current_acc:
-            q_cluster = acc[q_cluster_id]
-            q_pos = [pos for pos, gene in enumerate(q_cluster) if gene]
-            q_present = set([tags[pos] for pos in q_pos])
-            q_missing = set(filter(lambda tag: tag not in q_present, tags))
-            q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
-            q_first_hits = set(filter(lambda x: x is not None, Flatten(q_blasts.values())))
-            filtered_acc = [key for key in current_acc if not any(acc[key][pos] for pos in q_pos)]
-            for s_cluster_id in filtered_acc:
-                s_cluster = acc[s_cluster_id]
-                s_members = [gene for gene in s_cluster if gene]
-                s_present = set([gene.split("|")[0] for gene in s_members if gene])
-                s_missing = set(filter(lambda tag: tag not in s_present, tags))
-                s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
-                s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
-                if len(s_first_hits) == len(q_present):
-                    if sorted(q_cluster)
-                    print "yes!"
+        print "{0} out of {1} clusters searched".format(og_acc.index(q_cluster_id), len(og_acc))
+        if q_cluster_id not in ignore:
+            current_acc = [key for key in acc.keys() if key not in ignore]
+            if q_cluster_id in current_acc:
+                q_cluster = acc[q_cluster_id]
+                q_pos = [pos for pos, gene in enumerate(q_cluster) if gene]
+                q_present = set([tags[pos] for pos in q_pos])
+                q_members = set(sorted(filter(lambda x: x is not None, q_cluster)))
+                q_missing = set(filter(lambda tag: tag not in q_present, tags))
+                q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
+                q_first_hits = set(filter(lambda x: x is not None, Flatten(q_blasts.values())))
+                q_query = MultipleInsert(list(q_first_hits), q_pos)
+                if q_query in acc.values():
+                    s_cluster_id = acc.keys()[acc.values().index(q_query)]
+                    if s_cluster_id not in ignore:
+                        s_cluster = acc[s_cluster_id]
+                        s_members = set(sorted(filter(lambda x: x is not None, s_cluster)))
+                        if s_members == q_first_hits:
+                            s_present = set([gene.split("|")[0] for gene in s_members])
+                            s_missing = set(filter(lambda tag: tag not in s_present, tags))
+                            s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
+                            s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
+                            reciprocal = Reciprocal(q_members, q_first_hits, s_members, s_first_hits)
+                            if reciprocal:
+                                new_cluster = ClusterMerge(q_cluster, s_cluster)
+                                new_clusters[q_cluster_id] = new_cluster
+                                acc.pop(q_cluster_id, "None")
+                                acc.pop(s_cluster_id, "None")
+                                merged = True
+                                print "clusters merged: {0} {1}\n".format(str(q_cluster_id), str(s_cluster_id))
+                                print "size of clusters merged: {0} {1}\n".format(len(q_members), len(s_members))
+                                ignore = ignore + [q_cluster_id, s_cluster_id]
+        else:
+            pass
 
     # Write new matchtable to file.
     with open("refined_matchtable.txt", "w") as out:
-        for comp in [core, acc, new_mergers]:
+        for comp in [core, acc, new_clusters]:
             for cluster in comp:
                 line = ["----------" if not a else str(a) for a in comp[cluster]]
                 print line
@@ -104,13 +118,13 @@ def PanOCTOutputHandler():
                 os.remove(f)
 
 
-def GenerateClusterFASTAs(matchtable):
+def GenerateClusterFASTAs(matchtable, refined=False):
     """
     Extract gene model clusters from full database and write out nucleotide and protein sequence families to file.
     """
     nt_index = SeqIO.index("./gm_pred/sets/allnucl.db", "fasta")
     aa_index = SeqIO.index("./gm_pred/sets/allprot.db", "fasta")
-    fdir = "./panoct/clusters"
+    fdir = "./panoct/clusters/"
     matchtable = "./panoct/matchtable.txt"
     TryMkDirs(fdir)
     TryMkDirs("{0}/core/faa".format(fdir))
@@ -137,3 +151,32 @@ def GenerateClusterFASTAs(matchtable):
 
         with open("{0}/acc/faa/Acc_{1}.faa".format(fdir, cluster), "w") as aa_out:
             SeqIO.write(aa_seqs, aa_out, "fasta")
+
+    if refined:
+        matchtable = "./panoct/refined_matchtable.txt"
+        rdir = "./panoct/clusters/refined"
+        TryMkDirs(rdir)
+        TryMkDirs("{0}/core/faa".format(rdir))
+        TryMkDirs("{0}/core/fna".format(rdir))
+        TryMkDirs("{0}/acc/faa".format(rdir))
+        TryMkDirs("{0}/acc/fna".format(rdir))
+
+        core, acc = ParseMatchtable(matchtable)
+
+        for cluster in core:
+            nt_seqs = [nt_index[member] for member in core[cluster]]
+            aa_seqs = [aa_index[member] for member in core[cluster]]
+            with open("{0}/core/fna/Core_{1}.fna".format(rdir, cluster), "w") as aa_out:
+                SeqIO.write(nt_seqs, aa_out, "fasta")
+
+            with open("{0}/core/faa/Core_{1}.faa".format(rdir, cluster), "w") as aa_out:
+                SeqIO.write(aa_seqs, aa_out, "fasta")
+
+        for cluster in acc:
+            nt_seqs = [nt_index[member] for member in acc[cluster] if member]
+            aa_seqs = [aa_index[member] for member in acc[cluster] if member]
+            with open("{0}/acc/fna/Acc_{1}.fna".format(rdir, cluster), "w") as aa_out:
+                SeqIO.write(nt_seqs, aa_out, "fasta")
+
+            with open("{0}/acc/faa/Acc_{1}.faa".format(rdir, cluster), "w") as aa_out:
+                SeqIO.write(aa_seqs, aa_out, "fasta")

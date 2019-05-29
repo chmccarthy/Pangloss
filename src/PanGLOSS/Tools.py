@@ -47,12 +47,6 @@ def get_gene_lengths(fasta):
         ref_lengths[db[seq].id] = len(db[seq].seq)
     return ref_lengths
 
-def merge_clusters(larger_cluster, smaller_cluster):
-    for index, member in enumerate(larger_cluster):
-        if member == "----------":
-            larger_cluster[index] = smaller_cluster[index]
-    return larger_cluster
-
 def called_ratio(called_alignment, query_gene):
     """
     Return the ratio of lengths for a query sequence and a called gene.
@@ -390,8 +384,13 @@ def QueryClusterFirstHits(q_cluster, blast_idx, ident, tags):
     """
     Generate dictionary of all hits for all members of a query cluster >min_id_cutoff identity.
     """
-    hit_dict = {member: [hit.id for hit in blast_idx[member].hits if hit.hsps[0].ident_pct
-                               >= float(ident)] for member in q_cluster if member in blast_idx}
+    try:
+        hit_dict = {member: [hit.id for hit in blast_idx[member].hits if hit.hsps[0].ident_pct
+                                   >= float(ident)] for member in q_cluster if member in blast_idx}
+    except:
+        print "SOMETHING WEIRD HAPPEN WITH THIS GUY"
+        print q_cluster
+        return 0
     for member in q_cluster:
         top_hits = []
         if member in hit_dict:
@@ -401,18 +400,32 @@ def QueryClusterFirstHits(q_cluster, blast_idx, ident, tags):
     return hit_dict
 
 
-def Reciprocal(q_cluster, q_first_hits, s_cluster, s_first_hits):
+def MultipleInsert(cluster, positions):
+    """
+    Add multiple nones into potential matching cluster for gap filling.
+    """
+    for position in positions:
+        cluster.insert(position, None)
+    return cluster
+
+
+def Reciprocal(q_members, q_first_hits, s_members, s_first_hits):
     """
     Return True if all first hits for the source strain of a cluster member are the member itself, otherwise False.
     """
     reciprocal = False
-    q_members = set([member for member in q_cluster if member])
     q_value = bool(q_members <= s_first_hits)
-    s_members = set([member for member in s_cluster if member])
     s_value = bool(s_members <= q_first_hits)
     if all([q_value, s_value]):
         reciprocal = True
     return reciprocal
+
+
+def ClusterMerge(q_cluster, s_cluster):
+    for index, member in enumerate(q_cluster):
+        if not member:
+            q_cluster[index] = s_cluster[index]
+    return q_cluster
 
 
 def ClusterSizes(component):
