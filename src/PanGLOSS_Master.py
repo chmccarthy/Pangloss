@@ -265,7 +265,8 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         PanOCT.FillGaps(blast, "./panoct/matchtable.txt", fasta_db, "panoct_tags.txt")
         PanOCT.GenerateClusterFASTAs("./panoct/refined_matchtable.txt")
     else:
-        PanOCT.GenerateClusterFASTAs("./panoct/matchtable.txt")
+        pass
+    #    PanOCT.GenerateClusterFASTAs("./panoct/matchtable.txt")
 
 
 def IPSHandler(cores=None):
