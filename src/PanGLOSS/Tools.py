@@ -99,7 +99,6 @@ def ConcatenateDatasets(genomes):
     att_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".attributes" for tag in tags]
 
     # Run commands.
-    logging.info("BLASTAll: Concatenating sequence databases and attributes files.")
     with open("./gm_pred/sets/allnucl.db", "w") as f:
         sp.call(nucl_cmd, stdout=f)
     with open("./gm_pred/sets/allprot.db", "w") as f:
