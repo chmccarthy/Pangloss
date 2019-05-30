@@ -8,7 +8,8 @@ from glob import glob
 
 from Bio import SeqIO, SearchIO
 
-from Tools import ClusterMerge, Flatten, MultipleInsert, ParseMatchtable, QueryClusterFirstHits, Reciprocal, TryMkDirs
+from Tools import ConcatenateDatasets, ClusterMerge, Flatten, MultipleInsert, ParseMatchtable, \
+                  QueryClusterFirstHits, Reciprocal, TryMkDirs
 
 def RunPanOCT(fasta_db, attributes, blast, genome_list, **kwargs):
     """
@@ -18,7 +19,6 @@ def RunPanOCT(fasta_db, attributes, blast, genome_list, **kwargs):
     panoct_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "/panoct.pl"
 
     tag_list = [i.strip("\n").split(".")[0].split("/")[1] for i in open(genome_list).readlines()]
-    print tag_list
     with open("./panoct_tags.txt", "w") as tag_file:
         tag_file.write("\n".join([str(tag) for tag in tag_list]))
 
@@ -60,28 +60,27 @@ def FillGaps(blast, matchtable, seqs, tags):
                 q_missing = set(filter(lambda tag: tag not in q_present, tags))
                 q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
                 q_first_hits = set(filter(lambda x: x is not None, Flatten(q_blasts.values())))
-                q_queries = MultipleInsert(list(q_first_hits), q_pos)
-                for q_query in q_queries:
-                    if q_query in acc.values():
-                        s_cluster_id = acc.keys()[acc.values().index(q_query)]
-                        if s_cluster_id not in ignore:
-                            s_cluster = acc[s_cluster_id]
-                            s_members = set(sorted(filter(lambda x: x is not None, s_cluster)))
-                            if s_members == q_first_hits:
-                                s_present = set([gene.split("|")[0] for gene in s_members])
-                                s_missing = set(filter(lambda tag: tag not in s_present, tags))
-                                s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
-                                s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
-                                reciprocal = Reciprocal(q_members, q_first_hits, s_members, s_first_hits)
-                                if reciprocal:
-                                    new_cluster = ClusterMerge(q_cluster, s_cluster)
-                                    new_clusters[q_cluster_id] = new_cluster
-                                    acc.pop(q_cluster_id, "None")
-                                    acc.pop(s_cluster_id, "None")
-                                    merged = True
-                                    print "clusters merged: {0} {1}\n".format(str(q_cluster_id), str(s_cluster_id))
-                                    print "size of clusters merged: {0} {1}\n".format(len(q_members), len(s_members))
-                                    ignore = ignore + [q_cluster_id, s_cluster_id]
+                q_query = MultipleInsert(list(q_first_hits), tags)
+                if q_query in acc.values():
+                    s_cluster_id = acc.keys()[acc.values().index(q_query)]
+                    if s_cluster_id not in ignore:
+                        s_cluster = acc[s_cluster_id]
+                        s_members = set(sorted(filter(lambda x: x is not None, s_cluster)))
+                        if s_members == q_first_hits:
+                            s_present = set([gene.split("|")[0] for gene in s_members])
+                            s_missing = set(filter(lambda tag: tag not in s_present, tags))
+                            s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
+                            s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
+                            reciprocal = Reciprocal(q_members, q_first_hits, s_members, s_first_hits)
+                            if reciprocal:
+                                new_cluster = ClusterMerge(q_cluster, s_cluster)
+                                new_clusters[q_cluster_id] = new_cluster
+                                acc.pop(q_cluster_id, "None")
+                                acc.pop(s_cluster_id, "None")
+                                merged = True
+                                print "clusters merged: {0} {1}\n".format(str(q_cluster_id), str(s_cluster_id))
+                                print "size of clusters merged: {0} {1}\n".format(len(q_members), len(s_members))
+                                ignore = ignore + [q_cluster_id, s_cluster_id]
         else:
             pass
 
@@ -90,7 +89,6 @@ def FillGaps(blast, matchtable, seqs, tags):
         for comp in [core, acc, new_clusters]:
             for cluster in comp:
                 line = ["----------" if not a else str(a) for a in comp[cluster]]
-                print line
                 out.write("\t".join(line) + "\n")
 
 
@@ -119,10 +117,14 @@ def PanOCTOutputHandler():
                 os.remove(f)
 
 
-def GenerateClusterFASTAs(matchtable, refined=False):
+def GenerateClusterFASTAs(genomes, refined=False):
     """
     Extract gene model clusters from full database and write out nucleotide and protein sequence families to file.
     """
+    if not os.path.isfile("./gm_pred/sets/allnucl.db"):
+        ConcatenateDatasets(genomes)
+    elif not os.path.isfile("./gm_pred/sets/allprot.db"):
+        ConcatenateDatasets(genomes)
     nt_index = SeqIO.index("./gm_pred/sets/allnucl.db", "fasta")
     aa_index = SeqIO.index("./gm_pred/sets/allprot.db", "fasta")
     fdir = "./panoct/clusters/"

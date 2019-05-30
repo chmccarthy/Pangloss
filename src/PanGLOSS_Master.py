@@ -16,6 +16,7 @@ Recent changes:
     v0.8.0 (May 2019)
     - Rejigged when exactly amino acid, nucleotide and attribute datasets are concatenated.
     - Loads of changes to R scripts.
+    - Fully implemented pangenome refinement using "gap finding" method.
 
     v0.7.0 (May 2019)
     - Changed --fillgaps to --refine to reflect output matchtable.
@@ -256,17 +257,17 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         ConcatenateDatasets("genomes/genomes.txt")
     elif not os.path.isfile(attributes):
         ConcatenateDatasets("genomes/genomes.txt")
-#    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
-#    PanOCT.PanOCTOutputHandler()
+    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
         logging.info("Master: Running gap filling method.")
-        PanOCT.FillGaps(blast, "./panoct/matchtable.txt", fasta_db, "panoct_tags.txt")
+        PanOCT.FillGaps(blast, "./matchtable.txt", fasta_db, "./panoct_tags.txt")
+        PanOCT.PanOCTOutputHandler()
         PanOCT.GenerateClusterFASTAs("./panoct/refined_matchtable.txt")
     else:
-        pass
-    #    PanOCT.GenerateClusterFASTAs("./panoct/matchtable.txt")
+        PanOCT.PanOCTOutputHandler()
+        PanOCT.GenerateClusterFASTAs("./panoct/matchtable.txt")
 
 
 def IPSHandler(cores=None):
