@@ -263,11 +263,12 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     if gaps:
         logging.info("Master: Running gap filling method.")
         #PanOCT.FillGaps(blast, "./matchtable.txt", fasta_db, "./panoct_tags.txt")
-        PanOCT.PanOCTOutputHandler()
-        PanOCT.GenerateClusterFASTAs("genomes/genomes.txt", True)
+        #PanOCT.PanOCTOutputHandler()
+        #PanOCT.GenerateClusterFASTAs("genomes/genomes.txt", True)
     else:
-        PanOCT.PanOCTOutputHandler()
-        PanOCT.GenerateClusterFASTAs("genomes/genomes.txt")
+        pass
+        #PanOCT.PanOCTOutputHandler()
+        #PanOCT.GenerateClusterFASTAs("genomes/genomes.txt")
 
 
 def IPSHandler(cores=None):
