@@ -262,13 +262,13 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
         logging.info("Master: Running gap filling method.")
-        #PanOCT.FillGaps(blast, "./matchtable.txt", fasta_db, "./panoct_tags.txt")
-        #PanOCT.PanOCTOutputHandler()
-        #PanOCT.GenerateClusterFASTAs("genomes/genomes.txt", True)
+        PanOCT.FillGaps(blast, "./matchtable.txt", fasta_db, "./panoct_tags.txt")
+        PanOCT.PanOCTOutputHandler()
+        PanOCT.GenerateClusterFASTAs("genomes/genomes.txt", gaps)
     else:
         pass
-        #PanOCT.PanOCTOutputHandler()
-        #PanOCT.GenerateClusterFASTAs("genomes/genomes.txt")
+        PanOCT.PanOCTOutputHandler()
+        PanOCT.GenerateClusterFASTAs("genomes/genomes.txt")
 
 
 def IPSHandler(cores=None):
@@ -303,11 +303,11 @@ def GOHandler(refined=False):
     GO.AccessoryEnrichment("go.obo", "go/acc_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
 
 
-def PAMLHandler(ml_path, yn_path, refined=False):
+def PAMLHandler(ml_path, yn_path, refine=False):
     """
     Run Yn00 on core and accessory gene model clusters.
     """
-    if refined:
+    if refine:
         clusters = glob("./panoct/clusters/refined/core/fna/Core*.fna") + glob("./panoct/clusters/refined/acc/fna/Acc*.fna")
     else:
         clusters = glob("./panoct/clusters/core/fna/Core*.fna") + glob("./panoct/clusters/acc/fna/Acc*.fna")
@@ -317,7 +317,7 @@ def PAMLHandler(ml_path, yn_path, refined=False):
         nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
         PAML.RunYn00(yn_path, nucl_alignment)
 
-    PAML.SummarizeYn00()
+    PAML.SummarizeYn00(refine)
 
 
 def KaryoploteRHandler(refined=False):
@@ -582,7 +582,7 @@ def main():
     # If enabled, run selection analysis using yn00.
     if ap.yn00:
         logging.info("Master: Performing selection analysis using yn00.")
-        PAMLHandler(ml_path, yn_path)
+        PAMLHandler(ml_path, yn_path, ap.refine)
 
     # If enabled, enable all plot arguments.
     if ap.plots:

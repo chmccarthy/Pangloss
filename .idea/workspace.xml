@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PanGLOSS/PAML.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS/PAML.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/PanGLOSS_Master.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ini" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,7 +18,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS.coverage" NAME="PanGLOSS Coverage Results" MODIFIED="1522675848851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS_Master.coverage" NAME="PanGLOSS_Master Coverage Results" MODIFIED="1559235022173" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Abisporus_PANGENOME" />
+    <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS_Master.coverage" NAME="PanGLOSS_Master Coverage Results" MODIFIED="1559299041201" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Abisporus_PANGENOME" />
     <SUITE FILE_PATH="coverage/PanGLOSS$PanGLOSS__1_.coverage" NAME="PanGLOSS (1) Coverage Results" MODIFIED="1548460530840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="FavoritesManager">
@@ -23,32 +26,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="310" column="22" lean-forward="true" selection-start-line="310" selection-start-column="22" selection-end-line="310" selection-end-column="22" />
-              <folding>
-                <element signature="e#3616#3630#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="447">
+              <caret line="264" column="34" selection-start-line="264" selection-start-column="34" selection-end-line="264" selection-end-column="34" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///Library/Python/2.7/site-packages/Bio/Alphabet/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="393" selection-start-line="393" selection-end-line="393" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-311">
-              <caret line="21" selection-start-line="21" selection-end-line="21" />
+            <state relative-caret-position="438">
+              <caret line="100" selection-start-line="100" selection-end-line="100" />
               <folding>
                 <element signature="e#137#153#0" expanded="true" />
               </folding>
@@ -57,14 +48,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
+        <entry file="file://$PROJECT_DIR$/src/config.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="103">
-              <caret line="119" column="35" selection-start-line="119" selection-start-column="35" selection-end-line="119" selection-end-column="35" />
-              <folding>
-                <element signature="e#24#38#0" expanded="true" />
-                <element signature="e#1778#4181#0" />
-              </folding>
+            <state relative-caret-position="25">
+              <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/yn00.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1530">
+              <caret line="104" selection-start-line="104" selection-end-line="104" />
             </state>
           </provider>
         </entry>
@@ -72,7 +68,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6508">
+            <state relative-caret-position="90">
               <caret line="6" column="83" selection-start-line="6" selection-start-column="83" selection-end-line="6" selection-end-column="83" />
             </state>
           </provider>
@@ -81,29 +77,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
+            <state relative-caret-position="3135">
               <caret line="209" selection-start-line="209" selection-end-line="209" />
               <folding>
                 <element signature="e#159#190#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="475" selection-start-line="475" selection-end-line="475" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///Library/Python/2.7/site-packages/Bio/SeqIO/FastaIO.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="45" selection-start-line="45" selection-end-line="45" />
             </state>
           </provider>
         </entry>
@@ -187,15 +165,15 @@
         <option value="$PROJECT_DIR$/src/PanGLOSS/QualityCheck.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/BUSCO.py" />
         <option value="$PROJECT_DIR$/src/Karyotype.R" />
-        <option value="$PROJECT_DIR$/src/PanGLOSS/PAML.py" />
-        <option value="$PROJECT_DIR$/src/config.ini" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Karyotype.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
         <option value="$PROJECT_DIR$/src/UpSet.R" />
+        <option value="$PROJECT_DIR$/src/PanGLOSS/PAML.py" />
         <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
+        <option value="$PROJECT_DIR$/src/config.ini" />
       </list>
     </option>
   </component>
@@ -212,6 +190,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -234,7 +213,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -377,12 +355,14 @@
       <workItem from="1557738747141" duration="16023000" />
       <workItem from="1557929711407" duration="18966000" />
       <workItem from="1558641202599" duration="18540000" />
-      <workItem from="1559175280328" duration="8847000" />
+      <workItem from="1559175280328" duration="8885000" />
+      <workItem from="1559261231119" duration="4757000" />
+      <workItem from="1559314077021" duration="1036000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="292996000" />
+    <option name="totallyTimeSpent" value="298827000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -397,7 +377,7 @@
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.13519314" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.88834953" weight="0.13662376" />
       <window_info id="Structure" order="1" weight="0.2274678" />
       <window_info id="Favorites" order="2" sideWeight="0.11165048" side_tool="true" weight="0.17811158" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -405,7 +385,7 @@
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Find" order="3" sideWeight="0.49928468" weight="0.3299363" />
       <window_info anchor="bottom" id="Run" order="4" sideWeight="0.7467811" weight="0.21146497" />
-      <window_info active="true" anchor="bottom" id="Debug" order="5" sideWeight="0.90772533" visible="true" weight="0.25987262" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.90772533" weight="0.25987262" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="8" sideWeight="0.49928468" weight="0.3284974" />
@@ -425,7 +405,7 @@
       <window_info anchor="right" id="Database" order="7" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.13519314" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.13662376" />
       <window_info id="Structure" order="1" weight="0.2274678" />
       <window_info id="Favorites" order="2" sideWeight="0.11165048" side_tool="true" weight="0.17811158" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -433,7 +413,7 @@
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Find" order="3" sideWeight="0.49928468" weight="0.3299363" />
       <window_info anchor="bottom" id="Run" order="4" sideWeight="0.7467811" weight="0.21146497" />
-      <window_info active="true" anchor="bottom" id="Debug" order="5" sideWeight="0.90772533" visible="true" weight="0.2601036" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.90772533" weight="0.25987262" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="8" sideWeight="0.49928468" weight="0.3284974" />
@@ -544,6 +524,11 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
+        <expression-string>yn00.read(cluster)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>list(product(query_cluster))</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
@@ -580,11 +565,6 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
       </expression>
       <expression>
         <expression-string>test = any([s_cluster[pos] for pos in q_present])</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>s_cluster = [None, None, None, None]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -647,13 +627,6 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/GeneOrder.py" />
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/yn00.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="115" selection-start-line="115" selection-end-line="115" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/genericpath.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -760,13 +733,6 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="945">
-          <caret line="63" column="28" selection-start-line="63" selection-start-column="28" selection-end-line="63" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karyotype.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="735">
@@ -781,20 +747,71 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1785">
+          <caret line="119" column="35" selection-start-line="119" selection-start-column="35" selection-end-line="119" selection-end-column="35" />
+          <folding>
+            <element signature="e#24#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SeqIO/FastaIO.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/Alphabet/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="393" selection-start-line="393" selection-end-line="393" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/contextlib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/_parse_yn00.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="74" selection-start-line="74" selection-end-line="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="475" selection-start-line="475" selection-end-line="475" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/yn00.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1530">
+          <caret line="104" selection-start-line="104" selection-end-line="104" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6508">
+        <state relative-caret-position="90">
           <caret line="6" column="83" selection-start-line="6" selection-start-column="83" selection-end-line="6" selection-end-column="83" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="119" column="35" selection-start-line="119" selection-start-column="35" selection-end-line="119" selection-end-column="35" />
+        <state relative-caret-position="3135">
+          <caret line="209" selection-start-line="209" selection-end-line="209" />
           <folding>
-            <element signature="e#24#38#0" expanded="true" />
-            <element signature="e#1778#4181#0" />
+            <element signature="e#159#190#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -806,53 +823,26 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/Alphabet/__init__.py">
+    <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="393" selection-start-line="393" selection-end-line="393" />
+        <state relative-caret-position="447">
+          <caret line="264" column="34" selection-start-line="264" selection-start-column="34" selection-end-line="264" selection-end-column="34" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py">
+    <entry file="file://$PROJECT_DIR$/src/config.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="209" selection-start-line="209" selection-end-line="209" />
-          <folding>
-            <element signature="e#159#190#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="475" selection-start-line="475" selection-end-line="475" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SeqIO/FastaIO.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        <state relative-caret-position="25">
+          <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PAML.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-311">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="438">
+          <caret line="100" selection-start-line="100" selection-end-line="100" />
           <folding>
             <element signature="e#137#153#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="310" column="22" lean-forward="true" selection-start-line="310" selection-start-column="22" selection-end-line="310" selection-end-column="22" />
-          <folding>
-            <element signature="e#3616#3630#0" expanded="true" />
           </folding>
         </state>
       </provider>
