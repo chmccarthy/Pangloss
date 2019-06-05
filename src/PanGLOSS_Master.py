@@ -74,6 +74,7 @@ Recent changes:
 import logging
 import os
 import sys
+import multiprocessing as mp
 from ConfigParser import SafeConfigParser
 from argparse import ArgumentParser
 from datetime import datetime
@@ -257,7 +258,7 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         ConcatenateDatasets("genomes/genomes.txt")
     elif not os.path.isfile(attributes):
         ConcatenateDatasets("genomes/genomes.txt")
-    #PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
+    PanOCT.RunPanOCT(fasta_db, attributes, blast, tags, **kwargs)
 
     # If enabled, try to fill potential gaps in syntenic clusters within pangenome using BLAST+ data.
     if gaps:
@@ -271,14 +272,14 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         PanOCT.GenerateClusterFASTAs("genomes/genomes.txt")
 
 
-def IPSHandler(cores=None):
+def IPSHandler(ips_path, cores=None):
     """
     Run InterProScan annotation of pangenome dataset. Note, this only works on Linux and won't run otherwise.
     """
-    GO.RunInterProScan("/gm_pred/sets/allprot.db", cores)
+    GO.RunInterProScan("/gm_pred/sets/allprot.db", ips_path, cores)
 
 
-def GOHandler(refined=False):
+def GOHandler(go_path, gs_path, refine=False):
     """
     Run GO-slim enrichment analysis on pangenome datasets using GOATools.
     """
@@ -290,17 +291,17 @@ def GOHandler(refined=False):
 
     # Generate GO associations and populations files.
     GO.GenerateAssociations(annos)
-    if refined:
+    if refine:
         GO.GeneratePopulations(annos, "./panoct/refined_matchtable.txt")
     else:
         GO.GeneratePopulations(annos, "./panoct/matchtable.txt")
 
     # Run map_to_slim.py from GOATools.
-    GO.GenerateSlimData("go/associations.txt", "go.obo", "goslim_generic.obo")
+    GO.GenerateSlimData("go/associations.txt", go_path, gs_path)
 
     # Run enrichment analysis of core and accessory genomes against full pangenome dataset.
-    GO.CoreEnrichment("go.obo", "go/core_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
-    GO.AccessoryEnrichment("go.obo", "go/acc_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
+    GO.CoreEnrichment(go_path, "go/core_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
+    GO.AccessoryEnrichment(go_path, "go/acc_pop.txt", "go/full_pop.txt", "go/pangenome_slim.txt")
 
 
 def PAMLHandler(ml_path, yn_path, refine=False):
@@ -429,9 +430,6 @@ def CmdLineParser():
     ap.add_argument("--upset", action="store_true", help="Generate UpSet plot of distribution of syntenic orthologs "
                                                          "within accessory genome of a pangenome dataset.")
 
-    #ap.add_argument("--order", action="store_true", help="Generate circos plot of cluster order within pangenome "
-    #                                                     "dataset (implies --karyo).")
-
     # Add mandatory positional argument for path to config file (default will be the .ini file in /src).
     ap.add_argument("CONFIG_FILE", action="store", nargs="?", help="Path to PanGLOSS configuration file.",
                     default=os.path.dirname(os.path.realpath(sys.argv[0])) + "/config.ini")
@@ -494,8 +492,12 @@ def main():
             ml_path = arg[1]
         if arg[0] == "yn00_path":
             yn_path = arg[1]
-        if arg[1] == "ips_path":
+        if arg[0] == "ips_path":
             ip_path = arg[1]
+        if arg[0] == "goslim_path":
+            gs_path = arg[1]
+        if arg[0] == "go_path":
+            go_path = arg[1]
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
@@ -552,14 +554,11 @@ def main():
     if not ap.no_panoct:
         logging.info("Master: Performing PanOCT analysis of dataset.")
         panoct_default_args = []
-        panoct_extra_args = []
         for arg in cp.items("PanOCT_settings"):
             if arg[1]:
                 panoct_default_args.append(arg[1])
         if ap.refine:
             panoct_default_args.append(True)
-        if panoct_extra_args:
-            pass
         else:
             PanOCTHandler(*panoct_default_args)
     else:
@@ -567,16 +566,16 @@ def main():
 
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
-        if sys.platform != "linux":
+        if not sys.platform.startswith("linux"):
             print "InterProScan is not supported on non-Linux operating systems. Cannot run InterProScan analysis."
             print "See https://github.com/ebi-pf-team/interproscan/wiki for more information."
             pass
         else:
-            IPSHandler()
+            IPSHandler(ip_path)
 
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:
-        GOHandler(ap.refine)
+        GOHandler(go_path, gs_path, ap.refine)
         pass
 
     # If enabled, run selection analysis using yn00.

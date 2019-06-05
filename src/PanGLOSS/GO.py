@@ -2,6 +2,7 @@
 """
 
 """
+import os
 import multiprocessing as mp
 import subprocess as sp
 from csv import reader
@@ -9,17 +10,18 @@ from csv import reader
 from Tools import Flatten, ParseMatchtable, TryMkDirs
 
 
-def RunInterProScan(allprot, cores=None):
+def RunInterProScan(allprot, ip_path, cores=None):
     """
     Remove asterisks from sequences in your pangenome dataset via sed, and then run InterProScan on this modified
     dataset using n number of threads. Preferably the user should have IPS data for their dataset generated
     themselves via some HPC setup.
     """
+    prot_path = os.getcwd() + allprot
     ips_input = open("ips.db", "w")
-    sp.call(["sed", "s/\*//g", allprot], stdout=ips_input)
+    sp.call(["sed", "s/\*//g", prot_path], stdout=ips_input)
     if not cores:
         cores = mp.cpu_count() - 1
-    sp.call(["sh", "interproscan-5.34-73.0/interproscan.sh", "--appl", "Pfam",
+    sp.call(["sh", ip_path, "--appl", "Pfam",
              "-goterms", "-i", "ips.db", "-o", "ips.output.tsv", "-f", "tsv", "-cpu", str(cores)])
 
 
