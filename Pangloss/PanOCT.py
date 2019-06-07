@@ -13,7 +13,7 @@ from Tools import ConcatenateDatasets, ClusterMerge, Flatten, MultipleInsert, Pa
 
 def RunPanOCT(fasta_db, attributes, blast, genome_list, **kwargs):
     """
-    Run PanOCT analysis of gene model dataset. By default, PanGLOSS runs PanOCT with the default parameters
+    Run PanOCT analysis of gene model dataset. By default, Pangloss runs PanOCT with the default parameters
     without specifiying anything.
     """
     panoct_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "/panoct.pl"

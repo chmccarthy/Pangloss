@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-PanGuess: gene prediction for PanGLOSS.
+PanGuess: gene prediction for Pangloss.
 
 PanGuess is a gene prediction pipeline used to generate protein and genomic
 location data for pangenomic analysis of eukaryotes using Pangloss. PanGuess

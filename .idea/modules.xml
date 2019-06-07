@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/PanGLOSS.iml" filepath="$PROJECT_DIR$/.idea/PanGLOSS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Pangloss.iml" filepath="$PROJECT_DIR$/.idea/Pangloss.iml" />
     </modules>
   </component>
 </project>

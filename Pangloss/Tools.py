@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Short functions used throughout PanGLOSS and PanGuess.
+Short functions used throughout Pangloss and PanGuess.
 
-Functions imported explictly via "from PanGLOSS.Tools import <name>".
+Functions imported explictly via "from Pangloss.Tools import <name>".
 """
 
 from __future__ import division

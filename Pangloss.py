@@ -10,9 +10,13 @@ See Pangloss/README.md for more information.
 To-do:
     - Improve logging.
     - Seriously improve config file!
-    - Test IPS pipeline fully.
+    - Write manual!
 
 Recent changes:
+    v0.9.0 (June 2019)
+    - Tested out InterProScan and GOATools pipelines.
+    - Changed how UpSet plots are generated, now done through Cairo (on Mac at least).
+
     v0.8.0 (May 2019)
     - Rejigged when exactly amino acid, nucleotide and attribute datasets are concatenated.
     - Loads of changes to R scripts.
@@ -22,7 +26,7 @@ Recent changes:
     - Changed --fillgaps to --refine to reflect output matchtable.
     - Added percentage score threshold of ≥90% to Exonerate gene model prediction in place of sequence coverage.
     - Added BUSCO assessment of gene model set completedness.
-    - Added option for running InterProScan analysis of dataset within PanGLOSS.
+    - Added option for running InterProScan analysis of dataset within Pangloss.
     - Fully implemented yn00 selection analysis and summary generation for full datasets.
     - Moved cores check out of modules and into master script.
     - Fully incorporated paths from config file into script and set default config file.
@@ -52,7 +56,7 @@ Recent changes:
     - Added --yn00 flag to command line.
 
     v0.3.0 (February 2019)
-    - PanGLOSS now requires Biopython >1.73 for correct handling and parsing of SearchIO objects in BLASTAll.
+    - Pangloss now requires Biopython >1.73 for correct handling and parsing of SearchIO objects in BLASTAll.
     - Added in BLASTAll module to handle (optional) all-vs.-all BLASTp searches for PanOCT.
     - Added in PanOCT module to handle PanOCT analysis with default parameters.
     - Redesigned workflow to allow user to solely carry out gene model prediction.
@@ -65,7 +69,7 @@ Recent changes:
     - Incorporated logging.
 
     v0.1.0 (January 2019)
-    - Constructed basic version of PanGLOSS-compatible config file.
+    - Constructed basic version of Pangloss-compatible config file.
     - Added config file and command line parsers.
     - Rewrote PanGuess as module, and changed how it's handled from master script.
     - Created master script based on old pangenome pipelines from 2017-18.
@@ -80,8 +84,8 @@ from argparse import ArgumentParser
 from datetime import datetime
 from glob import glob
 
-from PanGLOSS import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
-from PanGLOSS.Tools import ConcatenateDatasets
+from Pangloss import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
+from Pangloss.Tools import ConcatenateDatasets
 
 
 def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
@@ -431,7 +435,7 @@ def CmdLineParser():
                                                          "within accessory genome of a pangenome dataset.")
 
     # Add mandatory positional argument for path to config file (default will be the .ini file in /src).
-    ap.add_argument("CONFIG_FILE", action="store", nargs="?", help="Path to PanGLOSS configuration file.",
+    ap.add_argument("CONFIG_FILE", action="store", nargs="?", help="Path to Pangloss configuration file.",
                     default=os.path.dirname(os.path.realpath(sys.argv[0])) + "/config.ini")
 
     # Parse and return args.
@@ -455,7 +459,7 @@ def main():
     """
     # Create logfile and assign it to all child modules.
     start_time = datetime.now()
-    logging.basicConfig(filename="PanGLOSS_Run_{0}.log".format(str(start_time).replace(" ", "_")),
+    logging.basicConfig(filename="Pangloss_Run_{0}.log".format(str(start_time).replace(" ", "_")),
                         level=logging.INFO, format="%(asctime)s: %(levelname)s: %(message)s")
 
     # Create parser objects.
@@ -531,9 +535,9 @@ def main():
 
         # Allow program to finish after gene prediction and (optionally) QC/BUSCO if --pred_only is enabled.
         if ap.pred_only:
-            logging.info("Master: Finishing PanGLOSS (--pred_only enabled). To run remaining steps with your own "
-                         "all-vs.-all BLAST data, run PanGLOSS with the --no_pred and --no_blast flags.")
-            logging.info("Master: PanGLOSS finished in {0}.".format(str(datetime.now() - start_time)))
+            logging.info("Master: Finishing Pangloss (--pred_only enabled). To run remaining steps with your own "
+                         "all-vs.-all BLAST data, run Pangloss with the --no_pred and --no_blast flags.")
+            logging.info("Master: Pangloss finished in {0}.".format(str(datetime.now() - start_time)))
             sys.exit(0)
     else:
         logging.info("Master: Skipped gene prediction steps (--nopred enabled).")
