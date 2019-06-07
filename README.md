@@ -1,4 +1,4 @@
-# PanGLOSS
+# Pangloss
 
 
 ## Requirements and dependencies
