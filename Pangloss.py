@@ -271,7 +271,6 @@ def PanOCTHandler(fasta_db, attributes, blast, tags, gaps=False, **kwargs):
         PanOCT.PanOCTOutputHandler()
         PanOCT.GenerateClusterFASTAs("genomes/genomes.txt", gaps)
     else:
-        pass
         PanOCT.PanOCTOutputHandler()
         PanOCT.GenerateClusterFASTAs("genomes/genomes.txt")
 
@@ -562,9 +561,11 @@ def main():
             if arg[1]:
                 panoct_default_args.append(arg[1])
         if ap.refine:
+            logging.info("Master: Refine enabled.")
             panoct_default_args.append(True)
         else:
-            PanOCTHandler(*panoct_default_args)
+            pass
+        PanOCTHandler(*panoct_default_args)
     else:
         logging.info("Master: Skipping PanOCT analysis (--no_panoct enabled).")
 
@@ -580,7 +581,6 @@ def main():
     # If enabled, run GO-slim enrichment analysis on core and accessory datasets using GOATools.
     if ap.go:
         GOHandler(go_path, gs_path, ap.refine)
-        pass
 
     # If enabled, run selection analysis using yn00.
     if ap.yn00:
