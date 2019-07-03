@@ -7,10 +7,15 @@
 ## Import and settings statements.
 library(Cairo)
 library(UpSetR)
-x11(type="cairo")
 args = commandArgs(trailingOnly=TRUE)
 setEPS()
-cairo_ps("UpSet.eps", height=8.5, width=8.5)
+if (Sys.info()["sysname"] == "Darwin")
+{
+  x11(type="cairo")
+  cairo_ps("UpSet.eps", height=8.5, width=8.5)
+} else {
+  postscript("UpSet.eps", height=8.5, width=8.5)
+}
 
 ## This script is run from within Pangloss as "UpSet.R [matchtable] [tags]",
 ## so we parse these here.
