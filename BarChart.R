@@ -50,7 +50,10 @@ p <-ggplot(data = df, aes(x = Size, y = Count, fill = scale)) +
   annotate("text", x = length(df$Count) / 4, y = Inf, label = chao_label, 
            hjust = 0, vjust = 2.5) +
   geom_text(aes(label = as.character(Count)), vjust=-0.5) +
-  scale_x_continuous(breaks = df$Size)
+  scale_x_continuous(breaks = df$Size) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, sum(df$Count))) +
+  labs(x = "Cluster size", y = "# of clusters", fill = "Size") +
+  theme_classic()
 
 ## Write bar chart plot to file and close.
 p
