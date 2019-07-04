@@ -2,26 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/PanGLOSS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pangloss.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Pangloss.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Pangloss.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Karyotype.R" beforeDir="false" afterPath="$PROJECT_DIR$/Karyotype.R" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/BLASTAll.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/BLASTAll.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/BUSCO.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/BUSCO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/ExonerateGene.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/ExonerateGene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/GO.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/GO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/Karyotype.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/Karyotype.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/PAML.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/PAML.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/PanGuess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/PanGuess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/PanOCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/PanOCT.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/QualityCheck.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/QualityCheck.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/Size.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/Size.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/Tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/Tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/UpSet.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/UpSet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PanGLOSS_Master.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config.ini" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,14 +23,52 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Pangloss.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="86" selection-start-line="17" selection-start-column="86" selection-end-line="17" selection-end-column="86" />
-              <folding>
-                <element signature="e#3689#3703#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="720">
+              <caret line="48" column="101" selection-start-line="48" selection-start-column="101" selection-end-line="48" selection-end-column="101" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Karyotype.R">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="735">
+              <caret line="49" column="55" lean-forward="true" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/UpSet.R">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BarChart.R">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="25" column="16" lean-forward="true" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pangloss/GO.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="16" column="15" lean-forward="true" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/RingChart.R">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="32" lean-forward="true" selection-start-column="32" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -137,6 +159,7 @@
         <option value="$PROJECT_DIR$/PanGLOSS_Master.py" />
         <option value="$PROJECT_DIR$/BarChart.R" />
         <option value="$PROJECT_DIR$/Pangloss.py" />
+        <option value="$PROJECT_DIR$/Karyotype.R" />
       </list>
     </option>
   </component>
@@ -153,6 +176,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -160,11 +184,15 @@
               <item name="Pangloss" type="b2602c69:ProjectViewProjectNode" />
               <item name="Pangloss" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Pangloss" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Pangloss" type="462c0819:PsiDirectoryNode" />
+              <item name="Pangloss" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -194,52 +222,6 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.PanGLOSS_Master">
-    <configuration default="true" type="DjangoTestsConfigurationType">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="" />
-      <option name="SETTINGS_FILE" value="" />
-      <option name="CUSTOM_SETTINGS" value="false" />
-      <option name="USE_OPTIONS" value="false" />
-      <option name="OPTIONS" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="PyBehaveRunConfigurationType" factoryName="Behave">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="ADDITIONAL_ARGS" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="PyLettuceRunConfigurationType" factoryName="Lettuce">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="ADDITIONAL_ARGS" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="PanGLOSS (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Pangloss" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -306,87 +288,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Python.FlaskServer" factoryName="Flask server">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="launchJavascriptDebuger" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
-      <module name="Pangloss" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.PanGLOSS (1)" />
       <item itemvalue="Python.PanGLOSS" />
@@ -438,11 +339,12 @@
       <workItem from="1559261231119" duration="4757000" />
       <workItem from="1559314077021" duration="1237000" />
       <workItem from="1559568781272" duration="4775000" />
+      <workItem from="1562233938566" duration="2533000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="304160000" />
+    <option name="totallyTimeSpent" value="306693000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -455,9 +357,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.13662376" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.88834953" visible="true" weight="0.13805436" />
       <window_info id="Structure" order="1" weight="0.2274678" />
       <window_info id="Favorites" order="2" sideWeight="0.11165048" side_tool="true" weight="0.17811158" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -651,41 +552,15 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Pangloss.py" />
-    <entry file="file://$PROJECT_DIR$/Pangloss/Tools.py" />
     <entry file="file://$PROJECT_DIR$/PanGuess_v0.1.0.py" />
     <entry file="file://$PROJECT_DIR$/src/PanGuess_v0.1.0.py" />
     <entry file="file://$PROJECT_DIR$/src/get_sequence_from_GTF.pl" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karotype.py" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/FillGaps.py" />
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_model/query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5595">
-          <caret line="386" selection-start-line="386" selection-end-line="386" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_model/hsp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14655">
-          <caret line="993" selection-start-line="993" selection-end-line="993" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_model/hit.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="132" selection-start-line="132" selection-end-line="132" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_model/query.py" />
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_model/hsp.py" />
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_utils.py" />
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/_model/hit.py" />
     <entry file="file://$PROJECT_DIR$/src/PanAnno.py" />
     <entry file="file://$PROJECT_DIR$/src/pam.R" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS.py" />
@@ -723,30 +598,12 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/BLASTAll.py" />
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/BlastIO/blast_tab.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="637" selection-start-line="637" selection-end-line="637" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SearchIO/BlastIO/blast_tab.py" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Karyotype.py" />
     <entry file="file://$PROJECT_DIR$/src/BarChart.R" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanOCT.py" />
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/SeqIO/FastaIO.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/Alphabet/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="393" selection-start-line="393" selection-end-line="393" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/SeqIO/FastaIO.py" />
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/Alphabet/__init__.py" />
     <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/contextlib.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -754,13 +611,7 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/_parse_yn00.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="74" selection-start-line="74" selection-end-line="74" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/_parse_yn00.py" />
     <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
@@ -768,13 +619,7 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/yn00.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="104" selection-start-line="104" selection-end-line="104" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/Bio/Phylo/PAML/yn00.py" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/PanGuess.py" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/Tools.py" />
     <entry file="file://$PROJECT_DIR$/src/UpSet.R" />
@@ -782,29 +627,43 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
     <entry file="file://$PROJECT_DIR$/src/config.ini" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS/GO.py" />
     <entry file="file://$PROJECT_DIR$/src/PanGLOSS_Master.py" />
-    <entry file="file://$PROJECT_DIR$/Karyotype.R">
+    <entry file="file://$PROJECT_DIR$/Pangloss.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
+        <state relative-caret-position="720">
+          <caret line="48" column="101" selection-start-line="48" selection-start-column="101" selection-end-line="48" selection-end-column="101" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RingChart.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="32" lean-forward="true" selection-start-column="32" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/BarChart.R">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="51" column="12" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
+        <state relative-caret-position="375">
+          <caret line="25" column="16" lean-forward="true" selection-start-line="25" selection-start-column="16" selection-end-line="25" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pangloss.py">
+    <entry file="file://$PROJECT_DIR$/Pangloss/GO.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="86" selection-start-line="17" selection-start-column="86" selection-end-line="17" selection-end-column="86" />
-          <folding>
-            <element signature="e#3689#3703#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="165">
+          <caret line="16" column="15" lean-forward="true" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Karyotype.R">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="735">
+          <caret line="49" column="55" lean-forward="true" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpSet.R">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>

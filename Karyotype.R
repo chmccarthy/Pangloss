@@ -24,8 +24,6 @@ color.bar <- function(lut, min, max=-min, nticks=11, ticks=seq(min, max, len=nti
 library(karyoploteR)
 library(Hmisc)
 library(regioneR)
-library(regioneR)
-library(regioneR)
 setEPS()
 args = commandArgs(trailingOnly = TRUE)
 
