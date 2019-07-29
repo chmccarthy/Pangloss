@@ -131,8 +131,11 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
     
     # Loop over each genome and carry out gene model prediction.
     for genome in genomes:
-        # Make tag from genome name.
-        tag = genome.split(".")[0].split("/")[1]
+        # Make tag from genome name (assuming genome name is in the format STRAIN.fna).
+        if "/" in genome:
+            tag = genome.split(".")[0].split("/")[1]
+        else:
+            tag = genome.split(".")[0]
         logging.info("Master: Running gene model prediction for {0}.".format(tag))
 
         if not skip:
@@ -198,7 +201,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         
         # Compress temporary folders and finish up.
         logging.info("Master: Compressing temporary folders for {0}.".format(genome))
-        PanGuess.TarballGenePredictionDirs(workdir, genome)
+        #PanGuess.TarballGenePredictionDirs(workdir, genome)
         logging.info("Master: Finished gene model predction for {0}.".format(genome))
 
     ConcatenateDatasets(genomelist)

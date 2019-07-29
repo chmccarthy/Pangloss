@@ -17,8 +17,12 @@ def RunPanOCT(fasta_db, attributes, blast, genome_list, **kwargs):
     without specifiying anything.
     """
     panoct_path = os.path.dirname(os.path.realpath(sys.argv[0])) + "/panoct.pl"
-
-    tag_list = [i.strip("\n").split(".")[0].split("/")[1] for i in open(genome_list).readlines()]
+    tag_list = []
+    for genome in open(genome_list).readlines():
+        if "/" in genome:
+            tag_list.append(genome.split(".")[0].split("/")[1])
+        else:
+            tag_list.append(genome.split(".")[0])
     with open("./panoct_tags.txt", "w") as tag_file:
         tag_file.write("\n".join([str(tag) for tag in tag_list]))
 

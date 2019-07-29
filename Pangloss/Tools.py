@@ -93,7 +93,12 @@ def ConcatenateDatasets(genomes):
     Concatenate all datasets and construct BLASTp database for gene model set.
     """
     # Generate cat commands for the three full datasets we have.
-    tags = [line.strip("\n").split(".")[0].split("/")[1] for line in open(genomes)]
+    tags = []
+    for line in open(genomes):
+        if "/" in line:
+            tags.append(line.strip("\n").split(".")[0].split("/")[1])
+        else:
+            tags.append(line.strip("\n").split(".")[0])
     nucl_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".nucl" for tag in tags]
     prot_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".faa" for tag in tags]
     att_cmd = ["cat"] + ["./gm_pred/sets/" + tag + ".attributes" for tag in tags]
