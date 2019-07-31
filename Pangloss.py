@@ -156,16 +156,16 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         
         # Run prediction using GeneMark-ES.
         logging.info("Master: Running gene model prediction for {0} using GeneMark-ES.".format(genome))
-        genemark_gtf = PanGuess.RunGeneMark(genome, gm_path, gm_branch, cores)
+        #genemark_gtf = PanGuess.RunGeneMark(genome, gm_path, gm_branch, cores)
         
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
         logging.info("Master: Converting GeneMark GTF data to attribute data.")
-        genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
+        #genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
         
         # Merge unique gene model calls between Exonerate and GeneMark-ES.
         if not skip:
             logging.info("Master: Merging Exonerate and GeneMark-ES gene calls.")
-            merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
+        #    merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
         else:
             pass
             merged_attributes = genemark_attributes
@@ -173,7 +173,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
 
         # Clean up GeneMark-ES files and folders.
         logging.info("Master: Tidying up GeneMark-ES temporary files.")
-        PanGuess.MoveGeneMarkFiles(workdir, genome)
+        #PanGuess.MoveGeneMarkFiles(workdir, genome)
         
         # Extract NCRs into list.
         logging.info("Master: Extracting non-coding regions of {0} for TransDecoder analysis.".format(genome))

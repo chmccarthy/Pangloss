@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57d16903-bc2f-49e4-9763-41b77ec4266c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pangloss/BUSCO.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss/BUSCO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pangloss.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pangloss.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,11 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Pangloss.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4785">
-              <caret line="329" column="23" selection-start-line="329" selection-start-column="23" selection-end-line="329" selection-end-column="23" />
+            <state relative-caret-position="450">
+              <caret line="179" column="9" lean-forward="true" selection-start-line="179" selection-start-column="9" selection-end-line="179" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -48,7 +47,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Pangloss/BUSCO.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="315">
@@ -187,9 +186,9 @@
         <option value="$PROJECT_DIR$/src/PanGLOSS_Master.py" />
         <option value="$PROJECT_DIR$/PanGLOSS_Master.py" />
         <option value="$PROJECT_DIR$/BarChart.R" />
-        <option value="$PROJECT_DIR$/Pangloss.py" />
         <option value="$PROJECT_DIR$/Karyotype.R" />
         <option value="$PROJECT_DIR$/Pangloss/BUSCO.py" />
+        <option value="$PROJECT_DIR$/Pangloss.py" />
       </list>
     </option>
   </component>
@@ -374,7 +373,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="307106000" />
+    <option name="totallyTimeSpent" value="307174000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -667,13 +666,6 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pangloss.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4785">
-          <caret line="329" column="23" selection-start-line="329" selection-start-column="23" selection-end-line="329" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Pangloss/Tools.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1455">
@@ -722,6 +714,13 @@ q_missing = set(filter(lambda tag: tag not in s_present, tags))</expression-stri
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pangloss.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="179" column="9" lean-forward="true" selection-start-line="179" selection-start-column="9" selection-end-line="179" selection-end-column="9" />
         </state>
       </provider>
     </entry>
