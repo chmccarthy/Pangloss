@@ -177,27 +177,27 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         
         # Extract NCRs into list.
         logging.info("Master: Extracting non-coding regions of {0} for TransDecoder analysis.".format(genome))
-        noncoding = PanGuess.ExtractNCR(exonerate_attributes, genome)
+        #noncoding = PanGuess.ExtractNCR(exonerate_attributes, genome)
         
         # Run TransDecoder on NCRs.
         logging.info("Master: Running TransDecoder on non-coding regions of {0}.".format(genome))
-        tdir = PanGuess.RunTransDecoder(noncoding, tp_path, tl_path, workdir, genome, td_len)
+        #tdir = PanGuess.RunTransDecoder(noncoding, tp_path, tl_path, workdir, genome, td_len)
         
         # Move TransDecoder files.
         logging.info("Master: Tidying up TransDecoder temporary files.")
-        PanGuess.MoveTransDecoderFiles(tdir)
+        #PanGuess.MoveTransDecoderFiles(tdir)
         
         # Extract TransDecoder attributes.
         logging.info("Master: Converting TransDecoder GTF data to attribute data.")
-        trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
+        #trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
 
         # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
         logging.info("Master: Merging all remmaining gene calls for {0}.".format(genome))
-        full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
+        #full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
         
         # Write out gene set, protein set and attributes set.
         logging.info("Master: Writing out datasets for {0}.".format(genome))
-        PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
+        PanGuess.ConstructGeneModelSets(exonerate_attributes, exonerate_genes, workdir, genome, tag)
         
         # Compress temporary folders and finish up.
         logging.info("Master: Compressing temporary folders for {0}.".format(genome))
