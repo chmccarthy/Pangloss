@@ -14,9 +14,9 @@ def RunBUSCO(buscopath, lineagepath, gene_sets):
     # Don't rewrite work directory if already there.
     TryMkDirs(bdir)
 
-    for set in gene_sets:
-        wd = set.split("/")[-1]
-        cmd = ["python", buscopath, "-i", set,  "-l", lineagepath, "-o", "{0}.busco".format(wd), "-m", "prot"]
+    for gene_set in gene_sets:
+        wd = gene_set.split("/")[-1]
+        cmd = [buscopath, "-i", gene_set,  "-l", lineagepath, "-o", "{0}.busco".format(wd), "-m", "prot"]
         print "Running BUSCO"
         sp.call(cmd)
         shutil.move("run_{0}.busco".format(wd), bdir)
