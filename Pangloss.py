@@ -168,7 +168,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         #    merged_attributes = PanGuess.MergeAttributes(exonerate_attributes, genemark_attributes)
         else:
             pass
-            merged_attributes = genemark_attributes
+            #merged_attributes = genemark_attributes
             del genemark_attributes
 
         # Clean up GeneMark-ES files and folders.
@@ -177,7 +177,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         
         # Extract NCRs into list.
         logging.info("Master: Extracting non-coding regions of {0} for TransDecoder analysis.".format(genome))
-        noncoding = PanGuess.ExtractNCR(merged_attributes, genome)
+        noncoding = PanGuess.ExtractNCR(exonerate_attributes, genome)
         
         # Run TransDecoder on NCRs.
         logging.info("Master: Running TransDecoder on non-coding regions of {0}.".format(genome))
