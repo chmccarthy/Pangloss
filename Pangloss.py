@@ -79,6 +79,7 @@ import logging
 import os
 import sys
 import multiprocessing as mp
+from Bio.Data.CodonTable import TranslationError
 from ConfigParser import SafeConfigParser
 from argparse import ArgumentParser
 from datetime import datetime
@@ -282,6 +283,9 @@ def IPSHandler(ips_path, cores=None):
     """
     Run InterProScan annotation of pangenome dataset. Note, this only works on Linux and won't run otherwise.
     """
+    # Make GO folder, unless one already exists.
+    GO.MakeWorkingDirs()
+
     GO.RunInterProScan("/gm_pred/sets/allprot.db", ips_path, cores)
 
 
@@ -289,11 +293,9 @@ def GOHandler(go_path, gs_path, refine=False):
     """
     Run GO-slim enrichment analysis on pangenome datasets using GOATools.
     """
-    # Make GO folder, unless one already exists.
-    GO.MakeWorkingDirs()
 
     # Generate dictionary for IPS annotation data.
-    annos = GO.GenerateAnnoDict("ips.output.tsv")
+    annos = GO.GenerateAnnoDict("go/ips.output.tsv")
 
     # Generate GO associations and populations files.
     GO.GenerateAssociations(annos)
@@ -319,10 +321,17 @@ def PAMLHandler(ml_path, yn_path, refine=False):
     else:
         clusters = glob("./panoct/clusters/core/fna/Core*.fna") + glob("./panoct/clusters/acc/fna/Acc*.fna")
     for cluster in clusters:
-        trans_seqs = PAML.TranslateCDS(cluster)
-        prot_alignment = PAML.MUSCLEAlign(ml_path, trans_seqs)
-        nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
-        PAML.RunYn00(yn_path, nucl_alignment)
+        try:
+            trans_seqs = PAML.TranslateCDS(cluster)
+        except TranslationError as e:
+            print "{0}, {1} has unusual frameshift mutation and can't be run through yn00.".format(e, cluster)
+            trans_seqs = None
+        if trans_seqs:
+            prot_alignment = PAML.MUSCLEAlign(ml_path, trans_seqs)
+            nucl_alignment = PAML.PutGaps(prot_alignment, cluster)
+            PAML.RunYn00(yn_path, nucl_alignment)
+        else:
+            pass
 
     PAML.SummarizeYn00(refine)
 

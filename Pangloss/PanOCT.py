@@ -41,56 +41,58 @@ def FillGaps(blast, matchtable, seqs, tags):
     """
     # Load core and accessory cluster sets, BLAST+ data and sequence data.
     core, acc = ParseMatchtable(matchtable)
-    searches = SearchIO.index(blast, "blast-tab")
-    idx = SeqIO.index(seqs, "fasta")
-    tags = [line.strip("\n") for line in open(tags)]
-
-    # Get total number of strains in dataset by taking the length of any accessory cluster list (including Nones).
-    total = len(acc[acc.keys()[0]])
     new_clusters = {}
+    if acc:
+        searches = SearchIO.index(blast, "blast-tab")
+        tags = [line.strip("\n") for line in open(tags)]
 
-    # Loop over every accessory cluster.
-    og_acc = acc.keys()
-    ignore = []
-    for q_cluster_id in og_acc:
-        print "{0} out of {1} clusters searched".format(og_acc.index(q_cluster_id), len(og_acc))
-        if q_cluster_id not in ignore:
-            current_acc = [key for key in acc.keys() if key not in ignore]
-            if q_cluster_id in current_acc:
-                q_cluster = acc[q_cluster_id]
-                q_pos = [pos for pos, gene in enumerate(q_cluster) if gene]
-                q_present = set([tags[pos] for pos in q_pos])
-                q_members = set(sorted(filter(lambda x: x is not None, q_cluster)))
-                q_missing = set(filter(lambda tag: tag not in q_present, tags))
-                q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
-                q_first_hits = set(filter(lambda x: x is not None, Flatten(q_blasts.values())))
-                q_query = MultipleInsert(list(q_first_hits), tags)
-                if q_query in acc.values():
-                    s_cluster_id = acc.keys()[acc.values().index(q_query)]
-                    if s_cluster_id not in ignore:
-                        s_cluster = acc[s_cluster_id]
-                        s_members = set(sorted(filter(lambda x: x is not None, s_cluster)))
-                        if s_members == q_first_hits:
-                            s_present = set([gene.split("|")[0] for gene in s_members])
-                            s_missing = set(filter(lambda tag: tag not in s_present, tags))
-                            s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
-                            s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
-                            reciprocal = Reciprocal(q_members, q_first_hits, s_members, s_first_hits)
-                            if reciprocal:
-                                new_cluster = ClusterMerge(q_cluster, s_cluster)
-                                new_clusters[q_cluster_id] = new_cluster
-                                acc.pop(q_cluster_id, "None")
-                                acc.pop(s_cluster_id, "None")
-                                merged = True
-                                print "clusters merged: {0} {1}\n".format(str(q_cluster_id), str(s_cluster_id))
-                                print "size of clusters merged: {0} {1}\n".format(len(q_members), len(s_members))
-                                ignore = ignore + [q_cluster_id, s_cluster_id]
-        else:
-            pass
+        # Loop over every accessory cluster.
+        og_acc = acc.keys()
+        ignore = []
+        for q_cluster_id in og_acc:
+            print "{0} out of {1} clusters searched".format(og_acc.index(q_cluster_id), len(og_acc))
+            if q_cluster_id not in ignore:
+                current_acc = [key for key in acc.keys() if key not in ignore]
+                if q_cluster_id in current_acc:
+                    q_cluster = acc[q_cluster_id]
+                    q_pos = [pos for pos, gene in enumerate(q_cluster) if gene]
+                    q_present = set([tags[pos] for pos in q_pos])
+                    q_members = set(sorted(filter(lambda x: x is not None, q_cluster)))
+                    q_missing = set(filter(lambda tag: tag not in q_present, tags))
+                    q_blasts = QueryClusterFirstHits(q_cluster, searches, 30, q_missing)
+                    q_first_hits = set(filter(lambda x: x is not None, Flatten(q_blasts.values())))
+                    q_query = MultipleInsert(list(q_first_hits), tags)
+                    if q_query in acc.values():
+                        s_cluster_id = acc.keys()[acc.values().index(q_query)]
+                        if s_cluster_id not in ignore:
+                            s_cluster = acc[s_cluster_id]
+                            s_members = set(sorted(filter(lambda x: x is not None, s_cluster)))
+                            if s_members == q_first_hits:
+                                s_present = set([gene.split("|")[0] for gene in s_members])
+                                s_missing = set(filter(lambda tag: tag not in s_present, tags))
+                                s_blasts = QueryClusterFirstHits(s_cluster, searches, 30, s_missing)
+                                s_first_hits = set(filter(lambda x: x is not None, Flatten(s_blasts.values())))
+                                reciprocal = Reciprocal(q_members, q_first_hits, s_members, s_first_hits)
+                                if reciprocal:
+                                    new_cluster = ClusterMerge(q_cluster, s_cluster)
+                                    new_clusters[q_cluster_id] = new_cluster
+                                    acc.pop(q_cluster_id, "None")
+                                    acc.pop(s_cluster_id, "None")
+                                    print "clusters merged: {0} {1}\n".format(str(q_cluster_id), str(s_cluster_id))
+                                    print "size of clusters merged: {0} {1}\n".format(len(q_members), len(s_members))
+                                    ignore = ignore + [q_cluster_id, s_cluster_id]
+            else:
+                pass
+    else:
+        pass
 
     # Write new matchtable to file.
     with open("refined_matchtable.txt", "w") as out:
-        for comp in [core, acc, new_clusters]:
+        if acc:
+            dataset = [core, acc, new_clusters]
+        else:
+            dataset = [core]
+        for comp in dataset:
             for cluster in comp:
                 line = ["----------" if not a else str(a) for a in comp[cluster]]
                 out.write("\t".join(line) + "\n")

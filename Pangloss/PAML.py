@@ -8,6 +8,7 @@ import os
 
 from Bio import AlignIO, SeqIO
 from Bio.Phylo.PAML import yn00
+from Bio.Phylo.PAML._paml import PamlError
 from glob import glob
 
 from Tools import StringMUSCLE, Untranslate
@@ -64,7 +65,13 @@ def RunYn00(yn_path, alignment):
     """
     yn = yn00.Yn00(alignment=alignment, out_file="{0}.yn00".format(alignment))
     yn.set_options(verbose=0, icode=0, weighting=0, commonf3x4=0)
-    yn.run(ctl_file=None, command=yn_path, parse=False)
+    try:
+        yn.run(ctl_file=None, command=yn_path, parse=False)
+    except PamlError as e:
+        print "{0}, {1} may have internal stop codons.".format(e, alignment)
+        pass
+
+
 
 
 def SummarizeYn00(refine=False):
@@ -97,7 +104,7 @@ def SummarizeYn00(refine=False):
                         elif pair["omega"] > 1.0:
                             with_omega = with_omega + 1
                 results[cl_number]["Omega > 1"] = with_omega / 2
-        except IndexError:
+        except (IndexError, ValueError):
             pass
 
     with open("./panoct/clusters/yn00_summary.txt", "w") as output:

@@ -10,6 +10,13 @@ from csv import reader
 from Tools import Flatten, ParseMatchtable, TryMkDirs
 
 
+def MakeWorkingDirs():
+    """
+    Tries to make work directory if not already present.
+    """
+    tdir = "go"
+    TryMkDirs(tdir)
+
 def RunInterProScan(allprot, ip_path, cores=None):
     """
     Remove asterisks from sequences in your pangenome dataset via sed, and then run InterProScan on this modified
@@ -17,20 +24,12 @@ def RunInterProScan(allprot, ip_path, cores=None):
     themselves via some HPC setup.
     """
     prot_path = os.getcwd() + allprot
-    ips_input = open("ips.db", "w")
+    ips_input = open("go/ips.db", "w")
     sp.call(["sed", "s/\*//g", prot_path], stdout=ips_input)
     if not cores:
         cores = mp.cpu_count() - 1
-    sp.call(["sh", ip_path, "--appl", "Pfam",
-             "-goterms", "-i", "ips.db", "-o", "ips.output.tsv", "-f", "tsv", "-cpu", str(cores)])
-
-
-def MakeWorkingDirs():
-    """
-    Tries to make work directory if not already present.
-    """
-    tdir = "go"
-    TryMkDirs(tdir)
+    sp.call([ip_path, "--appl", "Pfam", "-goterms", "-i",
+             "./go/ips.db", "-o", "./go/ips.output.tsv", "-f", "tsv", "-cpu", str(cores)])
 
 
 def GenerateAnnoDict(ips):
@@ -87,14 +86,17 @@ def GenerateSlimData(assocs, go_obo, slim_obo):
 
 def CoreEnrichment(go_obo, core_pop, full_pop, slimmed_assoc):
     """
+    Run enrichment analysis of core genome (if it exists).
     """
-    sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, core_pop,
-             full_pop, slimmed_assoc, "--outfile=core_enrichment.tsv"])
+    if os.stat(core_pop).st_size > 0:
+        sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, core_pop,
+                full_pop, slimmed_assoc, "--outfile=./go/core_enrichment.tsv"])
 
 
 def AccessoryEnrichment(go_obo, acc_pop, full_pop, slimmed_assoc):
     """
-
+    Run enrichment analysis of accessory genome (if it exists).
     """
-    sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, acc_pop,
-             full_pop, slimmed_assoc, "--outfile=noncore_enrichment.tsv"])
+    if os.stat(acc_pop).st_size > 0:
+        sp.call(["find_enrichment.py", "--pval=0.05", "--method=fdr", "--obo", go_obo, acc_pop,
+                full_pop, slimmed_assoc, "--outfile=./go/noncore_enrichment.tsv"])
