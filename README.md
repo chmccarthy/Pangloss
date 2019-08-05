@@ -5,4 +5,4 @@
 
 Pangloss is a pipeline intended primarily for performing pan-genome analysis of microbial eukaryotes such as yeasts and other fungi. Pangloss can perform gene prediction using up to three different prediction methods, pan-genome construction using PanOCT and a bunch of downstream functional annotation analyses and data visualization analyses. For the full range of stuff that Pangloss can do, a walkthrough of how to run Pangloss and information on how to install various dependencies Pangloss needs to run - [see the included manual](Pangloss_Manual.pdf).
 
-
+Any bugs or problems feel free to email me at Charley (dot) McCarthy (at) mu (dot) ie, or raise an issue here on the repo.
