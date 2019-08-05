@@ -1,0 +1,2 @@
+genomes/Strain_A.fna
+genomes/Strain_B.fna

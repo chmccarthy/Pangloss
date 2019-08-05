@@ -1,0 +1,2709 @@
+format-version: 1.2
+subsetdef: gocheck_do_not_annotate "Term not to be used for direct annotation"
+subsetdef: gocheck_do_not_manually_annotate "Term not to be used for direct manual annotation"
+subsetdef: goslim_agr "AGR slim"
+subsetdef: goslim_aspergillus "Aspergillus GO slim"
+subsetdef: goslim_candida "Candida GO slim"
+subsetdef: goslim_chembl "ChEMBL protein targets summary"
+subsetdef: goslim_flybase_ribbon "FlyBase Drosophila GO ribbon slim"
+subsetdef: goslim_generic "Generic GO slim"
+subsetdef: goslim_metagenomics "Metagenomics GO slim"
+subsetdef: goslim_mouse "Mouse GO slim"
+subsetdef: goslim_pir "PIR GO slim"
+subsetdef: goslim_plant "Plant GO slim"
+subsetdef: goslim_pombe "Fission yeast GO slim"
+subsetdef: goslim_synapse "synapse GO slim"
+subsetdef: goslim_yeast "Yeast GO slim"
+synonymtypedef: syngo_official_label "label approved by the SynGO project"
+synonymtypedef: systematic_synonym "Systematic synonym" EXACT
+ontology: go/subsets/goslim_generic
+
+[Term]
+id: GO:0000003
+name: reproduction
+namespace: biological_process
+alt_id: GO:0019952
+alt_id: GO:0050876
+def: "The production of new individuals that contain some portion of genetic material inherited from one or more parent organisms." [GOC:go_curators, GOC:isa_complete, GOC:jl, ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+synonym: "reproductive physiological process" EXACT []
+xref: Wikipedia:Reproduction
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0000228
+name: nuclear chromosome
+namespace: cellular_component
+def: "A chromosome that encodes the nuclear genome and is found in the nucleus of a eukaryotic cell during the cell cycle phases when the nucleus is intact." [GOC:dph, GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "nuclear interphase chromosome" NARROW []
+is_a: GO:0005694 ! chromosome
+intersection_of: GO:0005694 ! chromosome
+intersection_of: part_of GO:0005634 ! nucleus
+relationship: part_of GO:0005634 ! nucleus
+
+[Term]
+id: GO:0000229
+name: cytoplasmic chromosome
+namespace: cellular_component
+def: "A chromosome found in the cytoplasm." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "cytoplasmic interphase chromosome" NARROW []
+is_a: GO:0005694 ! chromosome
+intersection_of: GO:0005694 ! chromosome
+intersection_of: part_of GO:0005737 ! cytoplasm
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0000278
+name: mitotic cell cycle
+namespace: biological_process
+alt_id: GO:0007067
+def: "Progression through the phases of the mitotic cell cycle, the most common eukaryotic cell cycle, which canonically comprises four successive phases called G1, S, G2, and M and includes replication of the genome and the subsequent segregation of chromosomes into daughter cells. In some variant cell cycles nuclear replication or nuclear division may not be followed by cell division, or G1 and G2 phases may be absent." [GOC:mah, ISBN:0815316194, Reactome:69278]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "mitosis" RELATED []
+xref: MIPS_funcat:10.03.01
+xref: MIPS_funcat:10.03.01.01
+xref: Wikipedia:Mitosis
+is_a: GO:0007049 ! cell cycle
+intersection_of: GO:0007049 ! cell cycle
+intersection_of: has_part GO:0140014 ! mitotic nuclear division
+relationship: has_part GO:0140014 ! mitotic nuclear division
+
+[Term]
+id: GO:0000902
+name: cell morphogenesis
+namespace: biological_process
+alt_id: GO:0007148
+alt_id: GO:0045790
+alt_id: GO:0045791
+def: "The developmental process in which the size or shape of a cell is generated and organized." [GOC:clt, GOC:dph, GOC:go_curators, GOC:tb]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "cellular morphogenesis" EXACT []
+xref: MIPS_funcat:40.01
+is_a: GO:0008150 ! biological_process
+relationship: part_of GO:0048856 ! anatomical structure development
+
+[Term]
+id: GO:0002376
+name: immune system process
+namespace: biological_process
+def: "Any process involved in the development or functioning of the immune system, an organismal system for calibrated responses to potential internal or invasive threats." [GO_REF:0000022, GOC:add, GOC:mtg_15nov05]
+comment: Note that this term is a direct child of 'biological_process ; GO:0008150' because some immune system processes are types of cellular process (GO:0009987), whereas others are types of multicellular organism process (GO:0032501). This term was added by GO_REF:0000022.
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+xref: Wikipedia:Immune_system
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0003013
+name: circulatory system process
+namespace: biological_process
+def: "A organ system process carried out by any of the organs or tissues of the circulatory system. The circulatory system is an organ system that moves extracellular fluids to and from tissue within a multicellular organism." [GOC:mtg_cardio]
+subset: goslim_chembl
+subset: goslim_generic
+xref: Wikipedia:Circulatory_system
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0003674
+name: molecular_function
+namespace: molecular_function
+alt_id: GO:0005554
+def: "A molecular process that can be carried out by the action of a single macromolecular machine, usually via direct physical interactions with other molecular entities. Function in this sense denotes an action, or activity, that a gene product (or a complex) performs. These actions are described from two distinct but related perspectives: (1) biochemical activity, and (2) role as a component in a larger system/process." [GOC:pdt]
+comment: Note that, in addition to forming the root of the molecular function ontology, this term is recommended for use for the annotation of gene products whose molecular function is unknown. When this term is used for annotation, it indicates that no information was available about the molecular function of the gene product annotated as of the date the annotation was made; the evidence code "no data" (ND), is used to indicate this. Despite its name, this is not a type of 'function' in the sense typically defined by upper ontologies such as Basic Formal Ontology (BFO). It is instead a BFO:process carried out by a single gene product or complex.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "molecular function" EXACT []
+
+[Term]
+id: GO:0003677
+name: DNA binding
+namespace: molecular_function
+alt_id: GO:0043566
+def: "Any molecular function by which a gene product interacts selectively and non-covalently with DNA (deoxyribonucleic acid)." [GOC:dph, GOC:jl, GOC:tb, GOC:vw]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "microtubule/chromatin interaction" RELATED []
+synonym: "plasmid binding" NARROW []
+synonym: "structure specific DNA binding" RELATED []
+synonym: "structure-specific DNA binding" RELATED []
+xref: MIPS_funcat:16.03.01
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0003700
+name: DNA-binding transcription factor activity
+namespace: molecular_function
+alt_id: GO:0000130
+alt_id: GO:0001071
+alt_id: GO:0001130
+alt_id: GO:0001131
+alt_id: GO:0001151
+alt_id: GO:0001199
+alt_id: GO:0001204
+def: "A protein or a member of a complex that interacts selectively and non-covalently with a specific DNA sequence (sometimes referred to as a motif) within the regulatory region of a gene to modulate transcription. Regulatory regions include promoters (proximal and distal) and enhancers. Genes are transcriptional units, and include bacterial operons." [GOC:txnOH-2018]
+comment: Curator guidance: Note that most DNA-binding transcription factors do not have enzymatic activity. The presence of specific domains known to be present in DNA-binding transcription factors (HOX, GATA etc) should be used to help decide whether a protein is a DNA binding transcription factor or a coregulator. If a protein has an enzymatic activity (for example, ubiquitin ligase, histone acetyl transferase) and no known DNA binding domain, consider annotating to GO:0003712 transcription coregulator activity. Special care should be taken with proteins containing Myb/SANT and ARID domains, since only a subset of proteins containing these domains are DNA-binding transcription factors for specific genes. \nChanged definition see https://github.com/geneontology/go-ontology/issues/15704\nMerged term see https://github.com/geneontology/go-ontology/issues/16534
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "bacterial-type DNA binding transcription factor activity" NARROW []
+synonym: "bacterial-type RNA polymerase core promoter proximal region sequence-specific DNA binding transcription factor activity" NARROW []
+synonym: "bacterial-type RNA polymerase transcription enhancer sequence-specific DNA binding transcription factor activity" NARROW []
+synonym: "bacterial-type RNA polymerase transcription factor activity, metal ion regulated sequence-specific DNA binding" NARROW []
+synonym: "bacterial-type RNA polymerase transcription factor activity, sequence-specific DNA binding" NARROW []
+synonym: "DNA binding transcription factor activity" EXACT []
+synonym: "gene-specific transcription factor activity" EXACT []
+synonym: "metal ion regulated sequence-specific DNA binding bacterial-type RNA polymerase transcription factor activity" NARROW []
+synonym: "metal ion regulated sequence-specific DNA binding transcription factor activity" NARROW []
+synonym: "nucleic acid binding transcription factor activity" BROAD []
+synonym: "sequence-specific DNA binding bacterial-type RNA polymerase transcription factor activity" NARROW []
+synonym: "sequence-specific DNA binding transcription factor activity" EXACT []
+synonym: "transcription factor activity" BROAD []
+synonym: "transcription factor activity, bacterial-type RNA polymerase core promoter proximal region sequence-specific binding" NARROW []
+synonym: "transcription factor activity, bacterial-type RNA polymerase proximal promoter sequence-specific DNA binding" NARROW []
+synonym: "transcription factor activity, bacterial-type RNA polymerase transcription enhancer sequence-specific binding" NARROW []
+synonym: "transcription factor activity, metal ion regulated sequence-specific DNA binding" NARROW []
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+created_by: kchris
+creation_date: 2010-10-21T04:37:54Z
+
+[Term]
+id: GO:0003723
+name: RNA binding
+namespace: molecular_function
+alt_id: GO:0000498
+alt_id: GO:0044822
+def: "Interacting selectively and non-covalently with an RNA molecule or a portion thereof." [GOC:jl, GOC:mah]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "base pairing with RNA" NARROW []
+synonym: "poly(A) RNA binding" RELATED []
+synonym: "poly(A)-RNA binding" RELATED []
+synonym: "poly-A RNA binding" RELATED []
+xref: MIPS_funcat:16.03.03
+xref: Reactome:R-HSA-203922 "Exportin-5 recognizes 3' overhang of pre-miRNA"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0003729
+name: mRNA binding
+namespace: molecular_function
+alt_id: GO:0000499
+def: "Interacting selectively and non-covalently with messenger RNA (mRNA), an intermediate molecule between DNA and protein. mRNA includes UTR and coding sequences, but does not contain introns." [GOC:kmv, GOC:pr, SO:0000234]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "base pairing with mRNA" NARROW []
+is_a: GO:0003723 ! RNA binding
+
+[Term]
+id: GO:0003735
+name: structural constituent of ribosome
+namespace: molecular_function
+alt_id: GO:0003736
+alt_id: GO:0003737
+alt_id: GO:0003738
+alt_id: GO:0003739
+alt_id: GO:0003740
+alt_id: GO:0003741
+alt_id: GO:0003742
+def: "The action of a molecule that contributes to the structural integrity of the ribosome." [GOC:mah]
+comment: Note that this term may be used to annotate ribosomal RNAs as well as ribosomal proteins.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_yeast
+synonym: "ribosomal protein" BROAD []
+synonym: "ribosomal RNA" RELATED []
+is_a: GO:0005198 ! structural molecule activity
+intersection_of: GO:0005198 ! structural molecule activity
+intersection_of: occurs_in GO:0005840 ! ribosome
+relationship: occurs_in GO:0005840 ! ribosome
+
+[Term]
+id: GO:0003924
+name: GTPase activity
+namespace: molecular_function
+def: "Catalysis of the reaction: GTP + H2O = GDP + phosphate." [ISBN:0198547684]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "ARF small monomeric GTPase activity" NARROW []
+synonym: "dynamin GTPase activity" NARROW []
+synonym: "heterotrimeric G-protein GTPase activity" NARROW []
+synonym: "heterotrimeric G-protein GTPase, alpha-subunit" RELATED []
+synonym: "heterotrimeric G-protein GTPase, beta-subunit" RELATED []
+synonym: "heterotrimeric G-protein GTPase, gamma-subunit" RELATED []
+synonym: "hydrolase activity, acting on acid anhydrides, acting on GTP, involved in cellular and subcellular movement" BROAD []
+synonym: "protein-synthesizing GTPase activity" NARROW []
+synonym: "protein-synthesizing GTPase activity, elongation" NARROW []
+synonym: "protein-synthesizing GTPase activity, initiation" NARROW []
+synonym: "protein-synthesizing GTPase activity, termination" NARROW []
+synonym: "Rab small monomeric GTPase activity" NARROW []
+synonym: "Ran small monomeric GTPase activity" NARROW []
+synonym: "Ras small monomeric GTPase activity" NARROW []
+synonym: "RHEB small monomeric GTPase activity" NARROW []
+synonym: "Rho small monomeric GTPase activity" NARROW []
+synonym: "Sar small monomeric GTPase activity" NARROW []
+synonym: "signal-recognition-particle GTPase activity" NARROW []
+synonym: "small monomeric GTPase activity" NARROW []
+synonym: "tubulin GTPase activity" NARROW []
+xref: Reactome:R-HSA-1445143 "RAB8A,10,13,14 hydrolyze GTP"
+xref: Reactome:R-HSA-1458485 "RALA hydrolyzes GTP"
+xref: Reactome:R-HSA-156923 "Hydrolysis of eEF1A:GTP"
+xref: Reactome:R-HSA-164381 "G alpha (s) auto-inactivates by hydrolysing GTP to GDP"
+xref: Reactome:R-HSA-165055 "Hydrolysis of Ran:GTP to Ran:GDP"
+xref: Reactome:R-HSA-167415 "G-protein alpha subunit is inactivated"
+xref: Reactome:R-HSA-170666 "Adenylate cyclase increases the GTPase activity of G alpha-olf"
+xref: Reactome:R-HSA-170685 "Adenylaye cyclase increases the GTPase activity of G alpha-olf"
+xref: Reactome:R-HSA-170686 "Adenylate cyclase increases the GTPase activity of Gi alpha"
+xref: Reactome:R-HSA-177501 "Endocytosis (internalization) of clathrin-coated vesicle"
+xref: Reactome:R-HSA-203973 "Vesicle budding"
+xref: Reactome:R-HSA-2130641 "Translocation of TGN-lysosome vesicle to lysosome"
+xref: Reactome:R-HSA-2130725 "Internalization of MHC II:Ii clathrin coated vesicle"
+xref: Reactome:R-HSA-2584246 "GNAT1-GTP hydrolyses its bound GTP to GDP"
+xref: Reactome:R-HSA-380979 "RHEB in mTORC1:RHEB:GTP hydrolyses GTP"
+xref: Reactome:R-HSA-392133 "G alpha (z) auto-inactivates by hydrolysing GTP to GDP"
+xref: Reactome:R-HSA-392212 "G alpha (i) auto-inactivates by hydrolysing GTP to GDP"
+xref: Reactome:R-HSA-418574 "G alpha (12/13) auto-inactivates by hydrolysing GTP to GDP"
+xref: Reactome:R-HSA-418582 "G alpha (q) auto-inactivates by hydrolysing GTP to GDP"
+xref: Reactome:R-HSA-421835 "trans-Golgi Network Vesicle Scission"
+xref: Reactome:R-HSA-428941 "P2Y purinoceptor 1 activates MAP kinase p38 alpha"
+xref: Reactome:R-HSA-432707 "trans-Golgi Network Lysosomal Vesicle Scission"
+xref: Reactome:R-HSA-5333615 "80S:Met-tRNAi:mRNA:SECISBP2:Sec-tRNA(Sec):EEFSEC:GTP is hydrolysed to 80S:Met-tRNAi:mRNA:SECISBP2:Sec and EEFSEC:GDP by EEFSEC"
+xref: Reactome:R-HSA-5389839 "39S subunit binds 28S subunit:mRNA:fMet-tRNA"
+xref: Reactome:R-HSA-5389842 "TUFM hydrolyzes GTP and TUFM:GDP dissociates from 55S ribosome"
+xref: Reactome:R-HSA-5419273 "Hydrolysis of GTP and dissociation of 28S and 39S subunits"
+xref: Reactome:R-HSA-5419279 "Translocation of peptidyl-tRNA from A-site to P-site (and translocation of 55S ribosome by 3 bases along mRNA)"
+xref: Reactome:R-HSA-555065 "Formation of clathrin coated vesicle"
+xref: Reactome:R-HSA-5623513 "ASAP1 stimulates GTPase activity of ARF4"
+xref: Reactome:R-HSA-5638006 "ARL3 hydrolyzes GTP"
+xref: Reactome:R-HSA-5658231 "RAS GAPs stimulate RAS GTPase activity"
+xref: Reactome:R-HSA-5665809 "SRGAP2 stimulates RAC1 GTP-ase activity and ends FMNL1-mediated elongation of actin filaments"
+xref: Reactome:R-HSA-5672017 "Rheb in the mTORC1 complex hydrolyses GTP"
+xref: Reactome:R-HSA-5694527 "Loss of SAR1B GTPase"
+xref: Reactome:R-HSA-6807877 "ARFGAPs stimulate ARF GTPase activity"
+xref: Reactome:R-HSA-6814833 "TBC1D20 stimulates GTPase activity of RAB1, resulting in hydrolysis of GTP"
+xref: Reactome:R-HSA-8847534 "RAB43 hydrolyses GTP"
+xref: Reactome:R-HSA-8847883 "CYTH proteins stimulate ARF1 GTPase activity"
+xref: Reactome:R-HSA-8849082 "ARHGAP35 stimulates RHOA GTPase activity"
+xref: Reactome:R-HSA-8854173 "TBC RabGAPs accelerate GTP hydrolysis by RAB35"
+xref: Reactome:R-HSA-8854255 "TBC1D2A accelerates GTP hydrolysis by RAB7"
+xref: Reactome:R-HSA-8854329 "TBC1D15 accelerates GTP hydrolysis by RAB7"
+xref: Reactome:R-HSA-8854604 "TBC1D16 accelerates GTP hydrolysis by RAB4A"
+xref: Reactome:R-HSA-8854612 "TBC1D25 accelerates GTP hydrolysis by RAB33B"
+xref: Reactome:R-HSA-8868661 "Dynamin-mediated GTP hydrolysis promotes vesicle scission"
+xref: Reactome:R-HSA-8981353 "RASA1 stimulates RAS GTPase activity"
+xref: Reactome:R-HSA-8982020 "G alpha (i)i1/i2/i3 in G (i):RGS complex is inactivated"
+xref: Reactome:R-HSA-8982021 "G alpha (z) in G alpha (z):RGS complex is inactivated"
+xref: Reactome:R-HSA-8982025 "G alpha (q) in G (q):RGS complex is inactivated"
+xref: Reactome:R-HSA-983422 "Disassembly of COPII coated vesicle"
+xref: RHEA:19669
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0004386
+name: helicase activity
+namespace: molecular_function
+alt_id: GO:0008026
+def: "Catalysis of the reaction: ATP + H2O = ADP + phosphate, to drive the unwinding of a DNA or RNA helix." [GOC:jl]
+comment: Note that most helicases catalyze processive duplex unwinding.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "ATP-dependent helicase activity" EXACT []
+xref: Reactome:R-HSA-167097 "HIV Promoter Opening: First Transition"
+xref: Reactome:R-HSA-169461 "MCM8 mediated fork unwinding"
+xref: Reactome:R-HSA-169468 "MCM2-7 mediated fork unwinding"
+xref: Reactome:R-HSA-5690996 "ERCC2 and ERCC3 DNA helicases form an open bubble structure in damaged DNA"
+xref: Reactome:R-HSA-75949 "RNA Polymerase II Promoter Opening: First Transition"
+xref: Reactome:R-HSA-9613490 "Unwinding of DNA for the nascent HIV-1 transcript: Second Transition"
+xref: Reactome:R-HSA-9613494 "Unwinding of DNA for the Nascent Transcript: Second Transition"
+xref: Reactome:R-HSA-9613497 "Unwinding DNA for the nascent transcript"
+xref: Reactome:R-HSA-9613498 "Unwinding of DNA for the nascent HIV-1 transcript"
+is_a: GO:0016887 ! ATPase activity
+
+[Term]
+id: GO:0004518
+name: nuclease activity
+namespace: molecular_function
+def: "Catalysis of the hydrolysis of ester linkages within nucleic acids." [ISBN:0198547684]
+comment: Note that 'tRNA nucleotidyltransferase activity ; GO:0009022', also known as 'ribonuclease PH', and 'DNA-(apurinic or apyrimidinic site) lyase activity ; GO:0003906' do not have parentage in the 'nuclease activity' branch of the ontology because both GO and the Enzyme Commission define nuclease activity as a type of hydrolysis.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+subset: goslim_yeast
+xref: EC:3.1
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0034641 ! cellular nitrogen compound metabolic process
+
+[Term]
+id: GO:0005198
+name: structural molecule activity
+namespace: molecular_function
+def: "The action of a molecule that contributes to the structural integrity of a complex or its assembly within or outside a cell." [GOC:mah, GOC:vw]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+xref: MIPS_funcat:16.07
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0005575
+name: cellular_component
+namespace: cellular_component
+alt_id: GO:0008372
+def: "A location, relative to cellular compartments and structures, occupied by a macromolecular machine when it carries out a molecular function. There are two ways in which the gene ontology describes locations of gene products: (1) relative to cellular structures (e.g., cytoplasmic side of plasma membrane) or compartments (e.g., mitochondrion), and (2) the stable macromolecular complexes of which they are parts (e.g., the ribosome)." [GOC:pdt, NIF_Subcellular:sao-1337158144]
+comment: Note that, in addition to forming the root of the cellular component ontology, this term is recommended for use for the annotation of gene products whose cellular component is unknown. When this term is used for annotation, it indicates that no information was available about the cellular component of the gene product annotated as of the date the annotation was made; the evidence code "no data" (ND), is used to indicate this.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "cell or subcellular entity" EXACT []
+synonym: "cellular component" EXACT []
+synonym: "subcellular entity" RELATED [NIF_Subcellular:nlx_subcell_100315]
+xref: NIF_Subcellular:sao-1337158144
+xref: NIF_Subcellular:sao1337158144
+
+[Term]
+id: GO:0005576
+name: extracellular region
+namespace: cellular_component
+def: "The space external to the outermost structure of a cell. For cells without external protective or external encapsulating structures this refers to space outside of the plasma membrane. This term covers the host cell environment outside an intracellular parasite." [GOC:go_curators]
+comment: Note that this term is intended to annotate gene products that are not attached to the cell surface. For gene products from multicellular organisms which are secreted from a cell but retained within the organism (i.e. released into the interstitial fluid or blood), consider the cellular component term 'extracellular space ; GO:0005615'.
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "extracellular" EXACT []
+xref: MIPS_funcat:70.27
+xref: Wikipedia:Extracellular
+is_a: GO:0005575 ! cellular_component
+
+[Term]
+id: GO:0005615
+name: extracellular space
+namespace: cellular_component
+def: "That part of a multicellular organism outside the cells proper, usually taken to be outside the plasma membranes, and occupied by fluid." [ISBN:0198547684]
+comment: Note that for multicellular organisms, the extracellular space refers to everything outside a cell, but still within the organism (excluding the extracellular matrix). Gene products from a multi-cellular organism that are secreted from a cell into the interstitial fluid or blood can therefore be annotated to this term.
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "intercellular space" RELATED []
+xref: NIF_Subcellular:sao1425028079
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005576 ! extracellular region
+
+[Term]
+id: GO:0005618
+name: cell wall
+namespace: cellular_component
+def: "The rigid or semi-rigid envelope lying outside the cell membrane of plant, fungal, most prokaryotic cells and some protozoan parasites, maintaining their shape and protecting them from osmotic lysis. In plants it is made of cellulose and, often, lignin; in fungi it is composed largely of polysaccharides; in bacteria it is composed of peptidoglycan; in protozoan parasites such as Giardia species, it's made of carbohydrates and proteins." [GOC:giardia, http://en.wikipedia.org/wiki/Microbial_cyst, ISBN:0198547684, PMID:15134259]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+xref: MIPS_funcat:42.27.03
+xref: MIPS_funcat:70.01
+xref: Wikipedia:Cell_wall
+is_a: GO:0030312 ! external encapsulating structure
+
+[Term]
+id: GO:0005622
+name: intracellular
+namespace: cellular_component
+def: "The living contents of a cell; the matter contained within (but not including) the plasma membrane, usually taken to exclude large vacuoles and masses of secretory or ingested material. In eukaryotes it includes the nucleus and cytoplasm." [ISBN:0198506732]
+subset: gocheck_do_not_annotate
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_plant
+synonym: "internal to cell" EXACT []
+synonym: "nucleocytoplasm" RELATED [GOC:mah]
+synonym: "protoplasm" EXACT []
+synonym: "protoplast" RELATED [GOC:mah]
+xref: Wikipedia:Intracellular
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005623 ! cell
+
+[Term]
+id: GO:0005623
+name: cell
+namespace: cellular_component
+def: "The basic structural and functional unit of all organisms. Includes the plasma membrane and any external encapsulating structures such as the cell wall and cell envelope." [GOC:go_curators]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+xref: NIF_Subcellular:sao1813327414
+xref: Wikipedia:Cell_(biology)
+is_a: GO:0005575 ! cellular_component
+property_value: IAO:0000589 "cell and encapsulating structures" xsd:string
+
+[Term]
+id: GO:0005634
+name: nucleus
+namespace: cellular_component
+def: "A membrane-bounded organelle of eukaryotic cells in which chromosomes are housed and replicated. In most cells, the nucleus contains all of the cell's chromosomes except the organellar chromosomes, and is the site of RNA synthesis and processing. In some species, or in specialized cell types, RNA metabolism or DNA replication may be absent." [GOC:go_curators]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "cell nucleus" EXACT []
+synonym: "horsetail nucleus" NARROW [GOC:al, GOC:mah, GOC:vw, PMID:15030757]
+xref: MIPS_funcat:70.10
+xref: NIF_Subcellular:sao1702920020
+xref: Wikipedia:Cell_nucleus
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005622 ! intracellular
+
+[Term]
+id: GO:0005635
+name: nuclear envelope
+namespace: cellular_component
+alt_id: GO:0005636
+def: "The double lipid bilayer enclosing the nucleus and separating its contents from the rest of the cytoplasm; includes the intermembrane space, a gap of width 20-40 nm (also called the perinuclear space)." [ISBN:0198547684]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+xref: MIPS_funcat:70.10.05
+xref: Wikipedia:Nuclear_envelope
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005634 ! nucleus
+
+[Term]
+id: GO:0005654
+name: nucleoplasm
+namespace: cellular_component
+def: "That part of the nuclear content other than the chromosomes or the nucleolus." [GOC:ma, ISBN:0124325653]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+xref: NIF_Subcellular:sao661522542
+xref: Wikipedia:Nucleoplasm
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005634 ! nucleus
+
+[Term]
+id: GO:0005694
+name: chromosome
+namespace: cellular_component
+def: "A structure composed of a very long molecule of DNA and associated proteins (e.g. histones) that carries hereditary information." [ISBN:0198547684]
+comment: Chromosomes include parts that are not part of the chromatin.  Examples include the kinetochore.
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "chromatid" RELATED []
+synonym: "interphase chromosome" NARROW []
+synonym: "prophase chromosome" NARROW []
+xref: MIPS_funcat:70.10.03
+xref: Wikipedia:Chromosome
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005622 ! intracellular
+
+[Term]
+id: GO:0005730
+name: nucleolus
+namespace: cellular_component
+def: "A small, dense body one or more of which are present in the nucleus of eukaryotic cells. It is rich in RNA and protein, is not bounded by a limiting membrane, and is not seen during mitosis. Its prime function is the transcription of the nucleolar DNA into 45S ribosomal-precursor RNA, the processing of this RNA into 5.8S, 18S, and 28S components of ribosomal RNA, and the association of these components with 5S RNA and proteins synthesized outside the nucleolus. This association results in the formation of ribonucleoprotein precursors; these pass into the cytoplasm and mature into the 40S and 60S subunits of the ribosome." [ISBN:0198506732]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+xref: MIPS_funcat:70.10.07
+xref: NIF_Subcellular:sao1820400233
+xref: Wikipedia:Nucleolus
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005634 ! nucleus
+
+[Term]
+id: GO:0005737
+name: cytoplasm
+namespace: cellular_component
+def: "All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures." [ISBN:0198547684]
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+xref: MIPS_funcat:70.03
+xref: Wikipedia:Cytoplasm
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005622 ! intracellular
+
+[Term]
+id: GO:0005739
+name: mitochondrion
+namespace: cellular_component
+def: "A semiautonomous, self replicating organelle that occurs in varying numbers, shapes, and sizes in the cytoplasm of virtually all eukaryotic cells. It is notably the site of tissue respiration." [GOC:giardia, ISBN:0198506732]
+comment: Some anaerobic or microaerophilic organisms (e.g. Entamoeba histolytica, Giardia intestinalis and several Microsporidia species) do not have mitochondria, and contain mitochondrion-related organelles (MROs) instead, called mitosomes or hydrogenosomes, very likely derived from mitochondria. To annotate gene products located in these mitochondrial relics in species such as Entamoeba histolytica, Giardia intestinalis or others, please use GO:0032047 'mitosome' or GO:0042566 'hydrogenosome'. (See PMID:24316280 for a list of species currently known to contain mitochondrion-related organelles.)
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "mitochondria" EXACT []
+xref: MIPS_funcat:70.16
+xref: NIF_Subcellular:sao1860313010
+xref: Wikipedia:Mitochondrion
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0005764
+name: lysosome
+namespace: cellular_component
+def: "A small lytic vacuole that has cell cycle-independent morphology and is found in most animal cells and that contains a variety of hydrolases, most of which have their maximal activities in the pH range 5-6. The contained enzymes display latency if properly isolated. About 40 different lysosomal hydrolases are known and lysosomes have a great variety of morphologies and functions." [GOC:mah, ISBN:0198506732]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+xref: MIPS_funcat:70.25
+xref: NIF_Subcellular:sao585356902
+xref: Wikipedia:Lysosome
+is_a: GO:0005773 ! vacuole
+
+[Term]
+id: GO:0005768
+name: endosome
+namespace: cellular_component
+def: "A vacuole to which materials ingested by endocytosis are delivered." [ISBN:0198506732, PMID:19696797]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+xref: MIPS_funcat:70.22
+xref: NIF_Subcellular:sao1720343330
+xref: Wikipedia:Endosome
+is_a: GO:0031410 ! cytoplasmic vesicle
+
+[Term]
+id: GO:0005773
+name: vacuole
+namespace: cellular_component
+def: "A closed structure, found only in eukaryotic cells, that is completely surrounded by unit membrane and contains liquid material. Cells contain one or several vacuoles, that may have different functions from each other. Vacuoles have a diverse array of functions. They can act as a storage organelle for nutrients or waste products, as a degradative compartment, as a cost-effective way of increasing cell size, and as a homeostatic regulator controlling both turgor pressure and pH of the cytosol." [GOC:mtg_sensu, ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "vacuolar carboxypeptidase Y" RELATED []
+xref: MIPS_funcat:70.25
+xref: Wikipedia:Vacuole
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0005777
+name: peroxisome
+namespace: cellular_component
+alt_id: GO:0019818
+def: "A small organelle enclosed by a single membrane, and found in most eukaryotic cells. Contains peroxidases and other enzymes involved in a variety of metabolic processes including free radical detoxification, lipid catabolism and biosynthesis, and hydrogen peroxide metabolism." [GOC:pm, PMID:9302272, UniProtKB-KW:KW-0576]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "peroxisomal" RELATED [GOC:curators]
+synonym: "peroxisome vesicle" BROAD []
+xref: MIPS_funcat:70.19
+xref: NIF_Subcellular:sao499555322
+xref: Wikipedia:Peroxisome
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0005783
+name: endoplasmic reticulum
+namespace: cellular_component
+def: "The irregular network of unit membranes, visible only by electron microscopy, that occurs in the cytoplasm of many eukaryotic cells. The membranes form a complex meshwork of tubular channels, which are often expanded into slitlike cavities called cisternae. The ER takes two forms, rough (or granular), with ribosomes adhering to the outer surface, and smooth (with no ribosomes attached)." [ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "ER" EXACT []
+xref: MIPS_funcat:70.07
+xref: NIF_Subcellular:sao1036339110
+xref: Wikipedia:Endoplasmic_reticulum
+is_a: GO:0043226 ! organelle
+
+[Term]
+id: GO:0005794
+name: Golgi apparatus
+namespace: cellular_component
+def: "A compound membranous cytoplasmic organelle of eukaryotic cells, consisting of flattened, ribosome-free vesicles arranged in a more or less regular stack. The Golgi apparatus differs from the endoplasmic reticulum in often having slightly thicker membranes, appearing in sections as a characteristic shallow semicircle so that the convex side (cis or entry face) abuts the endoplasmic reticulum, secretory vesicles emerging from the concave side (trans or exit face). In vertebrate cells there is usually one such organelle, while in invertebrates and plants, where they are known usually as dictyosomes, there may be several scattered in the cytoplasm. The Golgi apparatus processes proteins produced on the ribosomes of the rough endoplasmic reticulum; such processing includes modification of the core oligosaccharides of glycoproteins, and the sorting and packaging of proteins for transport to a variety of cellular locations. Three different regions of the Golgi are now recognized both in terms of structure and function: cis, in the vicinity of the cis face, trans, in the vicinity of the trans face, and medial, lying between the cis and trans regions." [ISBN:0198506732]
+comment: Note that the Golgi apparatus can be located in various places in the cytoplasm. In plants and lower animal cells, the Golgi apparatus exists as many copies of discrete stacks dispersed throughout the cytoplasm, while the Golgi apparatus of interphase mammalian cells is a juxtanuclear, often pericentriolar reticulum, where the discrete Golgi stacks are stitched together to form a compact and interconnected ribbon, sometimes called the Golgi ribbon.
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "Golgi" BROAD []
+synonym: "Golgi complex" EXACT []
+synonym: "Golgi ribbon" NARROW []
+xref: MIPS_funcat:70.08
+xref: NIF_Subcellular:sao451912436
+xref: Wikipedia:Golgi_apparatus
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0005811
+name: lipid droplet
+namespace: cellular_component
+def: "An intracellular non-membrane-bounded organelle comprising a matrix of coalesced lipids surrounded by a phospholipid monolayer. May include associated proteins." [GOC:mah, GOC:tb]
+comment: Note that this term does not refer to vesicles, but instead to structures in which lipids do not necessarily form bilayers.
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "adiposome" EXACT []
+synonym: "lipid body" EXACT []
+synonym: "lipid particle" EXACT []
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005622 ! intracellular
+
+[Term]
+id: GO:0005815
+name: microtubule organizing center
+namespace: cellular_component
+def: "An intracellular structure that can catalyze gamma-tubulin-dependent microtubule nucleation and that can anchor microtubules by interacting with their minus ends, plus ends or sides." [GOC:vw, http://en.wikipedia.org/wiki/Microtubule_organizing_center, ISBN:0815316194, PMID:17072892, PMID:17245416]
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "microtubule organising centre" EXACT []
+synonym: "MTOC" EXACT []
+xref: Wikipedia:Microtubule_organizing_center
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005856 ! cytoskeleton
+
+[Term]
+id: GO:0005829
+name: cytosol
+namespace: cellular_component
+def: "The part of the cytoplasm that does not contain organelles but which does contain other particulate matter, such as protein complexes." [GOC:hjd, GOC:jl]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_plant
+xref: NIF_Subcellular:sao101633890
+xref: Wikipedia:Cytosol
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0005840
+name: ribosome
+namespace: cellular_component
+alt_id: GO:0033279
+def: "An intracellular organelle, about 200 A in diameter, consisting of RNA and protein. It is the site of protein biosynthesis resulting from translation of messenger RNA (mRNA). It consists of two subunits, one large and one small, each containing only protein and RNA. Both the ribosome and its subunits are characterized by their sedimentation coefficients, expressed in Svedberg units (symbol: S). Hence, the prokaryotic ribosome (70S) comprises a large (50S) subunit and a small (30S) subunit, while the eukaryotic ribosome (80S) comprises a large (60S) subunit and a small (40S) subunit. Two sites on the ribosomal large subunit are involved in translation, namely the aminoacyl site (A site) and peptidyl site (P site). Ribosomes from prokaryotes, eukaryotes, mitochondria, and chloroplasts have characteristically distinct ribosomal proteins." [ISBN:0198506732]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "free ribosome" NARROW [NIF_Subcellular:sao1139385046]
+synonym: "membrane bound ribosome" NARROW [NIF_Subcellular:sao1291545653]
+synonym: "ribosomal RNA" RELATED []
+xref: NIF_Subcellular:sao1429207766
+xref: Wikipedia:Ribosome
+is_a: GO:0032991 ! protein-containing complex
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0005856
+name: cytoskeleton
+namespace: cellular_component
+def: "Any of the various filamentous elements that form the internal framework of cells, and typically remain after treatment of the cells with mild detergent to remove membrane constituents and soluble components of the cytoplasm. The term embraces intermediate filaments, microfilaments, microtubules, the microtrabecular lattice, and other structures characterized by a polymeric filamentous nature and long-range order within the cell. The various elements of the cytoskeleton not only serve in the maintenance of cellular shape but also have roles in other cellular functions, including cellular movement, cell division, endocytosis, and movement of organelles." [GOC:mah, ISBN:0198547684, PMID:16959967]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+xref: MIPS_funcat:70.04
+xref: Wikipedia:Cytoskeleton
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005622 ! intracellular
+
+[Term]
+id: GO:0005886
+name: plasma membrane
+namespace: cellular_component
+alt_id: GO:0005904
+def: "The membrane surrounding a cell that separates the cell from its external environment. It consists of a phospholipid bilayer and associated proteins." [ISBN:0716731363]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "bacterial inner membrane" NARROW []
+synonym: "cell membrane" EXACT []
+synonym: "cellular membrane" EXACT [NIF_Subcellular:sao6433132645]
+synonym: "cytoplasmic membrane" EXACT []
+synonym: "inner endospore membrane" NARROW []
+synonym: "juxtamembrane" BROAD []
+synonym: "plasma membrane lipid bilayer" NARROW [GOC:mah]
+synonym: "plasmalemma" EXACT []
+xref: NIF_Subcellular:sao1663586795
+xref: Wikipedia:Cell_membrane
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005623 ! cell
+
+[Term]
+id: GO:0005929
+name: cilium
+namespace: cellular_component
+alt_id: GO:0072372
+def: "A specialized eukaryotic organelle that consists of a filiform extrusion of the cell surface and of some cytoplasmic parts. Each cilium is largely bounded by an extrusion of the cytoplasmic (plasma) membrane, and contains a regular longitudinal array of microtubules, anchored to a basal body." [GOC:cilia, GOC:curators, GOC:kmv, GOC:vw, ISBN:0198547684, PMID:16824949, PMID:17009929, PMID:20144998]
+comment: Note that we deem cilium and microtubule-based flagellum to be equivalent. In most eukaryotic species, intracellular sub-components of the cilium, such as the ciliary base and rootlet, are located near the plasma membrane. In Diplomonads such as Giardia, instead, the same ciliary parts are located further intracellularly. Also, 'cilium' may be used when axonemal structure and/or motility are unknown, or when axonemal structure is unusual. For all other cases, please refer to children of 'cilium'. Finally, note that any role of ciliary proteins in sensory events should be captured by annotating to relevant biological process terms.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+synonym: "eukaryotic flagellum" EXACT []
+synonym: "flagellum" RELATED []
+synonym: "microtubule-based flagellum" EXACT []
+synonym: "primary cilium" NARROW []
+xref: FMA:67181
+xref: NIF_Subcellular:sao787716553
+xref: Wikipedia:Cilium
+is_a: GO:0043226 ! organelle
+relationship: has_part GO:0032991 ! protein-containing complex
+
+[Term]
+id: GO:0005975
+name: carbohydrate metabolic process
+namespace: biological_process
+alt_id: GO:0044261
+alt_id: GO:0044723
+def: "The chemical reactions and pathways involving carbohydrates, any of a group of organic compounds based of the general formula Cx(H2O)y. Includes the formation of carbohydrate derivatives by the addition of a carbohydrate residue to another molecule." [GOC:mah, ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "carbohydrate metabolism" EXACT []
+synonym: "multicellular organismal carbohydrate metabolic process" NARROW []
+synonym: "single-organism carbohydrate metabolic process" RELATED []
+xref: MIPS_funcat:01.05
+xref: Wikipedia:Carbohydrate_metabolism
+is_a: GO:0008150 ! biological_process
+created_by: janelomax
+creation_date: 2012-10-23T15:40:34Z
+
+[Term]
+id: GO:0006091
+name: generation of precursor metabolites and energy
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the formation of precursor metabolites, substances from which energy is derived, and any process involved in the liberation of energy from these substances." [GOC:jl]
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "energy pathways" BROAD []
+synonym: "intermediary metabolism" RELATED [GOC:mah]
+synonym: "metabolic energy generation" RELATED []
+xref: MIPS_funcat:02.45.15
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006259
+name: DNA metabolic process
+namespace: biological_process
+alt_id: GO:0055132
+def: "Any cellular metabolic process involving deoxyribonucleic acid. This is one of the two main types of nucleic acid, consisting of a long, unbranched macromolecule formed from one, or more commonly, two, strands of linked deoxyribonucleotides." [ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+synonym: "cellular DNA metabolism" EXACT []
+synonym: "DNA metabolism" EXACT []
+xref: MIPS_funcat:10
+xref: MIPS_funcat:10.01
+is_a: GO:0034641 ! cellular nitrogen compound metabolic process
+
+[Term]
+id: GO:0006397
+name: mRNA processing
+namespace: biological_process
+def: "Any process involved in the conversion of a primary mRNA transcript into one or more mature mRNA(s) prior to translation into polypeptide." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "mRNA maturation" RELATED []
+xref: MIPS_funcat:11.04.03
+is_a: GO:0034641 ! cellular nitrogen compound metabolic process
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006399
+name: tRNA metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving tRNA, transfer RNA, a class of relatively small RNA molecules responsible for mediating the insertion of amino acids into the sequence of nascent polypeptide chains during protein synthesis. Transfer RNA is characterized by the presence of many unusual minor bases, the function of which has not been completely established." [ISBN:0198506732]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pombe
+synonym: "tRNA metabolism" EXACT []
+is_a: GO:0034641 ! cellular nitrogen compound metabolic process
+
+[Term]
+id: GO:0006412
+name: translation
+namespace: biological_process
+alt_id: GO:0006416
+alt_id: GO:0006453
+alt_id: GO:0043037
+def: "The cellular metabolic process in which a protein is formed, using the sequence of a mature mRNA or circRNA molecule to specify the sequence of amino acids in a polypeptide chain. Translation is mediated by the ribosome, and begins with the formation of a ternary complex between aminoacylated initiator methionine tRNA, GTP, and initiation factor 2, which subsequently associates with the small subunit of the ribosome and an mRNA or circRNA. Translation ends with the release of a polypeptide chain from the ribosome." [GOC:go_curators]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+synonym: "protein anabolism" EXACT []
+synonym: "protein biosynthesis" EXACT []
+synonym: "protein biosynthetic process" EXACT [GOC:curators]
+synonym: "protein formation" EXACT []
+synonym: "protein synthesis" EXACT []
+synonym: "protein translation" EXACT []
+xref: MIPS_funcat:12
+xref: Wikipedia:Translation_(genetics)
+is_a: GO:0009058 ! biosynthetic process
+is_a: GO:0034641 ! cellular nitrogen compound metabolic process
+relationship: has_part GO:0009058 ! biosynthetic process
+
+[Term]
+id: GO:0006457
+name: protein folding
+namespace: biological_process
+alt_id: GO:0007022
+alt_id: GO:0007024
+alt_id: GO:0007025
+def: "The process of assisting in the covalent and noncovalent assembly of single chain polypeptides or multisubunit complexes into the correct tertiary structure." [GOC:go_curators, GOC:rb]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "alpha-tubulin folding" NARROW [GOC:mah]
+synonym: "beta-tubulin folding" NARROW [GOC:mah]
+synonym: "chaperone activity" RELATED []
+synonym: "chaperonin ATPase activity" RELATED []
+synonym: "chaperonin-mediated tubulin folding" NARROW [GOC:mah]
+synonym: "co-chaperone activity" RELATED []
+synonym: "co-chaperonin activity" RELATED []
+synonym: "glycoprotein-specific chaperone activity" RELATED []
+synonym: "non-chaperonin molecular chaperone ATPase activity" RELATED []
+synonym: "protein complex assembly, multichaperone pathway" RELATED []
+xref: MIPS_funcat:14
+xref: MIPS_funcat:14.01
+xref: Wikipedia:Protein_folding
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006464
+name: cellular protein modification process
+namespace: biological_process
+def: "The covalent alteration of one or more amino acids occurring in proteins, peptides and nascent polypeptides (co-translational, post-translational modifications) occurring at the level of an individual cell. Includes the modification of charged tRNAs that are destined to occur in a protein (pre-translation modification)." [GOC:go_curators]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+synonym: "process resulting in protein modification" RELATED []
+synonym: "protein modification process" BROAD [GOC:bf, GOC:jl]
+synonym: "protein tagging activity" RELATED []
+xref: MIPS_funcat:14
+xref: MIPS_funcat:14.07
+xref: MIPS_funcat:18.01.01
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006520
+name: cellular amino acid metabolic process
+namespace: biological_process
+alt_id: GO:0006519
+def: "The chemical reactions and pathways involving amino acids, carboxylic acids containing one or more amino groups, as carried out by individual cells." [CHEBI:33709, GOC:curators, ISBN:0198506732]
+subset: goslim_aspergillus
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "amino acid and derivative metabolism" EXACT [GOC:curators]
+synonym: "amino acid metabolic process" EXACT [GOC:curators]
+synonym: "cellular amino acid and derivative metabolic process" EXACT []
+synonym: "cellular amino acid metabolism" EXACT []
+xref: MIPS_funcat:01.01
+is_a: GO:0044281 ! small molecule metabolic process
+
+[Term]
+id: GO:0006605
+name: protein targeting
+namespace: biological_process
+def: "The process of targeting specific proteins to particular regions of the cell, typically membrane-bounded subcellular organelles. Usually requires an organelle specific protein sequence motif." [GOC:ma]
+comment: Note that protein targeting encompasses the transport of the protein to the specified location, and may also include additional steps such as protein processing.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "nascent polypeptide association" RELATED []
+synonym: "protein sorting along secretory pathway" NARROW []
+xref: MIPS_funcat:14
+xref: MIPS_funcat:14.04
+xref: Wikipedia:Protein_targeting
+is_a: GO:0015031 ! protein transport
+relationship: occurs_in GO:0005622 ! intracellular
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006629
+name: lipid metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving lipids, compounds soluble in an organic solvent but not, or sparingly, in an aqueous solvent. Includes fatty acids; neutral fats, other fatty-acid esters, and soaps; long-chain (fatty) alcohols and waxes; sphingoids and other long-chain bases; glycolipids, phospholipids and sphingolipids; and carotenes, polyprenols, sterols, terpenes and other isoprenoids." [GOC:ma]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "lipid metabolism" EXACT []
+xref: MIPS_funcat:01.06
+xref: Wikipedia:Lipid_metabolism
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006790
+name: sulfur compound metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving the nonmetallic element sulfur or compounds that contain sulfur, such as the amino acids methionine and cysteine or the tripeptide glutathione." [GOC:ai]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+synonym: "sulfur metabolism" EXACT []
+synonym: "sulphur metabolic process" EXACT []
+synonym: "sulphur metabolism" EXACT []
+xref: MIPS_funcat:01.02
+xref: Wikipedia:Sulfur_metabolism
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006810
+name: transport
+namespace: biological_process
+alt_id: GO:0015457
+alt_id: GO:0015460
+alt_id: GO:0044765
+def: "The directed movement of substances (such as macromolecules, small molecules, ions) or cellular components (such as complexes and organelles) into, out of or within a cell, or between cells, or within a multicellular organism by means of some agent such as a transporter, pore or motor protein." [GOC:dos, GOC:dph, GOC:jl, GOC:mah]
+comment: Note that this term should not be used for direct annotation. It should be possible to make a more specific annotation to one of the children of this term, for e.g. to transmembrane transport, to microtubule-based transport or to vesicle-mediated transport.
+subset: gocheck_do_not_annotate
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+synonym: "single-organism transport" RELATED []
+synonym: "small molecule transport" NARROW []
+synonym: "solute:solute exchange" NARROW []
+xref: MIPS_funcat:20
+is_a: GO:0008150 ! biological_process
+created_by: janelomax
+creation_date: 2012-12-13T16:25:32Z
+
+[Term]
+id: GO:0006913
+name: nucleocytoplasmic transport
+namespace: biological_process
+alt_id: GO:0000063
+def: "The directed movement of molecules between the nucleus and the cytoplasm." [GOC:go_curators]
+comment: Note that transport through the nuclear pore complex is not transmembrane because the nuclear membrane is a double membrane, and is not traversed.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pombe
+synonym: "nucleocytoplasmic shuttling" NARROW []
+is_a: GO:0006810 ! transport
+relationship: occurs_in GO:0005622 ! intracellular
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0006914
+name: autophagy
+namespace: biological_process
+alt_id: GO:0016238
+def: "The cellular catabolic process in which cells digest parts of their own cytoplasm; allows for both recycling of macromolecular constituents under conditions of cellular stress and remodeling the intracellular structure for cell differentiation." [GOC:autophagy, ISBN:0198547684, PMID:11099404, PMID:9412464]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+xref: Wikipedia:Autophagy_(cellular)
+is_a: GO:0009056 ! catabolic process
+
+[Term]
+id: GO:0006950
+name: response to stress
+namespace: biological_process
+def: "Any process that results in a change in state or activity of a cell or an organism (in terms of movement, secretion, enzyme production, gene expression, etc.) as a result of a disturbance in organismal or cellular homeostasis, usually, but not necessarily, exogenous (e.g. temperature, humidity, ionizing radiation)." [GOC:mah]
+comment: Note that this term is in the subset of terms that should not be used for direct gene product annotation. Instead, select a child term or, if no appropriate child term exists, please request a new term. Direct annotations to this term may be amended during annotation QC.
+subset: gocheck_do_not_manually_annotate
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_plant
+synonym: "response to abiotic stress" RELATED []
+synonym: "response to biotic stress" RELATED []
+xref: MIPS_funcat:32.01
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007005
+name: mitochondrion organization
+namespace: biological_process
+def: "A process that is carried out at the cellular level which results in the assembly, arrangement of constituent parts, or disassembly of a mitochondrion; includes mitochondrial morphogenesis and distribution, and replication of the mitochondrial genome as well as synthesis of new mitochondrial components." [GOC:dph, GOC:jl, GOC:mah, GOC:sgd_curators, PMID:9786946]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "mitochondria organization" EXACT [GOC:mah]
+synonym: "mitochondrion organisation" EXACT [GOC:mah]
+synonym: "mitochondrion organization and biogenesis" RELATED [GOC:curators]
+xref: MIPS_funcat:42.16
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007009
+name: plasma membrane organization
+namespace: biological_process
+def: "A process that is carried out at the cellular level which results in the assembly, arrangement of constituent parts, or disassembly of the plasma membrane." [GOC:dph, GOC:jl, GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "plasma membrane organisation" EXACT [GOC:curators]
+synonym: "plasma membrane organization and biogenesis" RELATED [GOC:mah]
+xref: MIPS_funcat:42.02
+is_a: GO:0061024 ! membrane organization
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007010
+name: cytoskeleton organization
+namespace: biological_process
+def: "A process that is carried out at the cellular level which results in the assembly, arrangement of constituent parts, or disassembly of cytoskeletal structures." [GOC:dph, GOC:jl, GOC:mah]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "cytoskeletal organization and biogenesis" RELATED [GOC:mah]
+synonym: "cytoskeletal regulator activity" RELATED []
+synonym: "cytoskeleton organisation" EXACT [GOC:curators]
+synonym: "cytoskeleton organization and biogenesis" RELATED [GOC:mah]
+xref: MIPS_funcat:42.04
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007034
+name: vacuolar transport
+namespace: biological_process
+def: "The directed movement of substances into, out of or within a vacuole." [GOC:ai]
+subset: goslim_chembl
+subset: goslim_generic
+xref: MIPS_funcat:20.09.13
+is_a: GO:0006810 ! transport
+
+[Term]
+id: GO:0007049
+name: cell cycle
+namespace: biological_process
+def: "The progression of biochemical and morphological phases and events that occur in a cell during successive cell replication or nuclear replication events. Canonically, the cell cycle comprises the replication and segregation of genetic material followed by the division of the cell, but in endocycles or syncytial cells nuclear replication or nuclear division may not be followed by cell division." [GOC:go_curators, GOC:mtg_cell_cycle]
+subset: gocheck_do_not_manually_annotate
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+synonym: "cell-division cycle" EXACT []
+xref: MIPS_funcat:10
+xref: MIPS_funcat:10.03
+xref: Wikipedia:Cell_cycle
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007059
+name: chromosome segregation
+namespace: biological_process
+def: "The process in which genetic material, in the form of chromosomes, is organized into specific structures and then physically separated and apportioned to two or more sets. In eukaryotes, chromosome segregation begins with the condensation of chromosomes, includes chromosome separation, and ends when chromosomes have completed movement to the spindle poles." [GOC:jl, GOC:mah, GOC:mtg_cell_cycle, GOC:vw]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "chromosome division" EXACT []
+synonym: "chromosome transmission" RELATED []
+xref: MIPS_funcat:10.03.04
+xref: MIPS_funcat:10.03.04.05
+xref: Wikipedia:Chromosome_segregation
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007155
+name: cell adhesion
+namespace: biological_process
+alt_id: GO:0098602
+def: "The attachment of a cell, either to another cell or to an underlying substrate such as the extracellular matrix, via cell adhesion molecules." [GOC:hb, GOC:pf]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_pombe
+synonym: "cell adhesion molecule activity" RELATED []
+synonym: "single organism cell adhesion" RELATED []
+xref: MIPS_funcat:34.07
+xref: Wikipedia:Cell_adhesion
+is_a: GO:0008150 ! biological_process
+created_by: davidos
+creation_date: 2014-04-15T15:59:10Z
+
+[Term]
+id: GO:0007165
+name: signal transduction
+namespace: biological_process
+alt_id: GO:0023033
+def: "The cellular process in which a signal is conveyed to trigger a change in the activity or state of a cell. Signal transduction begins with reception of a signal (e.g. a ligand binding to a receptor or receptor activation by a stimulus such as light), or for signal transduction in the absence of ligand, signal-withdrawal or the activity of a constitutively active receptor. Signal transduction ends with regulation of a downstream cellular process, e.g. regulation of transcription or regulation of a metabolic process. Signal transduction covers signaling from receptors located on the surface of the cell and signaling via molecules located within the cell. For signaling between cells, signal transduction is restricted to events at and within the receiving cell." [GOC:go_curators, GOC:mtg_signaling_feb11]
+comment: Note that signal transduction is defined broadly to include a ligand interacting with a receptor, downstream signaling steps and a response being triggered. A change in form of the signal in every step is not necessary. Note that in many cases the end of this process is regulation of the initiation of transcription. Note that specific transcription factors may be annotated to this term, but core/general transcription machinery such as RNA polymerase should not.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_plant
+synonym: "signaling cascade" NARROW []
+synonym: "signaling pathway" RELATED []
+synonym: "signalling cascade" NARROW []
+synonym: "signalling pathway" RELATED [GOC:mah]
+xref: MIPS_funcat:30
+xref: Wikipedia:Signal_transduction
+is_a: GO:0008150 ! biological_process
+relationship: part_of GO:0008150 ! biological_process
+relationship: regulates GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007267
+name: cell-cell signaling
+namespace: biological_process
+def: "Any process that mediates the transfer of information from one cell to another. This process includes signal transduction in the receiving cell and, where applicable, release of a ligand and any processes that actively facilitate its transport and presentation to the receiving cell.  Examples include signaling via soluble ligands, via cell adhesion molecules and via gap junctions." [GOC:dos, GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+synonym: "cell-cell signalling" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0007568
+name: aging
+namespace: biological_process
+alt_id: GO:0016280
+def: "A developmental process that is a deterioration and loss of function over time. Aging includes loss of functions such as resistance to disease, homeostasis, and fertility, as well as wear and tear. Aging includes cellular senescence, but is more inclusive. May precede death and may succeed developmental maturation (GO:0021700)." [GOC:PO_curators]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "ageing" EXACT []
+xref: Wikipedia:Aging
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0008092
+name: cytoskeletal protein binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with any protein component of any cytoskeleton (actin, microtubule, or intermediate filament cytoskeleton)." [GOC:mah]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_yeast
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0008134
+name: transcription factor binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with a transcription factor, a protein required to initiate or regulate transcription." [ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_yeast
+synonym: "TF binding" EXACT []
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0008135
+name: translation factor activity, RNA binding
+namespace: molecular_function
+def: "Functions during translation by interacting selectively and non-covalently with RNA during polypeptide synthesis at the ribosome." [GOC:ai, GOC:vw]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "translation factor activity, nucleic acid binding" BROAD [GOC:mah]
+is_a: GO:0003723 ! RNA binding
+relationship: part_of GO:0006412 ! translation
+
+[Term]
+id: GO:0008150
+name: biological_process
+namespace: biological_process
+alt_id: GO:0000004
+alt_id: GO:0007582
+alt_id: GO:0044699
+def: "A biological process represents a specific objective that the organism is genetically programmed to achieve. Biological processes are often described by their outcome or ending state, e.g., the biological process of cell division results in the creation of two daughter cells (a divided cell) from a single parent cell. A biological process is accomplished by a particular set of molecular functions carried out by specific gene products (or macromolecular complexes), often in a highly regulated manner and in a particular temporal sequence." [GOC:pdt]
+comment: Note that, in addition to forming the root of the biological process ontology, this term is recommended for use for the annotation of gene products whose biological process is unknown. When this term is used for annotation, it indicates that no information was available about the biological process of the gene product annotated as of the date the annotation was made; the evidence code "no data" (ND), is used to indicate this.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "biological process" EXACT []
+synonym: "physiological process" EXACT []
+synonym: "single organism process" RELATED []
+synonym: "single-organism process" RELATED []
+xref: Wikipedia:Biological_process
+created_by: janelomax
+creation_date: 2012-09-19T15:05:24Z
+
+[Term]
+id: GO:0008168
+name: methyltransferase activity
+namespace: molecular_function
+alt_id: GO:0004480
+def: "Catalysis of the transfer of a methyl group to an acceptor molecule." [ISBN:0198506732]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "methylase" BROAD []
+xref: EC:2.1.1
+xref: Reactome:R-HSA-379387 "methylation of Dopamine to form 3-Methoxytyramine"
+xref: Reactome:R-HSA-379464 "Methylation of 3,4-dihydroxyphenylacetic acid to homovanillic acid"
+xref: Reactome:R-HSA-6800149 "N6AMT1:TRMT112 transfers CH3 group from AdoMet to MMAIII"
+xref: Reactome:R-HSA-71286 "guanidinoacetate + S-adenosylmethionine => creatine + S-adenosylhomocysteine"
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0008219
+name: cell death
+namespace: biological_process
+def: "Any biological process that results in permanent cessation of all vital functions of a cell. A cell should be considered dead when any one of the following molecular or morphological criteria is met: (1) the cell has lost the integrity of its plasma membrane; (2) the cell, including its nucleus, has undergone complete fragmentation into discrete bodies (frequently referred to as apoptotic bodies). The cell corpse (or its fragments) may be engulfed by an adjacent cell in vivo, but engulfment of whole cells should not be considered a strict criteria to define cell death as, under some circumstances, live engulfed cells can be released from phagosomes (see PMID:18045538)." [GOC:mah, GOC:mtg_apoptosis, PMID:25236395]
+comment: This term should not be used for direct annotation. The only exception should be when experimental data (e.g., staining with trypan blue or propidium iodide) show that cell death has occurred, but fail to provide details on death modality (accidental versus programmed). When information is provided on the cell death mechanism, annotations should be made to the appropriate descendant of 'cell death' (such as, but not limited to, GO:0097300 'programmed necrotic cell death' or GO:0006915 'apoptotic process'). Also, if experimental data suggest that a gene product influences cell death indirectly, rather than being involved in the death process directly, consider annotating to a 'regulation' term.
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_plant
+synonym: "accidental cell death" RELATED []
+synonym: "necrosis" RELATED []
+xref: MIPS_funcat:40.10
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0008233
+name: peptidase activity
+namespace: molecular_function
+def: "Catalysis of the hydrolysis of a peptide bond. A peptide bond is a covalent bond formed when the carbon atom from the carboxyl group of one amino acid shares electrons with the nitrogen atom from the amino group of a second amino acid." [GOC:jl, ISBN:0815332181]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "hydrolase, acting on peptide bonds" EXACT []
+synonym: "peptide hydrolase activity" EXACT []
+synonym: "protease activity" EXACT []
+synonym: "proteinase activity" NARROW []
+xref: EC:3.4
+xref: Reactome:R-HSA-205112 "gamma-secretase cleaves p75NTR, releasing NRIF and TRAF6"
+xref: Reactome:R-HSA-3000243 "Unknown protease degrades GIF:Cbl to release Cbl"
+xref: Reactome:R-HSA-3139027 "Maturation of HIV Virion"
+xref: Reactome:R-HSA-376149 "Proteolytic processing of SLIT"
+xref: Reactome:R-HSA-448678 "CTSG cleaves CASP1(1-404)"
+xref: Reactome:R-HSA-5655483 "USP1 autocleavage"
+xref: Reactome:R-HSA-5684864 "NAPSA, CTSH, PGA3-5 cleave pro-SFTPB"
+xref: Reactome:R-HSA-5685902 "NAPSA, CTSH, PGA3-5 cleave pro-SFTPC"
+xref: Reactome:R-HSA-5693319 "CTRC hydrolyses PRSS1"
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0008283
+name: cell population proliferation
+namespace: biological_process
+def: "The multiplication or reproduction of cells, resulting in the expansion of a cell population." [GOC:mah, GOC:mb]
+comment: This term was moved out from being a child of 'cellular process' because it is a cell population-level process, and cellular processes are restricted to those processes that involve individual cells. Also note that this term is intended to be used for the proliferation of cells within a multicellular organism, not for the expansion of a population of single-celled organisms.
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+synonym: "cell proliferation" RELATED []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0008289
+name: lipid binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with a lipid." [GOC:ai]
+subset: goslim_agr
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+xref: MIPS_funcat:16.09
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0009056
+name: catabolic process
+namespace: biological_process
+alt_id: GO:0044243
+alt_id: GO:0044712
+def: "The chemical reactions and pathways resulting in the breakdown of substances, including the breakdown of carbon compounds with the liberation of energy for use by the cell or organism." [ISBN:0198547684]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+synonym: "breakdown" EXACT []
+synonym: "catabolism" EXACT []
+synonym: "degradation" EXACT []
+synonym: "multicellular organismal catabolic process" NARROW []
+synonym: "single-organism catabolic process" RELATED []
+xref: Wikipedia:Catabolism
+is_a: GO:0008150 ! biological_process
+created_by: janelomax
+creation_date: 2012-10-17T15:52:35Z
+
+[Term]
+id: GO:0009058
+name: biosynthetic process
+namespace: biological_process
+alt_id: GO:0044274
+alt_id: GO:0044711
+def: "The chemical reactions and pathways resulting in the formation of substances; typically the energy-requiring part of metabolism in which simpler substances are transformed into more complex ones." [GOC:curators, ISBN:0198547684]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_plant
+synonym: "anabolism" EXACT []
+synonym: "biosynthesis" EXACT []
+synonym: "formation" BROAD []
+synonym: "multicellular organismal biosynthetic process" NARROW []
+synonym: "single-organism biosynthetic process" RELATED []
+synonym: "synthesis" EXACT []
+xref: Wikipedia:Anabolism
+is_a: GO:0008150 ! biological_process
+created_by: janelomax
+creation_date: 2012-10-17T15:52:18Z
+
+[Term]
+id: GO:0009536
+name: plastid
+namespace: cellular_component
+def: "Any member of a family of organelles found in the cytoplasm of plants and some protists, which are membrane-bounded and contain DNA. Plant plastids develop from a common type, the proplastid." [GOC:jl, ISBN:0198547684]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+xref: MIPS_funcat:70.26
+xref: Wikipedia:Plastid
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0009579
+name: thylakoid
+namespace: cellular_component
+def: "A membranous cellular structure that bears the photosynthetic pigments in plants, algae, and cyanobacteria. In cyanobacteria thylakoids are of various shapes and are attached to, or continuous with, the plasma membrane. In eukaryotes they are flattened, membrane-bounded disk-like structures located in the chloroplasts; in the chloroplasts of higher plants the thylakoids form dense stacks called grana. Isolated thylakoid preparations can carry out photosynthetic electron transport and the associated phosphorylation." [GOC:ds, GOC:mtg_sensu, ISBN:0198506732]
+comment: A thylakoid is not considered an organelle, but some thylakoids are part of organelles.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+synonym: "photosynthetic membrane" RELATED []
+xref: Wikipedia:Thylakoid
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005622 ! intracellular
+
+[Term]
+id: GO:0009790
+name: embryo development
+namespace: biological_process
+alt_id: GO:0009795
+def: "The process whose specific outcome is the progression of an embryo from its formation until the end of its embryonic life stage. The end of the embryonic stage is organism-specific. For example, for mammals, the process would begin with zygote formation and end with birth. For insects, the process would begin at zygote formation and end with larval hatching. For plant zygotic embryos, this would be from zygote formation to the end of seed dormancy. For plant vegetative embryos, this would be from the initial determination of the cell or group of cells to form an embryo until the point when the embryo becomes independent of the parent plant." [GOC:go_curators, GOC:isa_complete, GOC:mtg_sensu]
+subset: gocheck_do_not_manually_annotate
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+synonym: "embryogenesis" EXACT []
+synonym: "embryogenesis and morphogenesis" BROAD []
+synonym: "embryonal development" EXACT []
+xref: Wikipedia:Embryogenesis
+is_a: GO:0048856 ! anatomical structure development
+
+[Term]
+id: GO:0015031
+name: protein transport
+namespace: biological_process
+alt_id: GO:0015831
+def: "The directed movement of proteins into, out of or within a cell, or between cells, by means of some agent such as a transporter or pore." [GOC:ai]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "enzyme transport" NARROW []
+xref: MIPS_funcat:14
+xref: MIPS_funcat:14.04
+xref: MIPS_funcat:20.01.10
+is_a: GO:0006810 ! transport
+
+[Term]
+id: GO:0015979
+name: photosynthesis
+namespace: biological_process
+def: "The synthesis by organisms of organic chemical compounds, especially carbohydrates, from carbon dioxide (CO2) using energy obtained from light rather than from the oxidation of chemical compounds." [ISBN:0198547684]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_plant
+xref: MIPS_funcat:02.30
+xref: Wikipedia:Photosynthesis
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0016192
+name: vesicle-mediated transport
+namespace: biological_process
+alt_id: GO:0006899
+def: "A cellular transport process in which transported substances are moved in membrane-bounded vesicles; transported substances are enclosed in the vesicle lumen or located in the vesicle membrane. The process begins with a step that directs a substance to the forming vesicle, and includes vesicle budding and coating. Vesicles are then targeted to, and fuse with, an acceptor membrane." [GOC:ai, GOC:mah, ISBN:08789310662000]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+synonym: "nonselective vesicle transport" NARROW []
+synonym: "protein sorting along secretory pathway" RELATED []
+synonym: "vesicle trafficking" RELATED []
+synonym: "vesicle transport" EXACT []
+synonym: "vesicular transport" EXACT [GOC:mah]
+xref: MIPS_funcat:20.09.07
+is_a: GO:0006810 ! transport
+
+[Term]
+id: GO:0016301
+name: kinase activity
+namespace: molecular_function
+def: "Catalysis of the transfer of a phosphate group, usually from ATP, to a substrate molecule." [ISBN:0198506732]
+comment: Note that this term encompasses all activities that transfer a single phosphate group; although ATP is by far the most common phosphate donor, reactions using other phosphate donors are included in this term.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "phosphokinase activity" EXACT []
+xref: Reactome:R-HSA-6788855 "FN3KRP phosphorylates PsiAm, RibAm"
+xref: Reactome:R-HSA-6788867 "FN3K phosphorylates ketosamines"
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0016491
+name: oxidoreductase activity
+namespace: molecular_function
+def: "Catalysis of an oxidation-reduction (redox) reaction, a reversible chemical reaction in which the oxidation state of an atom or atoms within a molecule is altered. One substrate acts as a hydrogen or electron donor and becomes oxidized, while the other acts as hydrogen or electron acceptor and becomes reduced." [GOC:go_curators]
+comment: Note that enzymes of class EC:1.97.-.- should also be annotated to this term.
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "oxidoreductase activity, acting on other substrates" NARROW []
+synonym: "redox activity" EXACT []
+xref: EC:1
+xref: Reactome:R-HSA-1614362 "SUMF1 mediates the oxidation of cysteine to formylglycine, producing active arylsulfatases"
+xref: Reactome:R-HSA-209921 "Monoiodinated tyrosine can be deiodinated"
+xref: Reactome:R-HSA-209960 "Diiodinated tyrosine can be deiodinated"
+xref: Reactome:R-HSA-3095889 "MMACHC reduces Cbl"
+xref: Reactome:R-HSA-390425 "FAR1 reduces PalmCoA to HXOL"
+xref: Reactome:R-HSA-390438 "FAR2 reduces PalmCoA to HXOL"
+xref: Reactome:R-HSA-5662660 "Dopachrome is transformed to DHICA by DCT"
+xref: Reactome:R-HSA-8878581 "TYRP1 oxidises DHICA to IQCA"
+xref: Reactome:R-HSA-8936442 "MARC1,MARC2 reduce N-hydroxylated compounds"
+xref: Reactome:R-HSA-9020249 "Hydroperoxy reductase reduces 4(S)-Hp-17(S)-HDHA to RvD6"
+xref: Reactome:R-HSA-9020260 "Hydroperoxy reducatse reduces 7(S)-Hp-17(S)-HDHA to RvD5"
+xref: Reactome:R-HSA-9024624 "Hydroperoxy reductase reduces 4(S)-Hp-17(R)-HDHA to AT-RvD6"
+xref: Reactome:R-HSA-9024630 "Hydroperoxy reductase reduces 7(S)-Hp-17(R)-HDHA to AT-RvD5"
+xref: Reactome:R-HSA-9025007 "Hydroperoxy reductase reduces 7(S),14(S)-diHp-DHA to 7-epi-MaR1"
+xref: Reactome:R-HSA-9026001 "Hydroperoxy reductase reduces 7,17-diHp-DPAn-3 to RvD5n-3DPA"
+xref: Reactome:R-HSA-9026917 "Lipoxygenase dehydrogenates 7(S),17(S)-diHp-DHA to 7S(8)-epoxy-17(S)-HDHA"
+xref: Reactome:R-HSA-9027033 "Hydroperoxy reducatase reduces 14(S)-Hp-DHA to 14(S)-HDHA"
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0016746
+name: transferase activity, transferring acyl groups
+namespace: molecular_function
+alt_id: GO:0008415
+def: "Catalysis of the transfer of an acyl group from one compound (donor) to another (acceptor)." [GOC:jl, ISBN:0198506732]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "acyltransferase activity" EXACT []
+xref: EC:2.3
+xref: Reactome:R-HSA-159431 "Cytosolic chenodeoxycholoyl-CoA or choloyl-CoA are conjugated with glycine or taurine"
+xref: Reactome:R-HSA-192312 "Choloyl CoA reacts with glycine or taurine to form glycocholate or taurocholate"
+xref: Reactome:R-HSA-193491 "Chenodeoxycholoyl CoA reacts with glycine or taurine to form glycochenodeoxycholate or taurochenodeoxycholate"
+xref: Reactome:R-HSA-6792572 "LIPT1 transfers lipoyl group from lipoyl-GCSH to DHs"
+xref: Reactome:R-HSA-8858298 "HRASLS transfer acyl group from PC to PE to form NAPE"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016757
+name: transferase activity, transferring glycosyl groups
+namespace: molecular_function
+alt_id: GO:0016932
+def: "Catalysis of the transfer of a glycosyl group from one compound (donor) to another (acceptor)." [GOC:jl, ISBN:0198506732]
+comment: Note that enzymes of class EC:2.4.99.- should also be annotated to this term.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "glycosyltransferase activity" EXACT []
+synonym: "transferase activity, transferring other glycosyl groups" NARROW []
+synonym: "transglycosidase activity" EXACT []
+synonym: "transglycosylase activity" EXACT []
+xref: EC:2.4
+xref: Reactome:R-HSA-5173005 "B3GALTL transfers glucose to O-fucosyl-proteins"
+xref: Reactome:R-HSA-6785565 "Defective B3GALTL does not transfer glucose to O-fucosyl-proteins"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016765
+name: transferase activity, transferring alkyl or aryl (other than methyl) groups
+namespace: molecular_function
+alt_id: GO:0016766
+def: "Catalysis of the transfer of an alkyl or aryl (but not methyl) group from one compound (donor) to another (acceptor)." [GOC:jl, ISBN:0198506732]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "transferase activity, transferring alkyl or aryl groups, other than methyl groups" EXACT []
+xref: EC:2.5
+xref: EC:2.5.1
+xref: Reactome:R-HSA-4419978 "DHDDS:NUS1 elongates E,E-FPP with (n)IPPP to form pPPP"
+xref: Reactome:R-HSA-4755545 "Defective DHDDS does not elongate E,E-FPP"
+xref: Reactome:R-HSA-6782893 "TRMT12 transforms yW-187 yielding yW-86 at nucleotide 37 of tRNA(Phe)"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016779
+name: nucleotidyltransferase activity
+namespace: molecular_function
+def: "Catalysis of the transfer of a nucleotidyl group to a reactant." [ISBN:0198506732]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_yeast
+xref: EC:2.7.7
+xref: Reactome:R-HSA-6782434 "THG1L transfers GMP to 5' end of tRNA(His)"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016791
+name: phosphatase activity
+namespace: molecular_function
+alt_id: GO:0003869
+alt_id: GO:0016302
+def: "Catalysis of the hydrolysis of phosphoric monoesters, releasing inorganic phosphate." [EC:3.1.3, GOC:curators, GOC:pg]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_yeast
+synonym: "4-nitrophenylphosphatase activity" NARROW []
+synonym: "4-nitrophenylphosphate phosphohydrolase activity" NARROW [EC:3.1.3.41]
+synonym: "ecto-p-nitrophenyl phosphatase activity" NARROW [EC:3.1.3.41]
+synonym: "K-pNPPase activity" NARROW [EC:3.1.3.41]
+synonym: "nitrophenyl phosphatase activity" NARROW [EC:3.1.3.41]
+synonym: "NPPase activity" NARROW [EC:3.1.3.41]
+synonym: "p-nitrophenylphosphatase activity" NARROW [EC:3.1.3.41]
+synonym: "p-nitrophenylphosphate phosphohydrolase activity" NARROW [EC:3.1.3.41]
+synonym: "para-nitrophenyl phosphatase activity" NARROW [EC:3.1.3.41]
+synonym: "phosphatase" RELATED []
+synonym: "phosphoric monoester hydrolase activity" EXACT []
+synonym: "PNPPase activity" NARROW [EC:3.1.3.41]
+xref: EC:3.1.3
+xref: MetaCyc:4-NITROPHENYLPHOSPHATASE-RXN
+xref: Reactome:R-HSA-4419986 "Unknown pPPP phosphatase dephosphorylates pPPP to pPNOL"
+xref: RHEA:21664
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0016798
+name: hydrolase activity, acting on glycosyl bonds
+namespace: molecular_function
+def: "Catalysis of the hydrolysis of any glycosyl bond." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "glycosidase activity" EXACT []
+synonym: "glycosylase" NARROW []
+synonym: "N-glycosylase" NARROW []
+xref: EC:3.2
+xref: Reactome:R-HSA-1793176 "DS is cleaved from its proteoglycan"
+xref: Reactome:R-HSA-2065233 "CS is cleaved from its proteoglycan"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016810
+name: hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds
+namespace: molecular_function
+def: "Catalysis of the hydrolysis of any carbon-nitrogen bond, C-N, with the exception of peptide bonds." [GOC:jl]
+comment: Note that enzymes of class EC:3.5.99.- should also be annotated to this term.
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds, in other compounds" NARROW []
+xref: EC:3.5
+xref: Reactome:R-HSA-6803753 "NAAA hydrolyses NAEs to FAs and ethanolamine"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016829
+name: lyase activity
+namespace: molecular_function
+def: "Catalysis of the cleavage of C-C, C-O, C-N and other bonds by other means than by hydrolysis or oxidation, or conversely adding a group to a double bond. They differ from other enzymes in that two substrates are involved in one reaction direction, but only one in the other direction. When acting on the single substrate, a molecule is eliminated and this generates either a new double bond or a new ring." [EC:4.-.-.-, ISBN:0198547684]
+comment: Note that enzymes of class EC:4.99.-.- should also be annotated to this term.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "other lyase activity" NARROW []
+xref: EC:4
+xref: Reactome:R-HSA-5696408 "PHYKPL tetramer hydrolyses 5PHL"
+xref: Reactome:R-HSA-6782895 "TYW1:FMN:4Fe-4S  transforms 1-methylguanosine yielding yW-187 (4-demethylwyosine) at nucleotide 37 of tRNA(Phe)"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016853
+name: isomerase activity
+namespace: molecular_function
+def: "Catalysis of the geometric or structural changes within one molecule. Isomerase is the systematic name for any enzyme of EC class 5." [ISBN:0198506732]
+comment: Note that enzymes of class EC:5.99.-.- should also be annotated to this term.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "other isomerase activity" NARROW []
+xref: EC:5
+xref: Reactome:R-HSA-6787623 "TSTA3 dimer epimerises GDP-DHDMan to GDP-KDGal"
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016874
+name: ligase activity
+namespace: molecular_function
+def: "Catalysis of the joining of two substances, or two groups within a single molecule, with the concomitant hydrolysis of the diphosphate bond in ATP or a similar triphosphate." [EC:6, GOC:mah]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "synthetase activity" EXACT [GOC:jh2]
+xref: EC:6
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0016887
+name: ATPase activity
+namespace: molecular_function
+alt_id: GO:0004002
+def: "Catalysis of the reaction: ATP + H2O = ADP + phosphate + 2 H+. May or may not be coupled to another reaction." [EC:3.6.1.3, GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "(Ca2+ + Mg2+)-ATPase" NARROW [EC:3.6.1.3]
+synonym: "adenosine 5'-triphosphatase activity" EXACT [EC:3.6.1.3]
+synonym: "adenosine triphosphatase activity" EXACT [EC:3.6.1.3]
+synonym: "adenosinetriphosphatase activity" EXACT []
+synonym: "ATP hydrolase activity" EXACT [EC:3.6.1.3]
+synonym: "ATP monophosphatase activity" EXACT [EC:3.6.1.3]
+synonym: "ATP phosphohydrolase activity" EXACT []
+synonym: "complex V (mitochondrial electron transport)" RELATED [EC:3.6.1.3]
+synonym: "HCO3--ATPase" NARROW [EC:3.6.1.3]
+synonym: "SV40 T-antigen" RELATED [EC:3.6.1.3]
+xref: EC:3.6.1.3
+xref: MetaCyc:ADENOSINETRIPHOSPHATASE-RXN
+xref: Reactome:R-HSA-159101 "NXF1:NXT1 (TAP:p15) binds capped mRNA:CBC:EJC:TREX (minus DDX39B)"
+xref: Reactome:R-HSA-416985 "Trafficking of GluR2-containing AMPA receptors to synapse"
+xref: Reactome:R-HSA-5654989 "SPRTN:VCP-mediated release of POLH from monoUb:K164-PCNA"
+xref: Reactome:R-HSA-5694425 "NSF ATPase activity dissociates cis-SNARE"
+xref: Reactome:R-HSA-6809015 "NSF ATPase activity dissociates cis-SNARE at cis-Golgi"
+xref: Reactome:R-HSA-6811422 "NSF ATPase activity dissociates cis-SNARE at the ER"
+xref: Reactome:R-HSA-6814670 "ATP hydrolysis by RHOBTB3 promotes PLIN3 dissociation"
+xref: Reactome:R-HSA-6814678 "ATP hydrolysis by NSF disassembles the cis-SNARE at the TGN"
+xref: Reactome:R-HSA-6814683 "NSF-dependent ATP hydrolysis disassembles the cis-SNARE at the TGN"
+xref: Reactome:R-HSA-72139 "Formation of the active Spliceosomal C (B*) complex"
+xref: Reactome:R-HSA-8847638 "ATP hydrolysis by NSF disassembles the cis-SNARE at the Golgi membrane"
+xref: Reactome:R-HSA-8868658 "HSPA8-mediated ATP hydrolysis promotes vesicle uncoating"
+xref: Reactome:R-HSA-917693 "ESCRT Disassembly"
+xref: Reactome:R-HSA-9609860 "Tail-anchored protein:SGTA:BAG6:GET4:UBL4A:ASNA1:ATP dissociates and ASNA1 hydrolyzes ATP yielding Tail-anchored protein:ASNA1:ADP"
+xref: RHEA:13065
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0019748
+name: secondary metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in many of the chemical changes of compounds that are not necessarily required for growth and maintenance of cells, and are often unique to a taxon. In multicellular organisms secondary metabolism is generally carried out in specific cell types, and may be useful for the organism as a whole. In unicellular organisms, secondary metabolism is often used for the production of antibiotics or for the utilization and acquisition of unusual nutrients." [GOC:go_curators]
+subset: goslim_aspergillus
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+synonym: "secondary metabolism" EXACT []
+synonym: "secondary metabolite metabolic process" EXACT []
+synonym: "secondary metabolite metabolism" EXACT []
+xref: MIPS_funcat:01.20
+xref: Wikipedia:Secondary_metabolism
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0019843
+name: rRNA binding
+namespace: molecular_function
+alt_id: GO:0000944
+def: "Interacting selectively and non-covalently with ribosomal RNA." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "base pairing with rRNA" NARROW []
+is_a: GO:0003723 ! RNA binding
+
+[Term]
+id: GO:0019899
+name: enzyme binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with any enzyme." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0021700
+name: developmental maturation
+namespace: biological_process
+def: "A developmental process, independent of morphogenetic (shape) change, that is required for an anatomical structure, cell or cellular component to attain its fully functional state." [GO_REF:0000021, GOC:cls, GOC:dgh, GOC:dph, GOC:jid, GOC:mtg_15jun06]
+comment: This term was added by GO_REF:0000021.
+subset: goslim_chembl
+subset: goslim_generic
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0022607
+name: cellular component assembly
+namespace: biological_process
+alt_id: GO:0071844
+def: "The aggregation, arrangement and bonding together of a cellular component." [GOC:isa_complete]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+synonym: "cell structure assembly" EXACT []
+synonym: "cellular component assembly at cellular level" EXACT []
+is_a: GO:0008150 ! biological_process
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0022618
+name: ribonucleoprotein complex assembly
+namespace: biological_process
+def: "The aggregation, arrangement and bonding together of proteins and RNA molecules to form a ribonucleoprotein complex." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "protein-RNA complex assembly" EXACT []
+synonym: "RNA-protein complex assembly" EXACT []
+synonym: "RNP complex assembly" EXACT []
+is_a: GO:0065003 ! protein-containing complex assembly
+
+[Term]
+id: GO:0022857
+name: transmembrane transporter activity
+namespace: molecular_function
+alt_id: GO:0005386
+alt_id: GO:0015563
+alt_id: GO:0015646
+alt_id: GO:0022891
+alt_id: GO:0022892
+def: "Enables the transfer of a substance, usually a specific substance or a group of related substances, from one side of a membrane to the other." [GOC:jid, GOC:mtg_transport, ISBN:0815340729]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "substrate-specific transmembrane transporter activity" RELATED []
+synonym: "substrate-specific transporter activity" NARROW []
+synonym: "uptake permease activity" RELATED []
+synonym: "uptake transmembrane transporter activity" RELATED []
+xref: Reactome:R-HSA-1236947 "Egress of internalized antigen to the cytosol via sec61"
+xref: Reactome:R-HSA-429036 "SLC2A9 transports Fru, Glc, urate"
+xref: Reactome:R-HSA-5638209 "Defective SLC2A9 does not transport Fru, Glc, urate"
+xref: Reactome:R-HSA-5671707 "Fe3+ dissociates from SLC22A17:LCN2:2,5DHBA"
+xref: Reactome:R-HSA-6784434 "An unknown carrier transports cytosolic glyoxylate to the peroxisome"
+xref: Reactome:R-HSA-6784436 "An unknown carrier transports mitochondrial glyoxylate to the cytosol"
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0055085 ! transmembrane transport
+
+[Term]
+id: GO:0030154
+name: cell differentiation
+namespace: biological_process
+def: "The process in which relatively unspecialized cells, e.g. embryonic or regenerative cells, acquire specialized structural and/or functional features that characterize the cells, tissues, or organs of the mature organism or some other relatively stable phase of the organism's life history. Differentiation includes the processes involved in commitment of a cell to a specific fate and its subsequent development to the mature state." [ISBN:0198506732]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_plant
+xref: MIPS_funcat:40.02
+xref: Wikipedia:Cellular_differentiation
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0030198
+name: extracellular matrix organization
+namespace: biological_process
+def: "A process that is carried out at the cellular level which results in the assembly, arrangement of constituent parts, or disassembly of an extracellular matrix." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "extracellular matrix organisation" EXACT [GOC:curators]
+synonym: "extracellular matrix organization and biogenesis" RELATED [GOC:mah]
+xref: MIPS_funcat:42.27.01
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0030234
+name: enzyme regulator activity
+namespace: molecular_function
+alt_id: GO:0010576
+def: "Binds to and modulates the activity of an enzyme." [GOC:dph, GOC:mah, GOC:tb]
+comment: GO:0030234 is reserved for cases when the regulator directly interacts with the enzyme. When regulation of enzyme activity is achieved without enzyme binding, or when the mechanism of regulation is unknown, instead annotate to 'regulation of catalytic activity ; GO:0050790'.
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_pir
+subset: goslim_plant
+subset: goslim_yeast
+synonym: "catalytic regulator activity" EXACT [GOC:dph]
+synonym: "enzyme modulator" EXACT []
+synonym: "metalloenzyme regulator activity" NARROW []
+xref: MIPS_funcat:18.02.01
+is_a: GO:0003674 ! molecular_function
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0030312
+name: external encapsulating structure
+namespace: cellular_component
+def: "A structure that lies outside the plasma membrane and surrounds the entire cell or cells. This does not include the periplasmic space." [GOC:go_curators]
+comment: The outer membrane (of gram negative bacteria) or cell wall (of yeast or Gram positive bacteria) are defined as parts of this structure, see 'external encapsulating structure part'.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005623 ! cell
+
+[Term]
+id: GO:0030533
+name: triplet codon-amino acid adaptor activity
+namespace: molecular_function
+def: "The codon binding activity of a tRNA that positions an activated amino acid, mediating its insertion at the correct point in the sequence of a nascent polypeptide chain during protein synthesis." [GOC:hjd, GOC:mtg_MIT_16mar07, ISBN:0198506732]
+comment: Note that this term can be used in place of the obsolete term 'transfer RNA ; GO:0005563'.
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "transfer RNA" RELATED []
+synonym: "tRNA" RELATED []
+is_a: GO:0003729 ! mRNA binding
+relationship: part_of GO:0006412 ! translation
+
+[Term]
+id: GO:0030555
+name: RNA modification guide activity
+namespace: molecular_function
+def: "Specifies the site of a posttranscriptional modification in an RNA molecule by base pairing with a short sequence around the target residue." [GOC:mah, PMID:12457565]
+comment: Note that this term describes the activity of a nucleic acid, usually RNA, gene product that interacts with other RNA molecules via base pairing; it should not be used to annotate proteins.
+subset: goslim_generic
+subset: goslim_yeast
+is_a: GO:0003723 ! RNA binding
+
+[Term]
+id: GO:0030674
+name: protein binding, bridging
+namespace: molecular_function
+def: "The binding activity of a molecule that brings together two or more protein molecules, or a protein and another macromolecule or complex, through a selective, non-covalent, often stoichiometric interaction, permitting those molecules to function in a coordinated way." [GOC:bf, GOC:mah, GOC:vw]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "protein-protein adaptor" NARROW []
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0030705
+name: cytoskeleton-dependent intracellular transport
+namespace: biological_process
+def: "The directed movement of substances along cytoskeletal fibers such as microfilaments or microtubules within a cell." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+xref: MIPS_funcat:20.09.14
+is_a: GO:0006810 ! transport
+relationship: occurs_in GO:0005622 ! intracellular
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0031012
+name: extracellular matrix
+namespace: cellular_component
+alt_id: GO:0005578
+def: "A structure lying external to one or more cells, which provides structural support, biochemical or biomechanical cues for cells or tissues." [GOC:BHF, GOC:mah, GOC:rph, NIF_Subcellular:nlx_subcell_20090513, PMID:21123617, PMID:28089324]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+synonym: "matrisome" NARROW []
+synonym: "proteinaceous extracellular matrix" EXACT []
+xref: MIPS_funcat:70.27.01
+xref: NIF_Subcellular:nlx_subcell_20090513
+xref: Wikipedia:Extracellular_matrix
+is_a: GO:0005575 ! cellular_component
+relationship: part_of GO:0005576 ! extracellular region
+
+[Term]
+id: GO:0031410
+name: cytoplasmic vesicle
+namespace: cellular_component
+alt_id: GO:0016023
+def: "A vesicle found in the cytoplasm of a cell." [GOC:ai, GOC:mah, GOC:vesicles]
+subset: goslim_agr
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+subset: goslim_yeast
+synonym: "cytoplasmic membrane bounded vesicle" RELATED []
+synonym: "cytoplasmic membrane-enclosed vesicle" RELATED []
+synonym: "cytoplasmic, membrane-bounded vesicle" RELATED []
+xref: NIF_Subcellular:sao180601769
+is_a: GO:0043226 ! organelle
+relationship: part_of GO:0005737 ! cytoplasm
+
+[Term]
+id: GO:0032182
+name: ubiquitin-like protein binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with a small conjugating protein such as ubiquitin or a ubiquitin-like protein." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "small conjugating protein binding" EXACT [GOC:dph]
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0032196
+name: transposition
+namespace: biological_process
+def: "Any process involved in mediating the movement of discrete segments of DNA between nonhomologous sites." [GOC:jp, ISBN:1555812090]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_yeast
+xref: Wikipedia:Transposon
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0032991
+name: protein-containing complex
+namespace: cellular_component
+alt_id: GO:0043234
+def: "A stable assembly of two or more macromolecules, i.e. proteins, nucleic acids, carbohydrates or lipids, in which at least one component is a protein and the constituent parts function together." [GOC:dos, GOC:mah]
+comment: A protein complex in this context is meant as a stable set of interacting proteins which can be co-purified by an acceptable method, and where the complex has been shown to exist as an isolated, functional unit in vivo. Acceptable experimental methods include stringent protein purification followed by detection of protein interaction. The following methods should be considered non-acceptable: simple immunoprecipitation, pull-down experiments from cell extracts without further purification, colocalization and 2-hybrid screening. Interactions that should not be captured as protein complexes include: 1) enzyme/substrate, receptor/ligand or any similar transient interactions, unless these are a critical part of the complex assembly or are required e.g. for the receptor to be functional; 2) proteins associated in a pull-down/co-immunoprecipitation assay with no functional link or any evidence that this is a defined biological entity rather than a loose-affinity complex; 3) any complex where the only evidence is based on genetic interaction data; 4) partial complexes, where some subunits (e.g. transmembrane ones) cannot be expressed as recombinant proteins and are excluded from experiments (in this case, independent evidence is necessary to find out the composition of the full complex, if known). Interactions that may be captured as protein complexes include: 1) enzyme/substrate or receptor/ligand if the complex can only assemble and become functional in the presence of both classes of subunits; 2) complexes where one of the members has not been shown to be physically linked to the other(s), but is a homologue of, and has the same functionality as, a protein that has been experimentally demonstrated to form a complex with the other member(s); 3) complexes whose existence is accepted based on localization and pharmacological studies, but for which experimental evidence is not yet available for the complex as a whole.
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_pir
+synonym: "macromolecular complex" EXACT []
+synonym: "macromolecule complex" EXACT []
+synonym: "protein complex" NARROW []
+synonym: "protein containing complex" EXACT []
+synonym: "protein-protein complex" NARROW []
+is_a: GO:0005575 ! cellular_component
+
+[Term]
+id: GO:0034330
+name: cell junction organization
+namespace: biological_process
+def: "A process that is carried out at the cellular level which results in the assembly, arrangement of constituent parts, or disassembly of a cell junction. A cell junction is a specialized region of connection between two cells or between a cell and the extracellular matrix." [GOC:dph, GOC:jl, GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "cell junction assembly and maintenance" EXACT []
+synonym: "cell junction biogenesis" RELATED []
+synonym: "cell junction organisation" EXACT [GOC:mah]
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0034641
+name: cellular nitrogen compound metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving various organic and inorganic nitrogenous compounds, as carried out by individual cells." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "cellular nitrogen compound metabolism" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0034655
+name: nucleobase-containing compound catabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways resulting in the breakdown of nucleobases, nucleosides, nucleotides and nucleic acids." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "nucleobase, nucleoside, nucleotide and nucleic acid breakdown" EXACT []
+synonym: "nucleobase, nucleoside, nucleotide and nucleic acid catabolic process" RELATED [GOC:dph, GOC:tb]
+synonym: "nucleobase, nucleoside, nucleotide and nucleic acid catabolism" EXACT []
+synonym: "nucleobase, nucleoside, nucleotide and nucleic acid degradation" EXACT []
+is_a: GO:0009056 ! catabolic process
+is_a: GO:0034641 ! cellular nitrogen compound metabolic process
+
+[Term]
+id: GO:0040007
+name: growth
+namespace: biological_process
+alt_id: GO:0048590
+def: "The increase in size or mass of an entire organism, a part of an organism or a cell." [GOC:bf, GOC:ma]
+comment: See also the biological process term 'cell growth ; GO:0016049'.
+subset: gocheck_do_not_annotate
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_plant
+synonym: "growth pattern" RELATED []
+synonym: "non-developmental growth" RELATED [GOC:mah]
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0040011
+name: locomotion
+namespace: biological_process
+def: "Self-propelled movement of a cell or organism from one location to another." [GOC:dgh]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+xref: MIPS_funcat:02.45.11
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0042254
+name: ribosome biogenesis
+namespace: biological_process
+alt_id: GO:0007046
+def: "A cellular process that results in the biosynthesis of constituent macromolecules, assembly, and arrangement of constituent parts of ribosome subunits; includes transport to the sites of protein synthesis." [GOC:ma, PMID:26404467, Wikipedia:Ribosome_biogenesis]
+subset: goslim_aspergillus
+subset: goslim_candida
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+synonym: "ribosome biogenesis and assembly" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0042393
+name: histone binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with a histone, any of a group of water-soluble proteins found in association with the DNA of eukaroytic chromosomes. They are involved in the condensation and coiling of chromosomes during cell division and have also been implicated in nonspecific suppression of gene activity." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "histone-specific chaperone activity" RELATED []
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0042592
+name: homeostatic process
+namespace: biological_process
+alt_id: GO:0032844
+alt_id: GO:0032845
+alt_id: GO:0032846
+def: "Any biological process involved in the maintenance of an internal steady state." [GOC:jl, ISBN:0395825172]
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_mouse
+synonym: "activation of homeostatic process" NARROW []
+synonym: "homeostasis" EXACT []
+synonym: "inhibition of homeostatic process" NARROW []
+synonym: "negative regulation of homeostatic process" RELATED []
+synonym: "positive regulation of homeostatic process" RELATED []
+synonym: "regulation of homeostatic process" RELATED []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0043167
+name: ion binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with ions, charged atoms or groups of atoms." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_yeast
+synonym: "atom binding" RELATED []
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0043226
+name: organelle
+namespace: cellular_component
+def: "Organized structure of distinctive morphology and function. Includes the nucleus, mitochondria, plastids, vacuoles, vesicles, ribosomes and the cytoskeleton, and prokaryotic structures such as anammoxosomes and pirellulosomes. Excludes the plasma membrane." [GOC:go_curators]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+xref: NIF_Subcellular:sao1539965131
+xref: Wikipedia:Organelle
+is_a: GO:0005575 ! cellular_component
+
+[Term]
+id: GO:0043473
+name: pigmentation
+namespace: biological_process
+def: "The accumulation of pigment in an organism, tissue or cell, either by increased deposition or by increased number of cells." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0044281
+name: small molecule metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving small molecules, any low molecular weight, monomeric, non-encoded molecule." [GOC:curators, GOC:pde, GOC:vw]
+comment: Small molecules in GO include monosaccharides but exclude disaccharides and polysaccharides.
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_metagenomics
+synonym: "small molecule metabolism" EXACT []
+is_a: GO:0008150 ! biological_process
+created_by: jane
+creation_date: 2010-01-26T12:05:20Z
+
+[Term]
+id: GO:0044403
+name: symbiotic process
+namespace: biological_process
+alt_id: GO:0043298
+alt_id: GO:0044404
+alt_id: GO:0072519
+alt_id: GO:0085031
+def: "A process carried out by symbiont gene products that enables the interaction between two organisms living together in more or less intimate association. The various forms of symbiosis include parasitism, in which the association is disadvantageous or destructive to one of the organisms; mutualism, in which the association is advantageous, or often necessary to one or both and not harmful to either; and commensalism, in which one member of the association benefits while the other is not affected. However, mutualism, parasitism, and commensalism are often not discrete categories of interactions and should rather be perceived as a continuum of interaction ranging from parasitism to mutualism. In fact, the direction of a symbiotic interaction can change during the lifetime of the symbionts due to developmental changes as well as changes in the biotic/abiotic environment in which the interaction occurs. Microscopic symbionts are often referred to as endosymbionts." [GOC:cc, https://study.com/academy/lesson/symbiont-definition-lesson-quiz.html]
+comment: Changed term, definition see https://github.com/geneontology/go-ontology/issues/14807
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "commensalism" NARROW []
+synonym: "host-pathogen interaction" NARROW []
+synonym: "parasitism" NARROW []
+synonym: "symbiosis" RELATED []
+synonym: "symbiosis, encompassing mutualism through parasitism" RELATED []
+synonym: "symbiotic interaction" RELATED []
+synonym: "symbiotic interaction between host and organism" RELATED []
+synonym: "symbiotic interaction between organisms" RELATED []
+synonym: "symbiotic interaction between species" RELATED []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0048646
+name: anatomical structure formation involved in morphogenesis
+namespace: biological_process
+def: "The developmental process pertaining to the initial formation of an anatomical structure from unspecified parts. This process begins with the specific processes that contribute to the appearance of the discrete structure and ends when the structural rudiment is recognizable. An anatomical structure is any biological entity that occupies space and is distinguished from its surroundings. Anatomical structures can be macroscopic such as a carpel, or microscopic such as an acrosome." [GOC:dph, GOC:jid, GOC:tb]
+comment: Note that, for example, the formation of a pseudopod in an amoeba would not be considered formation involved in morphogenesis because it would not be thought of as the formation of an anatomical structure that was part of the shaping of the amoeba during its development. The formation of an axon from a neuron would be considered the formation of an anatomical structure involved in morphogenesis because it contributes to the creation of the form of the neuron in a developmental sense.
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "formation of an anatomical structure involved in morphogenesis" EXACT [GOC:dph, GOC:tb]
+is_a: GO:0008150 ! biological_process
+relationship: part_of GO:0048856 ! anatomical structure development
+
+[Term]
+id: GO:0048856
+name: anatomical structure development
+namespace: biological_process
+def: "The biological process whose specific outcome is the progression of an anatomical structure from an initial condition to its mature state. This process begins with the formation of the structure and ends with the mature structure, whatever form that may be including its natural destruction. An anatomical structure is any biological entity that occupies space and is distinguished from its surroundings. Anatomical structures can be macroscopic such as a carpel, or microscopic such as an acrosome." [GO_REF:0000021, GOC:mtg_15jun06]
+comment: This term was added by GO_REF:0000021.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_plant
+synonym: "development of an anatomical structure" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0048870
+name: cell motility
+namespace: biological_process
+def: "Any process involved in the controlled self-propelled movement of a cell that results in translocation of the cell from one place to another." [GOC:dgh, GOC:dph, GOC:isa_complete, GOC:mlg]
+subset: goslim_chembl
+subset: goslim_generic
+synonym: "cell locomotion" EXACT []
+synonym: "cell movement" RELATED []
+synonym: "movement of a cell" EXACT []
+is_a: GO:0040011 ! locomotion
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0050877
+name: nervous system process
+namespace: biological_process
+def: "A organ system process carried out by any of the organs or tissues of neurological system." [GOC:ai, GOC:mtg_cardio]
+comment: Discussion of class label and synonyms: https://github.com/geneontology/go-ontology/issues/13824
+subset: goslim_agr
+subset: goslim_chembl
+subset: goslim_flybase_ribbon
+subset: goslim_generic
+subset: goslim_pir
+synonym: "neurological system process" EXACT []
+synonym: "neurophysiological process" EXACT []
+synonym: "pan-neural process" RELATED []
+xref: MIPS_funcat:36.25.03
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0051082
+name: unfolded protein binding
+namespace: molecular_function
+def: "Interacting selectively and non-covalently with an unfolded protein." [GOC:ai]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_yeast
+synonym: "binding unfolded ER proteins" NARROW []
+synonym: "chaperone activity" RELATED []
+synonym: "fimbrium-specific chaperone activity" RELATED []
+synonym: "glycoprotein-specific chaperone activity" RELATED []
+synonym: "histone-specific chaperone activity" RELATED []
+synonym: "ribosomal chaperone activity" RELATED []
+synonym: "tubulin-specific chaperone activity" RELATED []
+is_a: GO:0003674 ! molecular_function
+
+[Term]
+id: GO:0051186
+name: cofactor metabolic process
+namespace: biological_process
+def: "The chemical reactions and pathways involving a cofactor, a substance that is required for the activity of an enzyme or other protein. Cofactors may be inorganic, such as the metal atoms zinc, iron, and copper in certain forms, or organic, in which case they are referred to as coenzymes. Cofactors may either be bound tightly to active sites or bind loosely with the substrate." [GOC:ai]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "cofactor metabolism" EXACT []
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0051276
+name: chromosome organization
+namespace: biological_process
+alt_id: GO:0007001
+alt_id: GO:0051277
+def: "A process that is carried out at the cellular level that results in the assembly, arrangement of constituent parts, or disassembly of chromosomes, structures composed of a very long molecule of DNA and associated proteins that carries hereditary information. This term covers covalent modifications at the molecular level as well as spatial relationships among the major components of a chromosome." [GOC:ai, GOC:dph, GOC:jl, GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+synonym: "chromosome organisation" EXACT []
+synonym: "chromosome organization and biogenesis" RELATED [GOC:mah]
+synonym: "maintenance of genome integrity" RELATED []
+synonym: "nuclear genome maintenance" RELATED []
+xref: MIPS_funcat:42.10.03
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0051301
+name: cell division
+namespace: biological_process
+def: "The process resulting in division and partitioning of components of a cell to form more cells; may or may not be accompanied by the physical separation of a cell into distinct, individually membrane-bounded daughter cells." [GOC:di, GOC:go_curators, GOC:pr]
+comment: Note that this term differs from 'cytokinesis ; GO:0000910' in that cytokinesis does not include nuclear division.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+xref: Wikipedia:Cell_division
+is_a: GO:0008150 ! biological_process
+
+[Term]
+id: GO:0051604
+name: protein maturation
+namespace: biological_process
+def: "Any process leading to the attainment of the full functional capacity of a protein." [GOC:ai]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+subset: goslim_yeast
+is_a: GO:0008150 ! biological_process
+relationship: part_of GO:0008150 ! biological_process
+
+[Term]
+id: GO:0055085
+name: transmembrane transport
+namespace: biological_process
+alt_id: GO:0090662
+def: "The process in which a solute is transported across a lipid bilayer, from one side of a membrane to the other." [GOC:dph, GOC:jid]
+comment: Transmembrane transport is the transport of a solute across a lipid bilayer. Note that transport through the nuclear pore complex is not transmembrane because the nuclear membrane is a double membrane and is not traversed. For transport through the nuclear pore, consider instead the term 'nucleocytoplasmic transport ; GO:0006913' and its children. Note also that this term is not intended for use in annotating lateral movement within membranes.
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "ATP hydrolysis coupled transmembrane transport" NARROW []
+synonym: "membrane transport" EXACT []
+is_a: GO:0006810 ! transport
+created_by: tanyaberardini
+creation_date: 2015-10-21T13:22:47Z
+
+[Term]
+id: GO:0061024
+name: membrane organization
+namespace: biological_process
+alt_id: GO:0016044
+alt_id: GO:0044802
+def: "A process which results in the assembly, arrangement of constituent parts, or disassembly of a membrane. A membrane is a double layer of lipid molecules that encloses all cells, and, in eukaryotes, many organelles; may be a single or double lipid bilayer; also includes associated proteins." [GOC:dph, GOC:tb]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pir
+subset: goslim_pombe
+synonym: "cellular membrane organisation" EXACT [GOC:curators]
+synonym: "cellular membrane organization" EXACT []
+synonym: "membrane organisation" EXACT [GOC:mah]
+synonym: "membrane organization and biogenesis" RELATED [GOC:mah]
+synonym: "single-organism membrane organization" RELATED []
+is_a: GO:0008150 ! biological_process
+created_by: janelomax
+creation_date: 2010-02-08T02:43:11Z
+
+[Term]
+id: GO:0065003
+name: protein-containing complex assembly
+namespace: biological_process
+alt_id: GO:0006461
+def: "The aggregation, arrangement and bonding together of a set of macromolecules to form a protein-containing complex." [GOC:jl]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_metagenomics
+subset: goslim_pir
+subset: goslim_pombe
+synonym: "chaperone activity" RELATED []
+synonym: "macromolecular complex assembly" RELATED []
+synonym: "macromolecule complex assembly" RELATED []
+synonym: "protein complex assembly" RELATED []
+synonym: "protein complex formation" RELATED []
+is_a: GO:0022607 ! cellular component assembly
+
+[Term]
+id: GO:0071554
+name: cell wall organization or biogenesis
+namespace: biological_process
+alt_id: GO:0070882
+def: "A process that results in the biosynthesis of constituent macromolecules, assembly, arrangement of constituent parts, or disassembly of a cell wall." [GOC:mah]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pombe
+subset: goslim_yeast
+synonym: "cell wall organisation or biogenesis" EXACT [GOC:mah]
+synonym: "cell wall organization or biogenesis at cellular level" EXACT [GOC:mah]
+synonym: "cellular cell wall organisation or biogenesis" EXACT [GOC:mah]
+synonym: "cellular cell wall organization or biogenesis" EXACT []
+is_a: GO:0008150 ! biological_process
+created_by: midori
+creation_date: 2010-01-13T03:19:38Z
+
+[Term]
+id: GO:0071941
+name: nitrogen cycle metabolic process
+namespace: biological_process
+def: "A nitrogen compound metabolic process that contributes to the nitrogen cycle. The nitrogen cycle is a series of metabolic pathways by which nitrogen is converted between various forms and redox states; it encompasses pathways in which nitrogen is acted upon directly, such as nitrification, denitrification, nitrogen fixation, and mineralization." [GOC:mah, PMID:16675690, Wikipedia:Nitrogen_cycle]
+subset: goslim_chembl
+subset: goslim_generic
+subset: goslim_pombe
+xref: Wikipedia:Nitrogen_cycle
+is_a: GO:0008150 ! biological_process
+created_by: midori
+creation_date: 2010-09-30T05:21:03Z
+
+[Term]
+id: GO:0140014
+name: mitotic nuclear division
+namespace: biological_process
+def: "A mitotic cell cycle process comprising the steps by which the nucleus of a eukaryotic cell divides; the process involves condensation of chromosomal DNA into a highly compacted form. Canonically, mitosis produces two daughter nuclei whose chromosome complement is identical to that of the mother cell." [ISBN:0198547684]
+subset: goslim_chembl
+subset: goslim_generic
+is_a: GO:0008150 ! biological_process
+relationship: part_of GO:0000278 ! mitotic cell cycle
+created_by: pg
+creation_date: 2017-03-23T14:44:23Z
+
+[Typedef]
+id: ends_during
+name: ends_during
+namespace: external
+xref: RO:0002093
+
+[Typedef]
+id: happens_during
+name: happens during
+namespace: external
+xref: RO:0002092
+is_transitive: true
+is_a: ends_during ! ends_during
+
+[Typedef]
+id: has_part
+name: has part
+namespace: external
+xref: BFO:0000051
+is_transitive: true
+
+[Typedef]
+id: negatively_regulates
+name: negatively regulates
+namespace: external
+xref: RO:0002212
+is_a: regulates ! regulates
+
+[Typedef]
+id: never_in_taxon
+name: never_in_taxon
+namespace: external
+xref: RO:0002161
+expand_assertion_to: "Class: ?X DisjointWith: RO_0002162 some ?Y" []
+is_metadata_tag: true
+is_class_level: true
+
+[Typedef]
+id: occurs_in
+name: occurs in
+namespace: external
+xref: BFO:0000066
+transitive_over: part_of ! part of
+
+[Typedef]
+id: part_of
+name: part of
+namespace: external
+xref: BFO:0000050
+is_transitive: true
+inverse_of: has_part ! has part
+
+[Typedef]
+id: positively_regulates
+name: positively regulates
+namespace: external
+xref: RO:0002213
+holds_over_chain: negatively_regulates negatively_regulates
+is_a: regulates ! regulates
+
+[Typedef]
+id: regulates
+name: regulates
+namespace: external
+xref: RO:0002211
+is_transitive: true
+
+[Typedef]
+id: starts_during
+name: starts_during
+namespace: external
+xref: RO:0002091
+
