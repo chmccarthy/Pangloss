@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Pangloss: A pipeline for pan-genome analysis of microbial eukaryotes.
