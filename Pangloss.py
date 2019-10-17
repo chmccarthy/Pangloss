@@ -160,6 +160,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         else:
             logging.info("Master: Skipping gene model prediction via Exonerate (--no_exonerate enabled).")
             exonerate_genes = None
+            exonerate_attributes = None
         
         # Run prediction using GeneMark-ES.
         logging.info("Master: Running gene model prediction for {0} using GeneMark-ES.".format(genome))
@@ -199,11 +200,11 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
 
         # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
         logging.info("Master: Merging all remmaining gene calls for {0}.".format(genome))
-        #full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
+        full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
         
         # Write out gene set, protein set and attributes set.
         logging.info("Master: Writing out datasets for {0}.".format(genome))
-        PanGuess.ConstructGeneModelSets(exonerate_attributes, exonerate_genes, workdir, genome, tag)
+        PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
         
         # Compress temporary folders and finish up.
         logging.info("Master: Compressing temporary folders for {0}.".format(genome))

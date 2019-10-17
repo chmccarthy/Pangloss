@@ -414,10 +414,10 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
     Build completed gene model set for genome from our three sources.
     """
     # Temporary gene/protein sets from GeneMark-ES and TransDecoder.
-    #gm_prot_db = SeqIO.index("{0}/gmes/{1}/prot_seq.faa".format(workdir, genome), "fasta")
-    #gm_nucl_db = SeqIO.index("{0}/gmes/{1}/nuc_seq.fna".format(workdir, genome), "fasta")
-    #td_prot_db = SeqIO.index("{0}/td/{1}/NCR.fna.transdecoder.pep".format(workdir, genome), "fasta")
-    #td_nucl_db = SeqIO.index("{0}/td/{1}/NCR.fna.transdecoder.cds".format(workdir, genome), "fasta")
+    gm_prot_db = SeqIO.index("{0}/gmes/{1}/prot_seq.faa".format(workdir, genome), "fasta")
+    gm_nucl_db = SeqIO.index("{0}/gmes/{1}/nuc_seq.fna".format(workdir, genome), "fasta")
+    td_prot_db = SeqIO.index("{0}/td/{1}/NCR.fna.transdecoder.pep".format(workdir, genome), "fasta")
+    td_nucl_db = SeqIO.index("{0}/td/{1}/NCR.fna.transdecoder.cds".format(workdir, genome), "fasta")
 
     # Master lists.
     prot_models = []
@@ -430,22 +430,22 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
 
     # Loop over attributes, extract gene from given source based on parent method.
     for gene in attributes:
-        #if gene[4].startswith("TransDecoder"):
-        #    prot_seq = td_prot_db[gene[1]]
-        #    nucl_seq = td_nucl_db[gene[1]]
-        #    prot_seq.id = "{0}|{1}_{2}_{3}".format(tag, gene[0], gene[2], gene[3])
-        #    nucl_seq.id = prot_seq.id
-        #    gene[1] = prot_seq.id
-        #    prot_models.append(prot_seq)
-        #    nucl_models.append(nucl_seq)
-        #elif gene[4].startswith("GeneMark"):
-        #    prot_seq = gm_prot_db[gene[1]]
-        #    nucl_seq = gm_nucl_db[gene[1]]
-        #    prot_seq.id = "{0}|{1}_{2}_{3}".format(tag, gene[0], gene[2], gene[3])
-        #    nucl_seq.id = prot_seq.id
-        #    gene[1] = prot_seq.id
-        #    prot_models.append(prot_seq)
-        #    nucl_models.append(nucl_seq)
+        if gene[4].startswith("TransDecoder"):
+            prot_seq = td_prot_db[gene[1]]
+            nucl_seq = td_nucl_db[gene[1]]
+            prot_seq.id = "{0}|{1}_{2}_{3}".format(tag, gene[0], gene[2], gene[3])
+            nucl_seq.id = prot_seq.id
+            gene[1] = prot_seq.id
+            prot_models.append(prot_seq)
+            nucl_models.append(nucl_seq)
+        elif gene[4].startswith("GeneMark"):
+            prot_seq = gm_prot_db[gene[1]]
+            nucl_seq = gm_nucl_db[gene[1]]
+            prot_seq.id = "{0}|{1}_{2}_{3}".format(tag, gene[0], gene[2], gene[3])
+            nucl_seq.id = prot_seq.id
+            gene[1] = prot_seq.id
+            prot_models.append(prot_seq)
+            nucl_models.append(nucl_seq)
         if gene[4].startswith("Exonerate"):
             match = filter(lambda x: x.id == gene[1], exonerate_genes)
             prot_seq = SeqRecord(Seq(match[0].prot), id=match[0].id)
