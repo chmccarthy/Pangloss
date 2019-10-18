@@ -81,13 +81,13 @@ Recent changes:
     - Created master script based on old pangenome pipelines from 2017-18.
 """
 
-import datetime
 import logging
 import os
 import sys
 import multiprocessing as mp
 from Bio.Data.CodonTable import TranslationError
 from ConfigParser import SafeConfigParser
+from datetime import datetime
 from argparse import ArgumentParser
 from glob import glob
 
@@ -476,8 +476,7 @@ def main():
     Main function.
     """
     # Create logfile and assign it to all child modules.
-    #start_time = datetime.now()
-    start_time = datetime.datetime(2022, 10, 18, 13, 35, 13, 657714)
+    start_time = datetime.now()
     logging.basicConfig(filename="Pangloss_Run_{0}.log".format(str(start_time).replace(" ", "_")),
                         level=logging.INFO, format="%(asctime)s: %(levelname)s: %(message)s")
 
@@ -525,7 +524,6 @@ def main():
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
         in_date = CheckGeneMarkLicence(start_time)
-        print in_date
         if not in_date:
             print "Your 400-day GeneMark-ES license is out of date and hence PanGloss can't predict genes." \
                   "Go to http://exon.gatech.edu/GeneMark/gmes_instructions.html to download a new license key," \

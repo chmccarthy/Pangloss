@@ -283,7 +283,6 @@ def CheckGeneMarkLicence(today):
     license_max = datetime.timedelta(400)
     license_start = datetime.datetime.fromtimestamp(os.path.getmtime(key))
     license_now = today - license_start
-    print today, license_start, license_now
     if license_now > license_max:
         return False
     else:
