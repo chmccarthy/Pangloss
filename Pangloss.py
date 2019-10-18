@@ -92,7 +92,7 @@ from datetime import datetime
 from glob import glob
 
 from Pangloss import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
-from Pangloss.Tools import ConcatenateDatasets
+from Pangloss.Tools import ConcatenateDatasets, CheckGeneMarkLicence
 
 
 def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
@@ -119,6 +119,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
     Arguments activated by command line flags:
         skip         = Skip Exonerate gene model predictions.
     """
+
     # If user doesn't specify cores in config file, just leave them with one free.
     if not cores:
         cores = str(mp.cpu_count() - 1)
@@ -475,7 +476,8 @@ def main():
     Main function.
     """
     # Create logfile and assign it to all child modules.
-    start_time = datetime.now()
+    #start_time = datetime.now()
+    start_time = datetime(2015, 10, 18, 13, 35, 13, 657714)
     logging.basicConfig(filename="Pangloss_Run_{0}.log".format(str(start_time).replace(" ", "_")),
                         level=logging.INFO, format="%(asctime)s: %(levelname)s: %(message)s")
 
@@ -522,6 +524,12 @@ def main():
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
+        in_date = Tools.CheckGeneMarkLicence(start_time)
+        if not in_date:
+            print "Your 400-day GeneMark-ES license is out of date and hence PanGloss can't predict genes." \
+                  "Go to http://exon.gatech.edu/GeneMark/gmes_instructions.html to download a new license key," \
+                  "and place it in your home folder under the name .gm_key. Exiting out of Pangloss."
+            exit(0)
         panguess_args = [ex_path, gm_path, tp_path, tl_path]
         logging.info("Master: Performing gene prediction steps using PanGuess.")
         for arg in cp.items("Gene_model_prediction"):

@@ -12,6 +12,7 @@ import os
 import subprocess as sp
 from collections import Counter, OrderedDict as od
 from csv import reader
+from datetime import datetime
 from itertools import chain, izip_longest, tee
 
 from Bio import SeqIO, SeqRecord
@@ -272,3 +273,17 @@ def ClusterSizes(component):
     counts = [len(filter(lambda x: x is not None, cluster)) for cluster in clusters]
     sizes = Counter(counts)
     return sizes
+
+
+def CheckGeneMarkLicence(today):
+    """
+    Check that GeneMark-ES licence is in date. Licenses expire after 400 days.
+    """
+    key = os.path.expanduser("~") + "/.gm_key"
+    license_max = datetime.timedelta(400)
+    license_start = datetime.fromtimestamp(os.path.getmtime(key))
+    license_now = today - license_start
+    if license_now > license_max:
+        return False
+    else:
+        return True
