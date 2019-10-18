@@ -8,11 +8,11 @@ Functions imported explictly via "from Pangloss.Tools import <name>".
 from __future__ import division
 
 import cStringIO
+import datetime
 import os
 import subprocess as sp
 from collections import Counter, OrderedDict as od
 from csv import reader
-from datetime import datetime
 from itertools import chain, izip_longest, tee
 
 from Bio import SeqIO, SeqRecord
@@ -281,7 +281,7 @@ def CheckGeneMarkLicence(today):
     """
     key = os.path.expanduser("~") + "/.gm_key"
     license_max = datetime.timedelta(400)
-    license_start = datetime.fromtimestamp(os.path.getmtime(key))
+    license_start = datetime.datetime.fromtimestamp(os.path.getmtime(key))
     license_now = today - license_start
     if license_now > license_max:
         return False

@@ -81,6 +81,7 @@ Recent changes:
     - Created master script based on old pangenome pipelines from 2017-18.
 """
 
+import datetime
 import logging
 import os
 import sys
@@ -88,7 +89,6 @@ import multiprocessing as mp
 from Bio.Data.CodonTable import TranslationError
 from ConfigParser import SafeConfigParser
 from argparse import ArgumentParser
-from datetime import datetime
 from glob import glob
 
 from Pangloss import BLASTAll, BUSCO, GO, Karyotype, PAML, PanGuess, PanOCT, QualityCheck, Size, UpSet
@@ -477,7 +477,7 @@ def main():
     """
     # Create logfile and assign it to all child modules.
     #start_time = datetime.now()
-    start_time = datetime(2015, 10, 18, 13, 35, 13, 657714)
+    start_time = datetime.datetime(2015, 10, 18, 13, 35, 13, 657714)
     logging.basicConfig(filename="Pangloss_Run_{0}.log".format(str(start_time).replace(" ", "_")),
                         level=logging.INFO, format="%(asctime)s: %(levelname)s: %(message)s")
 
