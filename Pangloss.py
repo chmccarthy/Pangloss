@@ -524,7 +524,7 @@ def main():
 
     # Unless disabled, parse arguments for PanGuess and run gene model prediction.
     if ap.pred or ap.pred_only:
-        in_date = Tools.CheckGeneMarkLicence(start_time)
+        in_date = CheckGeneMarkLicence(start_time)
         if not in_date:
             print "Your 400-day GeneMark-ES license is out of date and hence PanGloss can't predict genes." \
                   "Go to http://exon.gatech.edu/GeneMark/gmes_instructions.html to download a new license key," \
