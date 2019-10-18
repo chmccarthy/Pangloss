@@ -184,7 +184,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         
         # Extract NCRs into list.
         logging.info("Master: Extracting non-coding regions of {0} for TransDecoder analysis.".format(genome))
-        noncoding = PanGuess.ExtractNCR(exonerate_attributes, genome)
+        noncoding = PanGuess.ExtractNCR(merged_attributes, genome)
         
         # Run TransDecoder on NCRs.
         logging.info("Master: Running TransDecoder on non-coding regions of {0}.".format(genome))
@@ -207,7 +207,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
         
         # Compress temporary folders and finish up.
-        logging.info("Master: Compressing temporary folders for {0}.".format(genome))
+        #logging.info("Master: Compressing temporary folders for {0}.".format(genome))
         #PanGuess.TarballGenePredictionDirs(workdir, genome)
         logging.info("Master: Finished gene model predction for {0}.".format(genome))
 
