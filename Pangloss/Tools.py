@@ -5,19 +5,19 @@ Short functions used throughout Pangloss and PanGuess.
 Functions imported explictly via "from Pangloss.Tools import <name>".
 """
 
-from __future__ import division
 
-import cStringIO
+
+import io
 import datetime
 import os
 import subprocess as sp
 from collections import Counter, OrderedDict as od
 from csv import reader
-from itertools import chain, izip_longest, tee
+from itertools import chain, zip_longest, tee
 
 from Bio import SeqIO, SeqRecord
 
-from ExonerateGene import ExonerateGene
+from .ExonerateGene import ExonerateGene
 
 
 def TryMkDirs(path):
@@ -38,7 +38,7 @@ def Pairwise(iterable):
     """
     a, b = tee(iterable)
     next(b, None)
-    return izip_longest(a, b)  # Allows (line, None) for EOF.
+    return zip_longest(a, b)  # Allows (line, None) for EOF.
 
 
 def Flatten(iterable):
@@ -62,7 +62,7 @@ def ExonerateCmdLine(cmd):
     """
     process = sp.check_output(cmd)
     if "C4 Alignment:" in process:  # Empty results don't contain this line!
-        return ExonerateGene(cStringIO.StringIO(process))
+        return ExonerateGene(io.StringIO(process))
     else:
         pass
 
@@ -269,8 +269,8 @@ def ClusterSizes(component):
     """
     Return counts of cluster sizes within a component.
     """
-    clusters = component.values()
-    counts = [len(filter(lambda x: x is not None, cluster)) for cluster in clusters]
+    clusters = list(component.values())
+    counts = [len([x for x in cluster if x is not None]) for cluster in clusters]
     sizes = Counter(counts)
     return sizes
 

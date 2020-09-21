@@ -3,7 +3,7 @@
 PAML: Module for handling yn00 selection analysis (and maybe CodeML in the future), if enabled by user.
 """
 
-import cStringIO
+import io
 import os
 
 from Bio import AlignIO, SeqIO
@@ -11,7 +11,7 @@ from Bio.Phylo.PAML import yn00
 from Bio.Phylo.PAML._paml import PamlError
 from glob import glob
 
-from Tools import StringMUSCLE, Untranslate
+from .Tools import StringMUSCLE, Untranslate
 
 
 def TranslateCDS(seqs):
@@ -32,7 +32,7 @@ def MUSCLEAlign(ml_path, seqs):
     Align translated nucleotides in StringMUSCLE, return parsed alignment.
     """
     output = StringMUSCLE(ml_path, seqs)
-    return AlignIO.parse(cStringIO.StringIO(output), "fasta")
+    return AlignIO.parse(io.StringIO(output), "fasta")
 
 
 def PutGaps(alignment, cluster):
@@ -53,7 +53,7 @@ def PutGaps(alignment, cluster):
             unseq.id = seq.id.split("|")[0]
             nucl_aln += (">{0}\n{1}\n".format(unseq.id, unseq.seq))
 
-    fas_aln = AlignIO.read(cStringIO.StringIO(nucl_aln), "fasta")
+    fas_aln = AlignIO.read(io.StringIO(nucl_aln), "fasta")
     AlignIO.write(fas_aln, "{0}.aln".format(cluster), "phylip-sequential")
 
     return "{0}.aln".format(cluster)
@@ -68,7 +68,7 @@ def RunYn00(yn_path, alignment):
     try:
         yn.run(ctl_file=None, command=yn_path, parse=False)
     except PamlError as e:
-        print "{0}, {1} may have internal stop codons.".format(e, alignment)
+        print("{0}, {1} may have internal stop codons.".format(e, alignment))
         pass
 
 

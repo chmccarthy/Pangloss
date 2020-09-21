@@ -7,7 +7,7 @@ import multiprocessing as mp
 import subprocess as sp
 from csv import reader
 
-from Tools import Flatten, ParseMatchtable, TryMkDirs
+from .Tools import Flatten, ParseMatchtable, TryMkDirs
 
 
 def MakeWorkingDirs():
@@ -62,8 +62,8 @@ def GeneratePopulations(annos, matchtable):
     Write out background (full) population and study (core, accessory) population files for use in GOATools.
     """
     core, acc = ParseMatchtable(matchtable)
-    c_pop = [val for val in Flatten(core.values()) if val in annos]
-    a_pop = [val for val in Flatten(acc.values()) if val in annos]
+    c_pop = [val for val in Flatten(list(core.values())) if val in annos]
+    a_pop = [val for val in Flatten(list(acc.values())) if val in annos]
     full_pop = c_pop + a_pop
     with open("go/core_pop.txt", "w") as cp_file, open("go/acc_pop.txt", "w") as ap_file,\
          open("go/full_pop.txt", "w") as fp_file:

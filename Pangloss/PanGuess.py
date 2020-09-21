@@ -45,7 +45,7 @@ Written by Charley McCarthy, Genome Evolution Lab, Department of Biology,
 Maynooth University in 2017-2019 (Charley.McCarthy@nuim.ie).
 """
 
-from __future__ import division
+
 
 import logging
 import multiprocessing as mp
@@ -62,7 +62,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from Tools import ExonerateCmdLine, LocationOverlap, Pairwise, TryMkDirs  # get_gene_lengths
+from .Tools import ExonerateCmdLine, LocationOverlap, Pairwise, TryMkDirs  # get_gene_lengths
 
 
 def LengthOverlap(gene, ref_lengths):
@@ -288,7 +288,7 @@ def ExtractNCR(attributes, genome):
 
     # Loop over every contig/chromosome in the genome.
     for seq in db:
-        coding = filter(lambda x: x[0] == seq.id, attributes)
+        coding = [x for x in attributes if x[0] == seq.id]
         for gene, next_gene in Pairwise(coding):
             if coding.index(gene) == 0:
                 if gene[2] != 0:
@@ -377,11 +377,11 @@ def TransDecoderGTFToAttributes(tdir, tag):
             if row:
                 if len(row) == 9:
                     contig_id = re.match(cregex, row[0]).group()[:-5]
-                    global_locs = map(int, row[0].split("_")[-2:])
+                    global_locs = list(map(int, row[0].split("_")[-2:]))
                     if row[2] == "exon":
                         exon_count = exon_count + 1
                     if row[2] == "CDS":
-                        relative_locs = map(int, row[3:5])
+                        relative_locs = list(map(int, row[3:5]))
                         start = global_locs[0] + relative_locs[0] - 1
                         stop = global_locs[0] + relative_locs[1] - 1
                         locs = [start, stop]
@@ -447,7 +447,7 @@ def ConstructGeneModelSets(attributes, exonerate_genes, workdir, genome, tag):
             prot_models.append(prot_seq)
             nucl_models.append(nucl_seq)
         if gene[4].startswith("Exonerate"):
-            match = filter(lambda x: x.id == gene[1], exonerate_genes)
+            match = [x for x in exonerate_genes if x.id == gene[1]]
             prot_seq = SeqRecord(Seq(match[0].prot), id=match[0].id)
             nucl_seq = SeqRecord(Seq(match[0].nucl), id=match[0].id)
             prot_seq.id = "{0}|{1}".format(tag, prot_seq.id)

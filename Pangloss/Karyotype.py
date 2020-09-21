@@ -16,7 +16,7 @@ from glob import glob
 
 from Bio import SeqIO
 
-from Tools import Flatten, ParseMatchtable, ParseKaryotypes, TryMkDirs
+from .Tools import Flatten, ParseMatchtable, ParseKaryotypes, TryMkDirs
 
 
 def GenerateContigLengths(genomes):
@@ -48,19 +48,19 @@ def GenerateKaryotypeFiles(attributes, matchtable):
 
     for row in attread:
         karyo = [row[0], row[1], row[2], row[3]]
-        core_gms = Flatten(core.values())
-        acc_gms = Flatten(acc.values())
-        total = len(core.values()[0])
+        core_gms = Flatten(list(core.values()))
+        acc_gms = Flatten(list(acc.values()))
+        total = len(list(core.values())[0])
         if row[1] in core_gms:
             number = core_gms.index(row[1]) / total
-            cluster = core.values()[number]
-            ortho = len(filter(lambda x: x is not None, cluster))
+            cluster = list(core.values())[number]
+            ortho = len([x for x in cluster if x is not None])
             karyo = karyo + ["core", row[5], str(ortho)]
             karyotype.append(karyo)
         elif row[1] in acc_gms:
             number = acc_gms.index(row[1]) / total
-            cluster = acc.values()[number]
-            ortho = len(filter(lambda x: x is not None, cluster))
+            cluster = list(acc.values())[number]
+            ortho = len([x for x in cluster if x is not None])
             karyo = karyo + ["acc", row[5], str(ortho)]
             karyotype.append(karyo)
         else:
