@@ -60,7 +60,7 @@ class ExonerateGene:
                                 prot.append(seq)
                             if "*" in record.seq[:-1]:
                                 stop = True
-                    cds_region = filter(lambda x: len(x) == 3, fragment.aln_annotation["hit_annotation"])
+                    cds_region = [x for x in fragment.aln_annotation["hit_annotation"] if len(x) == 3]
                     nucl.append(str("".join(cds_region)))
             
             # Populate attributes.

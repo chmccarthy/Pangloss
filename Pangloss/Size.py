@@ -1,4 +1,4 @@
-from __future__ import division
+
 
 """
 Module for generating bar and ring charts.
@@ -6,7 +6,7 @@ Module for generating bar and ring charts.
 import os
 import sys
 import subprocess as sp
-from Tools import ParseMatchtable, ClusterSizes
+from .Tools import ParseMatchtable, ClusterSizes
 
 def GenerateRingChart(matchtable):
     """

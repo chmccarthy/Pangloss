@@ -8,9 +8,9 @@ Arguments:
     queries     = Set of genes (protein sequences, in fact) to search against all gene model sets.
 """
 
-from __future__ import division
 
-import cStringIO
+
+import io
 import logging
 import multiprocessing as mp
 import os
@@ -19,7 +19,7 @@ from csv import reader
 
 from Bio import SeqIO, SearchIO
 
-from Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine, TryMkDirs
+from .Tools import MakeBLASTDBCmdLine, QCBLASTCmdLine, TryMkDirs
 
 
 def BuildMakeBLASTDBs(gene_sets, cores=None):
@@ -75,7 +75,7 @@ def QCBLAST(queries, sets, cores=None):
 
     # Return list of parsed BLASTp results.
     logging.info("QualityCheck: Parsing QCBLAST results into SeqIO XML objects.")
-    return [SearchIO.parse(cStringIO.StringIO(blast), "blast-xml") for blast in blasts]
+    return [SearchIO.parse(io.StringIO(blast), "blast-xml") for blast in blasts]
 
 
 def RemoveDubiousCalls(results, sets):
@@ -103,7 +103,7 @@ def RemoveDubiousCalls(results, sets):
     for path in sets:
         genome = path.split("/")[-1]
         tag = genome.split(".")[0]
-        tr_strain = filter(lambda x: x.split("|")[0] == tag, to_remove)
+        tr_strain = [x for x in to_remove if x.split("|")[0] == tag]
         if tr_strain:
             aa_path = "./gm_pred/sets/{0}.faa".format(tag)
             nt_path = "./gm_pred/sets/{0}.nucl".format(tag)
@@ -114,9 +114,9 @@ def RemoveDubiousCalls(results, sets):
             to_move = [aa_path, nt_path, at_path]
             TryMkDirs("./gm_pred/sets/old/")
 
-            new_prot = filter(lambda x: x.id not in tr_strain, current_prot)
-            new_nucl = filter(lambda x: x.id not in tr_strain, current_nucl)
-            new_att = filter(lambda x: x[1] not in tr_strain, current_att)
+            new_prot = [x for x in current_prot if x.id not in tr_strain]
+            new_nucl = [x for x in current_nucl if x.id not in tr_strain]
+            new_att = [x for x in current_att if x[1] not in tr_strain]
 
             logging.info("QualityCheck: Removed {0} dubious calls from {1},"
                          " writing remaining calls to new files.".format(len(tr_strain), genome))

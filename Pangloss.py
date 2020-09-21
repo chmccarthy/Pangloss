@@ -86,7 +86,7 @@ import os
 import sys
 import multiprocessing as mp
 from Bio.Data.CodonTable import TranslationError
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 from datetime import datetime
 from argparse import ArgumentParser
 from glob import glob
@@ -105,7 +105,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         gm_path      = GeneMark-ES path.
         tp_path      = TransDecoder.Predict path.
         tl_path      = TransDecoder.LongOrfs path.
-    
+
     Arguments taken from Gene_model_prediction section of config file as follows:
         genomelist   = List of strain genomes specified by genomes_list.
         workdir      = Working directory for prediction given by prediction_dir.
@@ -127,7 +127,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
     # Generate list of genomes from user-provided genome list file.
     logging.info("Master: Parsing genome list.")
     genomes = [line.strip("\n") for line in open(genomelist)]
-    
+
     # Create working directory if not present.
     logging.info("Master: Building working directory for gene model prediction.")
     PanGuess.MakeWorkingDir(workdir)
@@ -136,7 +136,7 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
     if not skip:
         logging.info("Master: Building working directory for gene model prediction.")
         PanGuess.BuildRefSet(workdir, ref)
-    
+
     # Loop over each genome and carry out gene model prediction.
     for genome in genomes:
         # Make tag from genome name (assuming genome name is in the format STRAIN.fna).
@@ -150,11 +150,11 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
             # Run prediction using Exonerate.
             cmds = PanGuess.BuildExonerateCmds(workdir, ex_path, genome)
             exonerate_genes = PanGuess.RunExonerate(cmds, cores)
-        
+
             # Order gene models predicted via Exonerate by Contig ID: Location.
             logging.info("Master: Sorting gene model predictions by genomic location.")
             exonerate_genes.sort(key=lambda x: (x.contig_id, x.locs[0]))
-        
+
             # Extract genomic attributes from Exonerate gene model set.
             exonerate_attributes = PanGuess.GetExonerateAttributes(exonerate_genes, tag)
 
@@ -162,15 +162,15 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
             logging.info("Master: Skipping gene model prediction via Exonerate (--no_exonerate enabled).")
             exonerate_genes = None
             exonerate_attributes = None
-        
+
         # Run prediction using GeneMark-ES.
         logging.info("Master: Running gene model prediction for {0} using GeneMark-ES.".format(genome))
         genemark_gtf = PanGuess.RunGeneMark(genome, gm_path, gm_branch, cores)
-        
+
         # Convert GeneMark-ES GTF file into a more PanOCT-compatible version.
         logging.info("Master: Converting GeneMark GTF data to attribute data.")
         genemark_attributes = PanGuess.GeneMarkGTFConverter(genemark_gtf, tag)
-        
+
         # Merge unique gene model calls between Exonerate and GeneMark-ES.
         if not skip:
             logging.info("Master: Merging Exonerate and GeneMark-ES gene calls.")
@@ -182,19 +182,19 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         # Clean up GeneMark-ES files and folders.
         logging.info("Master: Tidying up GeneMark-ES temporary files.")
         PanGuess.MoveGeneMarkFiles(workdir, genome)
-        
+
         # Extract NCRs into list.
         logging.info("Master: Extracting non-coding regions of {0} for TransDecoder analysis.".format(genome))
         noncoding = PanGuess.ExtractNCR(merged_attributes, genome)
-        
+
         # Run TransDecoder on NCRs.
         logging.info("Master: Running TransDecoder on non-coding regions of {0}.".format(genome))
         tdir = PanGuess.RunTransDecoder(noncoding, tp_path, tl_path, workdir, genome, td_len)
-        
+
         # Move TransDecoder files.
         logging.info("Master: Tidying up TransDecoder temporary files.")
         PanGuess.MoveTransDecoderFiles(tdir)
-        
+
         # Extract TransDecoder attributes.
         logging.info("Master: Converting TransDecoder GTF data to attribute data.")
         trans_attributes = PanGuess.TransDecoderGTFToAttributes(tdir, tag)
@@ -202,11 +202,11 @@ def PanGuessHandler(ex_path, gm_path, tp_path, tl_path,
         # Merge TransDecoder calls into the Exonerate + GeneMark-ES set.
         logging.info("Master: Merging all remmaining gene calls for {0}.".format(genome))
         full_attributes = PanGuess.MergeAttributes(merged_attributes, trans_attributes)
-        
+
         # Write out gene set, protein set and attributes set.
         logging.info("Master: Writing out datasets for {0}.".format(genome))
         PanGuess.ConstructGeneModelSets(full_attributes, exonerate_genes, workdir, genome, tag)
-        
+
         # Compress temporary folders and finish up.
         #logging.info("Master: Compressing temporary folders for {0}.".format(genome))
         #PanGuess.TarballGenePredictionDirs(workdir, genome)
@@ -331,7 +331,7 @@ def PAMLHandler(ml_path, yn_path, refine=False):
         try:
             trans_seqs = PAML.TranslateCDS(cluster)
         except TranslationError as e:
-            print "{0}, {1} has unusual frameshift mutation and can't be run through yn00.".format(e, cluster)
+            print("{0}, {1} has unusual frameshift mutation and can't be run through yn00.".format(e, cluster))
             trans_seqs = None
         if trans_seqs:
             prot_alignment = PAML.MUSCLEAlign(ml_path, trans_seqs)
@@ -525,9 +525,9 @@ def main():
     if ap.pred or ap.pred_only:
         in_date = CheckGeneMarkLicence(start_time)
         if not in_date:
-            print "Your 400-day GeneMark-ES license is out of date and hence PanGloss can't predict genes." \
+            print("Your 400-day GeneMark-ES license is out of date and hence PanGloss can't predict genes." \
                   "Go to http://exon.gatech.edu/GeneMark/gmes_instructions.html to download a new license key," \
-                  "and place it in your home folder under the name .gm_key. Exiting out of Pangloss."
+                  "and place it in your home folder under the name .gm_key. Exiting out of Pangloss.")
             exit(0)
         panguess_args = [ex_path, gm_path, tp_path, tl_path]
         logging.info("Master: Performing gene prediction steps using PanGuess.")
@@ -597,8 +597,8 @@ def main():
     # If enabled, run InterProScan analysis on entire dataset.
     if ap.ips:
         if not sys.platform.startswith("linux"):
-            print "InterProScan is not supported on non-Linux operating systems. Cannot run InterProScan analysis."
-            print "See https://github.com/ebi-pf-team/interproscan/wiki for more information."
+            print("InterProScan is not supported on non-Linux operating systems. Cannot run InterProScan analysis.")
+            print("See https://github.com/ebi-pf-team/interproscan/wiki for more information.")
             pass
         else:
             IPSHandler(ip_path)

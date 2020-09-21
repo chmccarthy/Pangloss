@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess as sp
 
-from Tools import TryMkDirs
+from .Tools import TryMkDirs
 
 
 def RunBUSCO(buscopath, lineagepath, gene_sets):
@@ -17,6 +17,6 @@ def RunBUSCO(buscopath, lineagepath, gene_sets):
     for gene_set in gene_sets:
         wd = gene_set.split("/")[-1]
         cmd = [buscopath, "-i", gene_set,  "-l", lineagepath, "-o", "{0}.busco".format(wd), "-m", "prot"]
-        print "Running BUSCO"
+        print("Running BUSCO")
         sp.call(cmd)
         shutil.move("run_{0}.busco".format(wd), bdir)
